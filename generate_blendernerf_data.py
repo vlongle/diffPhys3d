@@ -59,13 +59,20 @@ render.resolution_y = 512
 render.resolution_percentage = 100
 
 scene.cycles.device = "GPU"
-scene.cycles.samples = 32
+scene.cycles.samples = 64
 scene.cycles.diffuse_bounces = 1
 scene.cycles.glossy_bounces = 1
 scene.cycles.transparent_max_bounces = 3
 scene.cycles.transmission_bounces = 3
 scene.cycles.filter_width = 0.01
 scene.cycles.use_denoising = True
+
+
+### extra settings to ensure pure white background for gaussian splatting...
+scene.world.light_settings.use_ambient_occlusion = False
+scene.world.use_nodes = True
+scene.view_settings.view_transform = 'Standard'
+scene.view_settings.look = 'None'
 
 ## NOTE: for some reason, with transparent background, gaussian splatting will learn this weird
 ## artifacts like floating celling stuff surrounding the object.
@@ -79,6 +86,7 @@ def sample_point_on_sphere(radius: float) -> Tuple[float, float, float]:
         radius * math.sin(phi) * math.sin(theta),
         radius * math.cos(phi),
     )
+
 
 
 def add_lighting() -> None:
@@ -95,44 +103,44 @@ def add_lighting() -> None:
     
     # Create a three-point lighting setup
     
-    # 1. Key light (main light) - brightest, from front-right
-    bpy.ops.object.light_add(type="AREA", location=(2, -2, 2))
-    key_light = bpy.context.object
-    key_light.name = "Key_Light"
-    key_light.data.energy = 1000
-    key_light.data.size = 5
-    key_light.rotation_euler = (0.6, 0.2, 0.8)  # Angle toward the subject
+    # # 1. Key light (main light) - brightest, from front-right
+    # bpy.ops.object.light_add(type="AREA", location=(2, -2, 2))
+    # key_light = bpy.context.object
+    # key_light.name = "Key_Light"
+    # key_light.data.energy = 1000
+    # key_light.data.size = 5
+    # key_light.rotation_euler = (0.6, 0.2, 0.8)  # Angle toward the subject
     
-    # 2. Fill light - softer light from opposite side to fill shadows
-    bpy.ops.object.light_add(type="AREA", location=(-2, -1, 1))
-    fill_light = bpy.context.object
-    fill_light.name = "Fill_Light"
-    fill_light.data.energy = 400  # Less intense than key light
-    fill_light.data.size = 7  # Larger for softer light
-    fill_light.rotation_euler = (0.5, -0.2, -0.8)
+    # # 2. Fill light - softer light from opposite side to fill shadows
+    # bpy.ops.object.light_add(type="AREA", location=(-2, -1, 1))
+    # fill_light = bpy.context.object
+    # fill_light.name = "Fill_Light"
+    # fill_light.data.energy = 400  # Less intense than key light
+    # fill_light.data.size = 7  # Larger for softer light
+    # fill_light.rotation_euler = (0.5, -0.2, -0.8)
     
-    # 3. Rim/Back light - creates separation from background
-    bpy.ops.object.light_add(type="AREA", location=(0, 3, 2))
-    rim_light = bpy.context.object
-    rim_light.name = "Rim_Light"
-    rim_light.data.energy = 600
-    rim_light.data.size = 4
-    rim_light.rotation_euler = (0.8, 0, 0)  # Point down at the back of subject
+    # # 3. Rim/Back light - creates separation from background
+    # bpy.ops.object.light_add(type="AREA", location=(0, 3, 2))
+    # rim_light = bpy.context.object
+    # rim_light.name = "Rim_Light"
+    # rim_light.data.energy = 600
+    # rim_light.data.size = 4
+    # rim_light.rotation_euler = (0.8, 0, 0)  # Point down at the back of subject
     
-    # 4. Top light for general fill
-    bpy.ops.object.light_add(type="AREA", location=(0, 0, 4))
-    top_light = bpy.context.object
-    top_light.name = "Top_Light"
-    top_light.data.energy = 300
-    top_light.data.size = 10
-    top_light.rotation_euler = (0, 0, 0)  # Point straight down
+    # # 4. Top light for general fill
+    # bpy.ops.object.light_add(type="AREA", location=(0, 0, 4))
+    # top_light = bpy.context.object
+    # top_light.name = "Top_Light"
+    # top_light.data.energy = 300
+    # top_light.data.size = 10
+    # top_light.rotation_euler = (0, 0, 0)  # Point straight down
     
-    # # Add a subtle environment light
-    # world = bpy.data.worlds['World']
-    # world.use_nodes = True
-    # bg_node = world.node_tree.nodes['Background']
-    # bg_node.inputs[0].default_value = (0.2, 0.2, 0.2, 1.0)  # Subtle gray
-    # bg_node.inputs[1].default_value = 0.3  # Low strength
+    # set the background to white
+    world = bpy.data.worlds['World']
+    world.use_nodes = True
+    bg_node = world.node_tree.nodes['Background']
+    bg_node.inputs[0].default_value = (1.0, 1.0, 1.0, 1.0)  # Pure white
+    bg_node.inputs[1].default_value = 1.0  # Full strength
 
 
 # def add_lighting() -> None:

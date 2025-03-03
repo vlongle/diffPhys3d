@@ -103,37 +103,37 @@ def add_lighting() -> None:
     
     # Create a three-point lighting setup
     
-    # # 1. Key light (main light) - brightest, from front-right
-    # bpy.ops.object.light_add(type="AREA", location=(2, -2, 2))
-    # key_light = bpy.context.object
-    # key_light.name = "Key_Light"
-    # key_light.data.energy = 1000
-    # key_light.data.size = 5
-    # key_light.rotation_euler = (0.6, 0.2, 0.8)  # Angle toward the subject
+    # 1. Key light (main light) - brightest, from front-right
+    bpy.ops.object.light_add(type="AREA", location=(2, -2, 2))
+    key_light = bpy.context.object
+    key_light.name = "Key_Light"
+    key_light.data.energy = 1000
+    key_light.data.size = 5
+    key_light.rotation_euler = (0.6, 0.2, 0.8)  # Angle toward the subject
     
-    # # 2. Fill light - softer light from opposite side to fill shadows
-    # bpy.ops.object.light_add(type="AREA", location=(-2, -1, 1))
-    # fill_light = bpy.context.object
-    # fill_light.name = "Fill_Light"
-    # fill_light.data.energy = 400  # Less intense than key light
-    # fill_light.data.size = 7  # Larger for softer light
-    # fill_light.rotation_euler = (0.5, -0.2, -0.8)
+    # 2. Fill light - softer light from opposite side to fill shadows
+    bpy.ops.object.light_add(type="AREA", location=(-2, -1, 1))
+    fill_light = bpy.context.object
+    fill_light.name = "Fill_Light"
+    fill_light.data.energy = 400  # Less intense than key light
+    fill_light.data.size = 7  # Larger for softer light
+    fill_light.rotation_euler = (0.5, -0.2, -0.8)
     
-    # # 3. Rim/Back light - creates separation from background
-    # bpy.ops.object.light_add(type="AREA", location=(0, 3, 2))
-    # rim_light = bpy.context.object
-    # rim_light.name = "Rim_Light"
-    # rim_light.data.energy = 600
-    # rim_light.data.size = 4
-    # rim_light.rotation_euler = (0.8, 0, 0)  # Point down at the back of subject
+    # 3. Rim/Back light - creates separation from background
+    bpy.ops.object.light_add(type="AREA", location=(0, 3, 2))
+    rim_light = bpy.context.object
+    rim_light.name = "Rim_Light"
+    rim_light.data.energy = 600
+    rim_light.data.size = 4
+    rim_light.rotation_euler = (0.8, 0, 0)  # Point down at the back of subject
     
-    # # 4. Top light for general fill
-    # bpy.ops.object.light_add(type="AREA", location=(0, 0, 4))
-    # top_light = bpy.context.object
-    # top_light.name = "Top_Light"
-    # top_light.data.energy = 300
-    # top_light.data.size = 10
-    # top_light.rotation_euler = (0, 0, 0)  # Point straight down
+    # 4. Top light for general fill
+    bpy.ops.object.light_add(type="AREA", location=(0, 0, 4))
+    top_light = bpy.context.object
+    top_light.name = "Top_Light"
+    top_light.data.energy = 300
+    top_light.data.size = 10
+    top_light.rotation_euler = (0, 0, 0)  # Point straight down
     
     # set the background to white
     world = bpy.data.worlds['World']

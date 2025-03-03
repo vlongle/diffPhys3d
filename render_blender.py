@@ -79,7 +79,7 @@ render.resolution_x = args.resolution
 render.resolution_y = args.resolution
 render.resolution_percentage = 100
 bpy.context.scene.cycles.filter_width = 0.01
-bpy.context.scene.render.film_transparent = True
+# bpy.context.scene.render.film_transparent = True
 
 bpy.context.scene.cycles.device = 'GPU'
 bpy.context.scene.cycles.diffuse_bounces = 1
@@ -88,6 +88,10 @@ bpy.context.scene.cycles.transparent_max_bounces = 3
 bpy.context.scene.cycles.transmission_bounces = 3
 bpy.context.scene.cycles.samples = 32
 bpy.context.scene.cycles.use_denoising = True
+
+scene.world.use_nodes = True
+scene.view_settings.view_transform = 'Standard'
+scene.view_settings.look = 'None'
 
 
 def enable_cuda_devices():

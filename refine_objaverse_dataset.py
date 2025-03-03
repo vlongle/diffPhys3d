@@ -84,6 +84,9 @@ category_dict = {
   "elastic_materials": [
     "balloon", "elastic_band", "rubber_band", "rubber_glove", "swimsuit", 
     "tights_(clothing)", "trampoline"
+  ],
+  "tree": [
+      "tree", "ficus", "fern"
   ]
 }
 

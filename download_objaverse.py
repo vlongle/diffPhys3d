@@ -1,10 +1,10 @@
 import objaverse
 
 
-uid=["ecb91f433f144a7798724890f0528b23"]
-# objects = objaverse.load_objects(
-# uids=uid,
-# )
-# print("objects", objects)
+uid=["f420ea9edb914e1b9b7adebbacecc7d8"]
+objects = objaverse.load_objects(
+uids=uid,
+)
+print("objects", objects)
 
-print(objaverse.load_annotations(uid)[uid[0]]['categories'])
+# print(objaverse.load_annotations(uid)[uid[0]]['categories'])

@@ -59,7 +59,7 @@ render.resolution_y = 512
 render.resolution_percentage = 100
 
 scene.cycles.device = "GPU"
-scene.cycles.samples = 64
+scene.cycles.samples = 32
 scene.cycles.diffuse_bounces = 1
 scene.cycles.glossy_bounces = 1
 scene.cycles.transparent_max_bounces = 3
@@ -69,7 +69,7 @@ scene.cycles.use_denoising = True
 
 
 ### extra settings to ensure pure white background for gaussian splatting...
-scene.world.light_settings.use_ambient_occlusion = False
+# scene.world.light_settings.use_ambient_occlusion = False
 scene.world.use_nodes = True
 scene.view_settings.view_transform = 'Standard'
 scene.view_settings.look = 'None'
@@ -107,7 +107,7 @@ def add_lighting() -> None:
     bpy.ops.object.light_add(type="AREA", location=(2, -2, 2))
     key_light = bpy.context.object
     key_light.name = "Key_Light"
-    key_light.data.energy = 1000
+    key_light.data.energy = 500
     key_light.data.size = 5
     key_light.rotation_euler = (0.6, 0.2, 0.8)  # Angle toward the subject
     
@@ -115,7 +115,7 @@ def add_lighting() -> None:
     bpy.ops.object.light_add(type="AREA", location=(-2, -1, 1))
     fill_light = bpy.context.object
     fill_light.name = "Fill_Light"
-    fill_light.data.energy = 400  # Less intense than key light
+    fill_light.data.energy = 200  # Less intense than key light
     fill_light.data.size = 7  # Larger for softer light
     fill_light.rotation_euler = (0.5, -0.2, -0.8)
     
@@ -123,7 +123,7 @@ def add_lighting() -> None:
     bpy.ops.object.light_add(type="AREA", location=(0, 3, 2))
     rim_light = bpy.context.object
     rim_light.name = "Rim_Light"
-    rim_light.data.energy = 600
+    rim_light.data.energy = 300
     rim_light.data.size = 4
     rim_light.rotation_euler = (0.8, 0, 0)  # Point down at the back of subject
     
@@ -131,7 +131,7 @@ def add_lighting() -> None:
     bpy.ops.object.light_add(type="AREA", location=(0, 0, 4))
     top_light = bpy.context.object
     top_light.name = "Top_Light"
-    top_light.data.energy = 300
+    top_light.data.energy = 150
     top_light.data.size = 10
     top_light.rotation_euler = (0, 0, 0)  # Point straight down
     

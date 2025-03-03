@@ -4,12 +4,31 @@ Our key contribution
 
 
 ## Command
+My Blender version: 4.3.2
+### Curating objaverse dataset
+```bash
+python refine_objaverse_dataset.py
+```
+to get uids for each object category.
 
+```bash
+python curate_objaverse.py
+```
+to download the objaverse dataset.
+
+```bash
+python render_objaverse.py 
+```
+to render the objaverse dataset.
+
+
+### 
 1. Generate data
 ```bash
 cd /home/vlongle/code/diffPhys3d
-blender --background --python generate_blendernerf_data.py -- --object_path /home/vlongle/.objaverse/hf-objaverse-v1/glbs/000-064/ecb91f433f144a7798724890f0528b23.glb --num_images 100 --format NGP --camera_dist 1.8
+blender --background --python generate_blendernerf_data.py -- --object_path /home/vlongle/.objaverse/hf-objaverse-v1/glbs/000-064/ecb91f433f144a7798724890f0528b23.glb --num_images 100 --format NERF --camera_dist 1.8
 ```
+set `--format` to `NERF` for GS and `NGP` for Instant-NGP (faster NERF).
 
 2. Train GS
 ```bash

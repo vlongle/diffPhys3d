@@ -21,6 +21,7 @@ python render_objaverse.py
 ```
 to render the objaverse dataset.
 
+Data `glb` files are stored in `./assets/` and rendered images are stored in `./render_output/`.
 
 ### 
 1. Generate data

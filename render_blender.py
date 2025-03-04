@@ -329,6 +329,13 @@ else:
     bpy.data.objects['Area'].scale[2] = 100
 
 
+world = bpy.data.worlds['World']
+world.use_nodes = True
+bg_node = world.node_tree.nodes['Background']
+bg_node.inputs[0].default_value = (1.0, 1.0, 1.0, 1.0)  # Pure white
+bg_node.inputs[1].default_value = 1.0  # Full strength
+
+
 # Place camera
 
 cam = scene.objects['Camera']

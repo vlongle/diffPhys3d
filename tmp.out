@@ -8,12 +8,9 @@ Device enabled (CPU) = False
 Device enabled (OPTIX) = False
 Device enabled (OPTIX) = False
 Device enabled (OPTIX) = False
-19:03:47 | INFO: Data are loaded, start creating Blender stuff
-19:03:47 | INFO: Blender create Mesh node Object_0
-19:03:47 | INFO: Blender create Mesh node Object_1
-19:03:47 | INFO: Blender create Mesh node Object_2
-19:03:47 | INFO: Blender create Mesh node Object_3
-19:03:47 | INFO: Blender create Mesh node Object_4
-19:03:47 | INFO: Blender create Mesh node Object_5
-19:03:48 | INFO: Blender create Mesh node Object_6
-19:03:48 | INFO: glTF import finished in 0.68s
+19:03:54 | INFO: Data are loaded, start creating Blender stuff
+19:03:54 | INFO: Blender create Mesh node grp3_lo_blinn4_0
+19:03:54 | INFO: Blender create Mesh node grp1_lo_blinn4_0
+19:03:54 | INFO: Blender create Mesh node grp_4lo_blinn4_0
+19:03:54 | INFO: Blender create Mesh node grp2_lo_blinn4_0
+19:03:54 | INFO: glTF import finished in 0.01s

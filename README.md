@@ -36,8 +36,28 @@ set `--format` to `NERF` for GS and `NGP` for Instant-NGP (faster NERF).
 cd /home/vlongle/code/gaussian-splatting
 python train.py -s data/ecb91f433f144a7798724890f0528b23 -w --iterations 10_000
 ```
+train feature splatting
+```bash
+cd /home/vlongle/code/feature-splatting-inria
+conda activate feature_splatting
 
-3. Train PhysGaussian
+ python compute_obj_part_feature.py -s data/ecb91f433f144a7798724890f0528b23
+
+python train.py -s data/ecb91f433f144a7798724890f0528b23 -m output/ecb91f433f144a7798724890f0528b23 --iterations 10000
+
+python render.py -m output/ecb91f433f144a7798724890f0528b23 -s data/ecb91f433f144a7798724890f0528b23  --camera_slerp_list 0 1 --with_feat --clip_feat --text_query 'a tree pot' --step_size 10
+
+python pca_feature_viz.py --input_dir output/ecb91f433f144a7798724890f0528b23/interpolating_camera/ours_10000/renders --output_dir output/ecb91f433f144a7798724890f0528b23/interpolating_camera/ours_10000/pca_renders
+
+```
+
+
+View gaussian
+```
+./home/vlongle/code/gaussian-splatting/SIBR_viewers/install/bin/SIBR_gaussianViewer_app -m  {output_dir}
+```
+
+3. Simulate PhysGaussian
 ```bash
 cd /home/vlongle/code/PhysGaussian
 python gs_simulation.py --model_path ./model/test_white_bg_prune --output_path custom_output --config ./config/custom_config.json --render_img --compile_video --white_bg --debug

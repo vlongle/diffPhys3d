@@ -35,22 +35,28 @@ os.system(f"mkdir -p {DEFAULT_OBJAVERSE_PATH}")
 for category in categories_to_download:
     print(f"Processing category: {category}")
     
-    # Get UIDs for this category
-    category_uids = final_dataset.get(category, [])
+    # Get UIDs and scores for this category
+    category_items = final_dataset.get(category, [])
     
-    if not category_uids:
+    if not category_items:
         print(f"No objects found for category: {category}")
         continue
     
-    # Limit the number of UIDs if needed
-    if len(category_uids) > max_objs_per_class:
-        # Randomly sample to get a subset
-        category_uids = random.sample(category_uids, max_objs_per_class)
-        print(f"Limiting {category} to {max_objs_per_class} objects (from {len(final_dataset[category])} total)")
-    else:
-        print(f"Downloading all {len(category_uids)} {category} objects")
+    # Sort by similarity score (highest first)
+    category_items.sort(key=lambda x: x[1], reverse=True)
     
-    # Download the limited set of objects
+    # Limit the number of items if needed
+    if len(category_items) > max_objs_per_class:
+        # Take the top max_objs_per_class items with highest similarity scores
+        category_items = category_items[:max_objs_per_class]
+        print(f"Taking top {max_objs_per_class} {category} objects with highest similarity scores (from {len(final_dataset[category])} total)")
+    else:
+        print(f"Downloading all {len(category_items)} {category} objects")
+    
+    # Extract just the UIDs for downloading
+    category_uids = [item[0] for item in category_items]
+    
+    # Download the objects
     objects = objaverse.load_objects(
         uids=category_uids,
         download_processes=processes

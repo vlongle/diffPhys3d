@@ -139,10 +139,10 @@ for cat_key, cat_list in category_dict.items():
         if (obj_id not in assignment) or (sim_score > assignment[obj_id][1]):
             assignment[obj_id] = (cat_key, sim_score)
 
-# Build final_dataset = { category: [object_ids...] }
+# Build final_dataset = { category: [(object_id, sim_score)...] }
 final_dataset = defaultdict(list)
 for obj_id, (cat_key, sim_score) in assignment.items():
-    final_dataset[cat_key].append(obj_id)
+    final_dataset[cat_key].append((obj_id, sim_score))
 
 final_dataset = dict(final_dataset)
 

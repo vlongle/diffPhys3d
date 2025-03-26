@@ -8,7 +8,6 @@ Our key contribution
 ```
 conda create -n diffphys3d python=3.8
 conda activate diffphys3d
-pip install -r requirements.txt
 ```
 Install torch, torchvision according to your system's cuda version. On my desktop
 ```
@@ -19,6 +18,12 @@ on the grasp cluster,
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
 
+Then,
+```
+pip install ninja git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch
+pip install -r requirements.txt
+```
+
 Nerfstudio specific stuff:
 ```
 cd third_party/nerfstudio
@@ -27,7 +32,6 @@ cd ../../
 cd third_party/f3rm
 pip install -e .
 ## will take forever to install tiny-cuda-nn
-pip install ninja git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch
 pip install "git+https://github.com/facebookresearch/pytorch3d.git@stable"
 pip install viser==0.2.7
 pip install tyro==0.6.6

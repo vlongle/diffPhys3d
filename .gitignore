@@ -6,3 +6,5 @@ assets/
 **.tar.xz
 **outputs/
 **.zip
+**data/
+**BlenderNeRF/

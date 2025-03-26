@@ -13,7 +13,7 @@ import json
 import objaverse
 
 ## install the addon the first time
-# bpy.ops.preferences.addon_install(filepath='BlenderNeRF-main.zip')
+bpy.ops.preferences.addon_install(filepath='BlenderNeRF-main.zip')
 bpy.ops.preferences.addon_enable(module='BlenderNeRF-main')
 
 def get_default_output_dir(format_type):

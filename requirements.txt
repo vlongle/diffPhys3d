@@ -1,3 +1,4 @@
 objaverse
 sentence-transformers
-torch
+# third_party/nerfstudio
+# third_party/f3rm

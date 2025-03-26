@@ -2,3 +2,7 @@
 __pycache__
 assets/
 **render_output/
+**blender**
+**.tar.xz
+**outputs/
+**.zip

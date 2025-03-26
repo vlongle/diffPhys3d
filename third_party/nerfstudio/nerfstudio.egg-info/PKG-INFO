@@ -1,0 +1,94 @@
+Metadata-Version: 2.1
+Name: nerfstudio
+Version: 1.1.5
+Summary: All-in-one repository for state-of-the-art NeRFs
+License: Apache 2.0
+Project-URL: Documentation, https://docs.nerf.studio
+Classifier: Development Status :: 3 - Alpha
+Classifier: Programming Language :: Python
+Requires-Python: >=3.8.0
+Description-Content-Type: text/markdown
+Requires-Dist: appdirs>=1.4
+Requires-Dist: av>=9.2.0
+Requires-Dist: comet_ml>=3.33.8
+Requires-Dist: cryptography>=38
+Requires-Dist: tyro>=0.9.8
+Requires-Dist: gdown>=4.6.0
+Requires-Dist: ninja>=1.10
+Requires-Dist: h5py>=2.9.0
+Requires-Dist: imageio>=2.21.1
+Requires-Dist: importlib-metadata>=6.0.0; python_version < "3.10"
+Requires-Dist: ipywidgets>=7.6
+Requires-Dist: jaxtyping>=0.2.15
+Requires-Dist: jupyterlab>=3.3.4
+Requires-Dist: matplotlib>=3.6.0
+Requires-Dist: mediapy>=1.1.0
+Requires-Dist: msgpack>=1.0.4
+Requires-Dist: msgpack_numpy>=0.4.8
+Requires-Dist: nerfacc==0.5.2
+Requires-Dist: open3d>=0.16.0
+Requires-Dist: opencv-python-headless==4.10.0.84
+Requires-Dist: Pillow>=10.3.0
+Requires-Dist: plotly>=5.7.0
+Requires-Dist: protobuf!=3.20.0,<=3.20.3
+Requires-Dist: pymeshlab>=2022.2.post2; platform_machine != "arm64" and platform_machine != "aarch64"
+Requires-Dist: pymeshlab<2023.12.post2; sys_platform == "win32" and platform_machine != "arm64" and platform_machine != "aarch64"
+Requires-Dist: pyngrok>=5.1.0
+Requires-Dist: python-socketio>=5.7.1
+Requires-Dist: pyquaternion>=0.9.9
+Requires-Dist: rawpy>=0.18.1; platform_machine != "arm64"
+Requires-Dist: newrawpy>=1.0.0b0; platform_machine == "arm64"
+Requires-Dist: requests
+Requires-Dist: rich>=12.5.1
+Requires-Dist: scikit-image>=0.19.3
+Requires-Dist: splines==0.3.0
+Requires-Dist: tensorboard>=2.13.0
+Requires-Dist: torch>=1.13.1
+Requires-Dist: torchvision>=0.14.1
+Requires-Dist: torchmetrics[image]>=1.0.1
+Requires-Dist: typing_extensions>=4.4.0
+Requires-Dist: viser==0.2.7
+Requires-Dist: nuscenes-devkit>=1.1.1
+Requires-Dist: wandb>=0.13.3
+Requires-Dist: xatlas
+Requires-Dist: trimesh>=3.20.2
+Requires-Dist: timm==0.6.7
+Requires-Dist: gsplat==1.4.0
+Requires-Dist: pytorch-msssim
+Requires-Dist: pathos
+Requires-Dist: packaging
+Requires-Dist: fpsample
+Requires-Dist: tensorly
+Provides-Extra: gen
+Requires-Dist: diffusers==0.16.1; extra == "gen"
+Requires-Dist: transformers==4.29.2; extra == "gen"
+Requires-Dist: accelerate==0.19.0; extra == "gen"
+Requires-Dist: bitsandbytes==0.39.0; extra == "gen"
+Requires-Dist: sentencepiece==0.1.99; extra == "gen"
+Provides-Extra: dev
+Requires-Dist: pre-commit==3.3.2; extra == "dev"
+Requires-Dist: pytest==7.1.2; extra == "dev"
+Requires-Dist: pytest-xdist==2.5.0; extra == "dev"
+Requires-Dist: ruff>=0.6.1; extra == "dev"
+Requires-Dist: sshconf==0.2.5; extra == "dev"
+Requires-Dist: pycolmap>=0.3.0; extra == "dev"
+Requires-Dist: diffusers==0.16.1; extra == "dev"
+Requires-Dist: opencv-stubs==0.0.7; extra == "dev"
+Requires-Dist: transformers==4.29.2; extra == "dev"
+Requires-Dist: pyright==1.1.331; extra == "dev"
+Requires-Dist: projectaria-tools>=1.3.1; sys_platform != "win32" and extra == "dev"
+Requires-Dist: torch<2.2,>=1.13.1; extra == "dev"
+Requires-Dist: awscli==1.33.18; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: furo==2022.09.29; extra == "docs"
+Requires-Dist: ipython==8.6.0; extra == "docs"
+Requires-Dist: readthedocs-sphinx-search==0.1.2; extra == "docs"
+Requires-Dist: myst-nb==0.16.0; extra == "docs"
+Requires-Dist: nbconvert==7.2.5; extra == "docs"
+Requires-Dist: nbformat==5.9.2; extra == "docs"
+Requires-Dist: sphinx==5.2.1; extra == "docs"
+Requires-Dist: sphinxemoji==0.2.0; extra == "docs"
+Requires-Dist: sphinx-argparse==0.3.1; extra == "docs"
+Requires-Dist: sphinx-copybutton==0.5.0; extra == "docs"
+Requires-Dist: sphinx-design==0.2.0; extra == "docs"
+Requires-Dist: sphinxext-opengraph==0.6.3; extra == "docs"

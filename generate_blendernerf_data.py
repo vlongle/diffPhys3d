@@ -10,6 +10,11 @@ import bpy
 from mathutils import Vector
 import shutil
 import json
+import objaverse
+
+## install the addon the first time
+# bpy.ops.preferences.addon_install(filepath='BlenderNeRF-main.zip')
+bpy.ops.preferences.addon_enable(module='BlenderNeRF-main')
 
 def get_default_output_dir(format_type):
     """Determine the default output directory based on the format."""
@@ -21,10 +26,14 @@ def get_default_output_dir(format_type):
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
+    "--obj_id",
+    type=str,
+    help="Objaverse object ID to process",
+)
+parser.add_argument(
     "--object_path",
     type=str,
-    required=True,
-    help="Path to the object file",
+    help="Path to the object file (alternative to obj_id)",
 )
 parser.add_argument("--output_dir", type=str, default=None, 
                    help="Path to output directory. If not provided, will use format-specific default location.")
@@ -35,8 +44,23 @@ parser.add_argument("--num_images", type=int, default=12)
 parser.add_argument("--camera_dist", type=float, default=1.5)
 parser.add_argument("--format", type=str, default="NERF", choices=["NERF", "NGP"])
 parser.add_argument("--only_normalize", action='store_true', help="Only normalize the scene, don't render")
+parser.add_argument("--transparent_bg", action='store_true', help="Render with transparent background")
 argv = sys.argv[sys.argv.index("--") + 1 :]
 args = parser.parse_args(argv)
+
+if args.obj_id is None and args.object_path is None:
+    raise ValueError("Either --obj_id or --object_path must be provided")
+
+# If obj_id is provided, get the object path from Objaverse
+if args.obj_id is not None:
+    print(f"Looking up object path for ID: {args.obj_id}")
+    objects = objaverse.load_objects(uids=[args.obj_id])
+    if not objects or args.obj_id not in objects:
+        raise ValueError(f"Could not find object with ID: {args.obj_id}")
+    args.object_path = objects[args.obj_id]
+    print(f"Found object path: {args.object_path}")
+
+
 
 # Set the output directory if not provided
 if args.output_dir is None:
@@ -76,7 +100,7 @@ scene.view_settings.look = 'None'
 
 ## NOTE: for some reason, with transparent background, gaussian splatting will learn this weird
 ## artifacts like floating celling stuff surrounding the object.
-scene.render.film_transparent = args.format == "NGP" 
+scene.render.film_transparent = args.transparent_bg
 
 def sample_point_on_sphere(radius: float) -> Tuple[float, float, float]:
     theta = random.random() * 2 * math.pi
@@ -135,12 +159,16 @@ def add_lighting() -> None:
     top_light.data.size = 10
     top_light.rotation_euler = (0, 0, 0)  # Point straight down
     
-    # set the background to white
-    world = bpy.data.worlds['World']
-    world.use_nodes = True
-    bg_node = world.node_tree.nodes['Background']
-    bg_node.inputs[0].default_value = (1.0, 1.0, 1.0, 1.0)  # Pure white
-    bg_node.inputs[1].default_value = 1.0  # Full strength
+    if not args.transparent_bg:
+        world = bpy.data.worlds['World']
+        world.use_nodes = True
+        bg_node = world.node_tree.nodes['Background']
+        # bg_node.inputs[0].default_value = (1.0, 1.0, 1.0, 1.0)  # Pure white
+        ## gray background
+        # bg_node.inputs[0].default_value = (0.6, 0.6, 0.6, 1.0) ## gray
+        ## NOTE: the bg color MATTERS a lot it seems for generating good distilled nerf for some reason...
+        bg_node.inputs[0].default_value = (0.1, 0.1, 0.1, 1.0) ## gray
+        bg_node.inputs[1].default_value = 1.0  # Full strength
 
 
 # def add_lighting() -> None:

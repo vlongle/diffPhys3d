@@ -4,3 +4,5 @@ __pycache__
 **.tar.xz
 **outputs/
 **.zip
+**data/
+**BlenderNeRF/

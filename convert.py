@@ -10,7 +10,8 @@ def convert_images(obj_id):
         obj_id (str): The object ID of the dataset to process
     """
     # Define paths based on the object ID
-    source_data = f"/mnt/kostas-graid/datasets/vlongle/diffphys3d/data/{obj_id}"
+    # source_data = f"/mnt/kostas-graid/datasets/vlongle/diffphys3d/data/{obj_id}"
+    source_data = f"data/{obj_id}"
     input_dir = f"{source_data}/train"
     output_dir = f"{source_data}/rgb_train"
     os.makedirs(output_dir, exist_ok=True)

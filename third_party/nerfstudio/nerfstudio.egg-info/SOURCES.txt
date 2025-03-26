@@ -32,7 +32,6 @@ nerfstudio/data/datamanagers/random_cameras_datamanager.py
 nerfstudio/data/dataparsers/__init__.py
 nerfstudio/data/dataparsers/arkitscenes_dataparser.py
 nerfstudio/data/dataparsers/base_dataparser.py
-nerfstudio/data/dataparsers/blender_dataparser.py
 nerfstudio/data/dataparsers/colmap_dataparser.py
 nerfstudio/data/dataparsers/dnerf_dataparser.py
 nerfstudio/data/dataparsers/dycheck_dataparser.py
@@ -141,8 +140,6 @@ nerfstudio/scripts/process_data.py
 nerfstudio/scripts/render.py
 nerfstudio/scripts/texture.py
 nerfstudio/scripts/train.py
-nerfstudio/scripts/blender/__init__.py
-nerfstudio/scripts/blender/nerfstudio_blender.py
 nerfstudio/scripts/completions/__init__.py
 nerfstudio/scripts/completions/install.py
 nerfstudio/scripts/completions/setup.bash

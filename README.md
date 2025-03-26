@@ -43,6 +43,11 @@ Install objaverse for blender's python
 /mnt/kostas-graid/sw/envs/vlongle/blender/blender-4.3.2-linux-x64/4.3/python/bin/python3.11 -m pip install objaverse
 ```
 
+Install some f3rm robot specific stuff
+```
+pip install --upgrade PyMCubes==0.1.4
+pip install params-proto python-slugify
+```
 ## Workflow
 1. Download the object
 ```
@@ -129,3 +134,13 @@ ns-train f3rm --data /mnt/kostas-graid/datasets/vlongle/diffphys3d/data/ecb91f43
 
 
 ns-render dataset --load-config outputs/ecb91f433f144a7798724890f0528b23/f3rm/2025-03-26_060324/config.yml --output-path clip_grid_outputs/ecb91f433f144a7798724890f0528b23 --split=train --rendered_output_names=rgb
+
+
+## Debugging tips
+
+f3rm_robot/args.py is important for checking min_bounds and max_bounds.
+
+
+
+
+

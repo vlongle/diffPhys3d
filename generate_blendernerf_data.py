@@ -105,7 +105,7 @@ render.resolution_y = 512
 render.resolution_percentage = 100
 
 scene.cycles.device = "GPU"
-scene.cycles.samples = 32
+scene.cycles.samples = 128
 scene.cycles.diffuse_bounces = 1
 scene.cycles.glossy_bounces = 1
 scene.cycles.transparent_max_bounces = 3
@@ -187,9 +187,9 @@ def add_lighting() -> None:
         bg_node = world.node_tree.nodes['Background']
         # bg_node.inputs[0].default_value = (1.0, 1.0, 1.0, 1.0)  # Pure white
         ## gray background
-        # bg_node.inputs[0].default_value = (0.6, 0.6, 0.6, 1.0) ## gray
         ## NOTE: the bg color MATTERS a lot it seems for generating good distilled nerf for some reason...
-        bg_node.inputs[0].default_value = (0.1, 0.1, 0.1, 1.0) ## gray
+        ## NOTE: also camera_dist matters a lot for this...
+        bg_node.inputs[0].default_value = (0.8, 0.8, 0.8, 1.0) ## gray
         bg_node.inputs[1].default_value = 1.0  # Full strength
 
 

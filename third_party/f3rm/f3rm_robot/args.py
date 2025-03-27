@@ -36,8 +36,8 @@ class OptimizationArgs(ParamsProto, cli_parse=False):
     # min_bounds: Tuple[float, float, float] = (0.1, -0.45, 0.005)
     # max_bounds: Tuple[float, float, float] = (0.8, 0.45, 0.35)
     ## For our own scene:
-    # min_bounds: Tuple[float, float, float] = (-0.5, -0.5, -0.5)
-    # max_bounds: Tuple[float, float, float] = (0.5, 0.5, 0.5)
+    min_bounds: Tuple[float, float, float] = (-0.5, -0.5, -0.5)
+    max_bounds: Tuple[float, float, float] = (0.5, 0.5, 0.5)
 
     ## TODO: for some reason, the scene box is a two-cubic cube instead
     ## of a unit CUBE. WHAT'S GOING ON?????
@@ -45,8 +45,8 @@ class OptimizationArgs(ParamsProto, cli_parse=False):
     # max_bounds: Tuple[float, float, float] = (1.0, 1.0, 1.0)
     ## The normalization from here is a bit weird but whatever...
     ## TODO: literally I don't understand why the scene bounds are like this...
-    min_bounds: Tuple[float, float, float] = (-1.0, -1.0, -2.0)
-    max_bounds: Tuple[float, float, float] = (1.0, 1.0, 0.25)
+    # min_bounds: Tuple[float, float, float] = (-1.0, -1.0, -2.0)
+    # max_bounds: Tuple[float, float, float] = (1.0, 1.0, 0.25)
 
     # Visualization
     visualize: bool = Proto(True, help="Whether to enable visualization of the optimization. This slows down the run.")

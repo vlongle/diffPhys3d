@@ -86,7 +86,7 @@ bpy.context.scene.cycles.diffuse_bounces = 1
 bpy.context.scene.cycles.glossy_bounces = 1
 bpy.context.scene.cycles.transparent_max_bounces = 3
 bpy.context.scene.cycles.transmission_bounces = 3
-bpy.context.scene.cycles.samples = 32
+bpy.context.scene.cycles.samples = 64
 bpy.context.scene.cycles.use_denoising = True
 
 scene.world.use_nodes = True

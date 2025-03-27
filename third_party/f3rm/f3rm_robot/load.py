@@ -17,7 +17,11 @@ def load_nerf_to_world(dataset: Path) -> Transform3d:
     """
     n2w_path = dataset / "nerf_to_world.json"
     if not n2w_path.exists():
-        raise ValueError(f"Could not find nerf_to_world.json in {dataset}")
+        # raise ValueError(f"Could not find nerf_to_world.json in {dataset}")
+        ## assume identity transform
+        nerf_to_world = torch.eye(4)
+        nerf_to_world = Transform3d(matrix=nerf_to_world.T)
+        return nerf_to_world
 
     with n2w_path.open("r") as f:
         nerf_to_world_dict = json.load(f)

@@ -5,14 +5,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--obj_id", type=str, help="Objaverse object ID to process")
     parser.add_argument("--num_images", type=int, help="Number of images to render", default=100)
-    parser.add_argument("--train_steps", type=int, help="Number of training steps", default=30_000)
+    parser.add_argument("--train_steps", type=int, help="Number of training steps", default=10_000)
+    parser.add_argument("--camera_dist", type=float, help="Camera distance", default=1.8)
     args = parser.parse_args()
 
     is_on_desktop = on_desktop()
     path_prefix = "/mnt/kostas-graid/datasets/vlongle/diffphys3d" if not is_on_desktop else "."
 
     download_cmd = f"python download_objaverse.py --obj_id {args.obj_id}"
-    blender_render_cmd = f'blender --background --python generate_blendernerf_data.py -- --obj_id {args.obj_id} --num_images {args.num_images} --format NGP --camera_dist 1.8 --output_dir {path_prefix}/data'
+    blender_render_cmd = f'blender --background --python generate_blendernerf_data.py -- --obj_id {args.obj_id} --num_images {args.num_images} --format NGP --camera_dist {args.camera_dist} --output_dir {path_prefix}/data'
     if not is_on_desktop:
         blender_render_cmd = f'export PATH="/mnt/kostas-graid/sw/envs/vlongle/blender/blender-4.3.2-linux-x64:$PATH"; {blender_render_cmd}'
     convert_cmd = f"python convert.py --obj_id {args.obj_id}"

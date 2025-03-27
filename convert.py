@@ -12,25 +12,22 @@ def convert_images(obj_id):
     # Define paths based on the object ID
     # source_data = f"/mnt/kostas-graid/datasets/vlongle/diffphys3d/data/{obj_id}"
     source_data = f"data/{obj_id}"
-    input_dir = f"{source_data}/train"
-    output_dir = f"{source_data}/rgb_train"
+    # source_data = f"feat_data/{obj_id}"
+    output_dir = f"{source_data}/train"
     os.makedirs(output_dir, exist_ok=True)
     
-    # Convert images from RGBA to RGB
-    for filename in os.listdir(input_dir):
+    
+    for filename in os.listdir(output_dir):
         if filename.endswith((".png", ".jpg", ".jpeg")):
-            img_path = os.path.join(input_dir, filename)
+            img_path = os.path.join(output_dir, filename)
             img = Image.open(img_path)
             # Convert to RGB if it has an alpha channel
             if img.mode == 'RGBA':
                 img = img.convert('RGB')
             img.save(os.path.join(output_dir, filename))
+            # print("img.mode", img.mode, "saved to", os.path.join(output_dir, filename))
     
-    # Rename folders to match expected structure
-    os.rename(input_dir, f"{source_data}/rgba_train")
-    os.rename(output_dir, f"{source_data}/train")
-    
-    # Rename transforms file
+    # # Rename transforms file
     if os.path.exists(f"{source_data}/transforms_train.json"):
         os.rename(f"{source_data}/transforms_train.json", f"{source_data}/transforms.json")
     

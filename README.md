@@ -42,6 +42,17 @@ Install objaverse for blender's python
 ```
 /mnt/kostas-graid/sw/envs/vlongle/blender/blender-4.3.2-linux-x64/4.3/python/bin/python3.11 -m pip install objaverse
 ```
+Might have to install pip for older blender version:
+```
+# First, download get-pip.py
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+
+# Then install pip using Blender's Python
+/home/vlongle/code/diffPhys3d/objaverse_renderer/blender-3.2.2-linux-x64/3.2/python/bin/python3.10 get-pip.py
+
+# Now you should be able to install objaverse
+/home/vlongle/code/diffPhys3d/objaverse_renderer/blender-3.2.2-linux-x64/3.2/python/bin/python3.10 -m pip install objaverse
+```
 
 Install some f3rm robot specific stuff
 ```
@@ -140,6 +151,45 @@ ns-render dataset --load-config outputs/ecb91f433f144a7798724890f0528b23/f3rm/20
 
 f3rm_robot/args.py is important for checking min_bounds and max_bounds.
 
+
+
+Poor results on synthetic dataset:
+
+
+https://github.com/graphdeco-inria/gaussian-splatting/issues/1035
+
+https://github.com/nerfstudio-project/nerfstudio/issues/806
+
+
+https://github.com/graphdeco-inria/gaussian-splatting/issues/1035
+
+https://github.com/nerfstudio-project/nerfstudio/issues/2472
+
+
+## TODO:
+need to 
+Check this
+
+```
+collider_params:
+  far_plane: 6.0
+  near_plane: 2.0
+enable_collider: true
+```
+and
+```
+"aabb_scale": 4
+```
+in the data generation
+
+and
+
+```
+auto_scale_poses: true
+...
+scene_scale: 1.0
+```
+in the config file.
 
 
 

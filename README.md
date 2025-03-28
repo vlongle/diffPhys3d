@@ -59,8 +59,13 @@ Install some f3rm robot specific stuff
 pip install --upgrade PyMCubes==0.1.4
 pip install params-proto python-slugify
 ```
+
+
+We also modify the BlenderNerf add-on to allow random sampling of sphere radius. Under `third_party/BlenderNerf-main-custom`. You should zip this folder and install it as a Blender add-on using the GUI.
+
+
 ## Workflow
-1. Download the object
+<!-- 1. Download the object
 ```
 python download_objaverse.py --obj_id ecb91f433f144a7798724890f0528b23
 ```
@@ -88,7 +93,7 @@ ns-render dataset --load-config outputs/f420ea9edb914e1b9b7adebbacecc7d8/f3rm/20
 
 ```
 python voxel_to_pc.py --scene outputs/ecb91f433f144a7798724890f0528b23/f3rm/2025-03-26_083416/config.yml --output outputs/ecb91f433f144a7798724890f0528b23/f3rm/2025-03-26_083416/clip_features.npz
-```
+``` -->
 
 ## Command
 My Blender version: 4.3.2
@@ -192,5 +197,8 @@ scene_scale: 1.0
 in the config file.
 
 
-
-
+## DEBUG
+Right now, two issues:
+- the inconsistent scene bound after training
+    + a bit hard to debug because the hard-coded contraction stuff in `feature_field.py`
+- inability to train from further zoom probably due to non-volume region from near and far plane.

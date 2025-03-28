@@ -70,6 +70,7 @@ parser.add_argument("--camera_dist", type=float, default=1.2, help="Camera dista
 parser.add_argument("--format", type=str, default="NERF", choices=["NERF", "NGP"])
 parser.add_argument("--only_normalize", action='store_true', help="Only normalize the scene, don't render")
 parser.add_argument("--transparent_bg", action='store_true', help="Render with transparent background")
+parser.add_argument("--scene_scale", type=float, default=1.0, help="Scale factor to apply after normalization")
 argv = sys.argv[sys.argv.index("--") + 1 :]
 args = parser.parse_args(argv)
 
@@ -279,7 +280,7 @@ def normalize_scene():
     bbox_min, bbox_max = scene_bbox()
     scale = 1 / max(bbox_max - bbox_min)
     for obj in scene_root_objects():
-        obj.scale = obj.scale * scale
+        obj.scale = obj.scale * scale * args.scene_scale
     
     # Apply scale to matrix_world.
     bpy.context.view_layer.update()
@@ -319,7 +320,8 @@ def render_with_blendernerf(object_uid: str) -> None:
     # Global parameters
     scene.train_data = True
     scene.test_data = False
-    scene.aabb = 4  # Smaller bounding box to focus on the object
+    # scene.aabb = 4  # Smaller bounding box to focus on the object
+    scene.aabb = 2 # Smaller bounding box to focus on the object
     scene.render_frames = True
     scene.nerf = args.format == "NERF"  # True for NeRF format, False for NGP format
     scene.save_path = output_dir

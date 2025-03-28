@@ -10,6 +10,7 @@ if __name__ == "__main__":
     parser.add_argument("--camera_dist_max", type=float, help="Maximum camera distance", default=1.4)
     # parser.add_argument("--camera_dist", type=float, help="Camera distance (deprecated, use min/max instead)", default=1.2)
     parser.add_argument("--transparent_bg", type=bool, help="Use transparent background", default=True)
+    parser.add_argument("--scene_scale", type=float, help="Scene scale", default=1.0)
     args = parser.parse_args()
 
     is_on_desktop = on_desktop()
@@ -21,37 +22,33 @@ if __name__ == "__main__":
         blender_render_cmd += ' --transparent_bg'
     if not is_on_desktop:
         blender_render_cmd = f'export PATH="/mnt/kostas-graid/sw/envs/vlongle/blender/blender-4.3.2-linux-x64:$PATH"; {blender_render_cmd}'
+    blender_render_cmd += f" --scene_scale {args.scene_scale}"
+
     convert_cmd = f"python convert.py --obj_id {args.obj_id}"
     train_cmd = f"ns-train f3rm --data {path_prefix}/data/{args.obj_id} --max-num-iterations {args.train_steps} --viewer.quit-on-train-completion True --save_only_latest_checkpoint False --output_dir {path_prefix}/outputs"
 
 
-    train_cmd += " --auto-scale-poses False"
     print("train_cmd", train_cmd)
 
 
 
-    # blender_render_cmd = f"cd objaverse_renderer; blender-3.2.2-linux-x64/blender --background --python blender_script.py -- --obj_id {args.obj_id} --num_renders {args.num_images} --output_dir ../{path_prefix}/allen_data/{args.obj_id}"
 
-    # os.system(download_cmd)
-    # os.system(blender_render_cmd)
+    os.system(download_cmd)
+    os.system(blender_render_cmd)
 
 
-    # # convert_allen_cmd = f"python convert_allen.py --blender_rendered_dir {path_prefix}/allen_data/{args.obj_id} --target_dir {path_prefix}/allen_data_ngp/{args.obj_id}"
-    # # os.system(convert_allen_cmd)
-
-    # # train_cmd = f"ns-train f3rm --data {path_prefix}/allen_data_ngp/{args.obj_id} --max-num-iterations {args.train_steps} --viewer.quit-on-train-completion True --save_only_latest_checkpoint False --output_dir {path_prefix}/outputs"
-
-    # os.system(convert_cmd)
+    os.system(convert_cmd)
     os.system(train_cmd)
     
     # # #  # Find the latest config file in the output directory
-    # output_dir = f"{path_prefix}/outputs/{args.obj_id}/f3rm"
-    # latest_run = max([os.path.join(output_dir, d) for d in os.listdir(output_dir) if os.path.isdir(os.path.join(output_dir, d))], key=os.path.getmtime)
-    # config_path = os.path.join(latest_run, "config.yml")
+    output_dir = f"{path_prefix}/outputs/{args.obj_id}/f3rm"
+    # output_dir = f"{path_prefix}/outputs/{args.obj_id}_cam_1/f3rm"
+    latest_run = max([os.path.join(output_dir, d) for d in os.listdir(output_dir) if os.path.isdir(os.path.join(output_dir, d))], key=os.path.getmtime)
+    config_path = os.path.join(latest_run, "config.yml")
     
-    # render_output_dir = f"{path_prefix}/render_outputs/{args.obj_id}"
-    # ns_render_cmd = f"ns-render dataset --load-config {config_path} --output-path {render_output_dir} --split=train --rendered_output_names=rgb"
-    # os.system(ns_render_cmd)
+    render_output_dir = f"{path_prefix}/render_outputs/{args.obj_id}"
+    ns_render_cmd = f"ns-render dataset --load-config {config_path} --output-path {render_output_dir} --split=train --rendered_output_names=rgb"
+    os.system(ns_render_cmd)
 
 
     # voxel_cmd = f"python voxel_to_pc.py --scene {config_path} --output {render_output_dir}/clip_features.npz"

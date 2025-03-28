@@ -45,10 +45,16 @@ class OptimizationArgs(ParamsProto, cli_parse=False):
     # max_bounds: Tuple[float, float, float] = (1.0, 1.0, 1.0)
     ## The normalization from here is a bit weird but whatever...
     ## TODO: literally I don't understand why the scene bounds are like this...
-    min_bounds: Tuple[float, float, float] = (-1.0, -1.0, -2.0)
-    max_bounds: Tuple[float, float, float] = (1.0, 1.0, 0.25)
+    # min_bounds: Tuple[float, float, float] = (-1.0, -1.0, -2.0)
+    # max_bounds: Tuple[float, float, float] = (1.0, 1.0, 0.25)
     # max_bounds: Tuple[float, float, float] = (1.0, 1.0, 1.0)
 
+    
+    # min_bounds: Tuple[float, float, float] = (-1.0, -1.0, -2.0)
+    # max_bounds: Tuple[float, float, float] = (1.0, 1.0, 0.25)
+
+    min_bounds: Tuple[float, float, float] = (-2.0, -2.0, -2.0)
+    max_bounds: Tuple[float, float, float] = (2.0, 2.0, 0.25)
     # Visualization
     visualize: bool = Proto(True, help="Whether to enable visualization of the optimization. This slows down the run.")
     viser_host: str = Proto("localhost", help="Host to use for viser visualization server.")

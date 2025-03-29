@@ -1,0 +1,4 @@
+initial: 1000000
+density_masked: 66412
+gray_filtered: 19439
+language_masked: 5697

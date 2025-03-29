@@ -761,8 +761,9 @@ class DatasetRender(BaseRender):
         
 
         ## HACK: for rendering
-        pipeline.model.set_language_queries(self.lang_positives, self.lang_negatives)
-        pipeline.model.feature_field.set_grid_feature(self.grid_feature_path)
+        if hasattr(pipeline.model, "set_language_queries"):
+            pipeline.model.set_language_queries(self.lang_positives, self.lang_negatives)
+            pipeline.model.feature_field.set_grid_feature(self.grid_feature_path)
 
         data_manager_config = config.pipeline.datamanager
         assert isinstance(data_manager_config, (VanillaDataManagerConfig, FullImageDatamanagerConfig))

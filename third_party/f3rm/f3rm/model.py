@@ -137,6 +137,7 @@ class FeatureFieldModel(NerfactoModel):
         self.feature_field = FeatureField(
             feature_dim=feature_dim,
             spatial_distortion=self.field.spatial_distortion,
+            aabb=self.scene_box.aabb,
             use_pe=self.config.feat_use_pe,
             pe_n_freq=self.config.feat_pe_n_freq,
             num_levels=self.config.feat_num_levels,

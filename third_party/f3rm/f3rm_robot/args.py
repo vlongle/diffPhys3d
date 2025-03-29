@@ -44,6 +44,9 @@ class OptimizationArgs(ParamsProto, cli_parse=False):
     # min_bounds: Tuple[float, float, float] = (-1.0, -1.0, -1.0)
     # max_bounds: Tuple[float, float, float] = (1.0, 1.0, 1.0)
 
+    # min_bounds: Tuple[float, float, float] = (-0.5, -0.5, -0.5)
+    # max_bounds: Tuple[float, float, float] = (0.5, 0.5, 0.5)
+
     min_bounds: Tuple[float, float, float] = (-0.5, -0.5, -0.5)
     max_bounds: Tuple[float, float, float] = (0.5, 0.5, 0.5)
     ## The normalization from here is a bit weird but whatever...

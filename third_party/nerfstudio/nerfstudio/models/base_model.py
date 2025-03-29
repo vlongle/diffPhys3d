@@ -34,7 +34,7 @@ from nerfstudio.configs.config_utils import to_immutable_dict
 from nerfstudio.data.scene_box import OrientedBox, SceneBox
 from nerfstudio.engine.callbacks import TrainingCallback, TrainingCallbackAttributes
 from nerfstudio.model_components.scene_colliders import NearFarCollider
-
+from nerfstudio.utils.rich_utils import CONSOLE
 
 # Model related configs
 @dataclass
@@ -43,7 +43,8 @@ class ModelConfig(InstantiateConfig):
 
     _target: Type = field(default_factory=lambda: Model)
     """target class to instantiate"""
-    enable_collider: bool = True
+    # enable_collider: bool = True
+    enable_collider: bool = False
     """Whether to create a scene collider to filter rays."""
     collider_params: Optional[Dict[str, float]] = to_immutable_dict({"near_plane": 2.0, "far_plane": 6.0})
     """parameters to instantiate scene collider with"""
@@ -108,6 +109,7 @@ class Model(nn.Module):
             self.collider = NearFarCollider(
                 near_plane=self.config.collider_params["near_plane"], far_plane=self.config.collider_params["far_plane"]
             )
+            CONSOLE.print(f"[DEBUG] IN BASE MODEL::: USING NEAR FAR COLLIDER with near_plane={self.config.collider_params['near_plane']} and far_plane={self.config.collider_params['far_plane']}")
 
     @abstractmethod
     def get_param_groups(self) -> Dict[str, List[Parameter]]:
@@ -138,6 +140,8 @@ class Model(nn.Module):
         """
 
         if self.collider is not None:
+            # CONSOLE.print(f"[DEBUG] IN FORWARDING RAY_BUNDLE::: USING {self.collider.near_plane} and {self.collider.far_plane}")
+            # exit(0)
             ray_bundle = self.collider(ray_bundle)
 
         return self.get_outputs(ray_bundle)

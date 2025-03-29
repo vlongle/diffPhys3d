@@ -46,6 +46,7 @@ from nerfstudio.model_components.scene_colliders import NearFarCollider
 from nerfstudio.model_components.shaders import NormalsShader
 from nerfstudio.models.base_model import Model, ModelConfig
 from nerfstudio.utils import colormaps
+from nerfstudio.utils.rich_utils import CONSOLE
 
 
 @dataclass
@@ -56,6 +57,15 @@ class NerfactoModelConfig(ModelConfig):
     near_plane: float = 0.05
     """How far along the ray to start sampling."""
     far_plane: float = 1000.0
+
+
+
+
+    ## NOTE: HACK: my own values for testing
+    # near_plane: float = 2.0
+    # """How far along the ray to start sampling."""
+    # far_plane: float = 6.0
+
     """How far along the ray to stop sampling."""
     background_color: Literal["random", "last_sample", "black", "white"] = "last_sample"
     """Whether to randomize the background color."""
@@ -118,7 +128,11 @@ class NerfactoModelConfig(ModelConfig):
     """Whether use single jitter or not for the proposal networks."""
     predict_normals: bool = False
     """Whether to predict normals or not."""
-    disable_scene_contraction: bool = False
+    # disable_scene_contraction: bool = False
+
+    ## NOTE: HACK: We'll disable scene contraction for Blender synthetic data
+    # disable_scene_contraction: bool = False ## default values
+    disable_scene_contraction: bool = True
     """Whether to disable scene contraction or not."""
     use_gradient_scaling: bool = False
     """Use gradient scaler where the gradients are lower for points closer to the camera."""
@@ -227,7 +241,9 @@ class NerfactoModel(Model):
         )
 
         # Collider
+        CONSOLE.print(f"[DEBUG] IN NERFACTO::: USING NEAR FAR COLLIDER with near_plane={self.config.near_plane} and far_plane={self.config.far_plane}")
         self.collider = NearFarCollider(near_plane=self.config.near_plane, far_plane=self.config.far_plane)
+        # exit(0)
 
         # renderers
         self.renderer_rgb = RGBRenderer(background_color=self.config.background_color)

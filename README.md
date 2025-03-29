@@ -202,3 +202,12 @@ Right now, two issues:
 - the inconsistent scene bound after training
     + a bit hard to debug because the hard-coded contraction stuff in `feature_field.py`
 - inability to train from further zoom probably due to non-volume region from near and far plane.
+
+
+
+Normalization stuff
+- dataparser autoscale
+- `aabb_scale` in NGP. Actually doesn't seem to matter for nerfstudio as it uses its own scene bounding box. Verified. [x]
+- scene contraction for nerfacto. Disable scene contraction [x]
+-  near and far plane default and collider. In nerfacto.py and also in base_model.py. seems that they both matter.
+- NOTE: f3rm has its own hacky scaling that needs to be fixed.

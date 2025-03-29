@@ -24,8 +24,14 @@ if __name__ == "__main__":
         blender_render_cmd = f'export PATH="/mnt/kostas-graid/sw/envs/vlongle/blender/blender-4.3.2-linux-x64:$PATH"; {blender_render_cmd}'
     blender_render_cmd += f" --scene_scale {args.scene_scale}"
 
+    
     convert_cmd = f"python convert.py --obj_id {args.obj_id}"
-    train_cmd = f"ns-train f3rm --data {path_prefix}/data/{args.obj_id} --max-num-iterations {args.train_steps} --viewer.quit-on-train-completion True --save_only_latest_checkpoint False --output_dir {path_prefix}/outputs"
+    
+
+
+    method = "f3rm"
+    method = "nerfacto"
+    train_cmd = f"ns-train {method} --data {path_prefix}/data/{args.obj_id} --max-num-iterations {args.train_steps} --viewer.quit-on-train-completion True --save_only_latest_checkpoint False --output_dir {path_prefix}/outputs"
 
 
     print("train_cmd", train_cmd)

@@ -321,7 +321,8 @@ def render_with_blendernerf(object_uid: str) -> None:
     scene.train_data = True
     scene.test_data = False
     # scene.aabb = 4  # Smaller bounding box to focus on the object
-    scene.aabb = 2 # Smaller bounding box to focus on the object
+    # scene.aabb = 2 # Smaller bounding box to focus on the object
+    scene.aabb = 32
     scene.render_frames = True
     scene.nerf = args.format == "NERF"  # True for NeRF format, False for NGP format
     scene.save_path = output_dir

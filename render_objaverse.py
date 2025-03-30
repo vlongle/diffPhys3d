@@ -2,10 +2,11 @@ import os
 import argparse
 import glob
 import os.path as osp
+from utils import on_desktop
 
 parser = argparse.ArgumentParser(description='Renders glbs')
 parser.add_argument(
-    '--save_folder', type=str, default='render_output',
+    '--save_folder', type=str, default='class_render_outputs',
     help='path for saving rendered image')
 parser.add_argument(
     '--folder_assets', type=str, default='./assets/',
@@ -17,6 +18,12 @@ parser.add_argument(
     '--obj_class', type=str, default=None,
     help='object class to render (e.g., "mug"). If not provided, renders all available categories')
 opt = parser.parse_args()
+
+is_on_desktop = on_desktop()
+path_prefix = "/mnt/kostas-graid/datasets/vlongle/diffphys3d" if not is_on_desktop else "."
+
+opt.folder_assets = path_prefix + "/assets"
+opt.save_folder = path_prefix + "/class_render_outputs"
 
 # Determine which folders to process based on obj_class
 if opt.obj_class:

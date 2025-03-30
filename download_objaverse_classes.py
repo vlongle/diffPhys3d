@@ -73,10 +73,10 @@ for category in categories_to_download:
     else:
         print(f"Downloading all {len(category_uids)} {category} objects")
     
-    # Download the limited set of objects
+    # # Download the limited set of objects
     # objects = objaverse.load_objects(
     #     uids=category_uids,
-    #     download_processes=processes
+    #     download_processes=min(processes, len(category_uids)),
     # )
     
     # Create a directory for this category

@@ -1,0 +1,1994 @@
+{
+    "tree/000-001/1d419eb4c9d34fc1a7f1e88d6ea8d55a": {
+        "is_appropriate": false,
+        "reason": "The image contains rocks and grass in addition to the tree. We are looking for images that depict only one single object from the classes: tree, ficus, fern."
+    },
+    "tree/000-001/20914c0588994396a6238cadb415e6ed": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a tree, which is one of the allowed classes. The image contains only the tree and a white background, making it suitable for use in video game development and physics simulation."
+    },
+    "tree/000-001/b86ab505d07846a9925858b76aa586ac": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects, including a deer-like animal and a plant-like object. The image should only depict a single object from the classes: tree, ficus, or fern."
+    },
+    "tree/000-002/167c5c4b537b4cc89eaa2a6f74fe0aa9": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a bonsai tree, which falls under the class 'tree'. It is suitable for physics simulation. While the tree is in a pot, the pot is considered part of the bonsai presentation rather than a separate object in this context."
+    },
+    "tree/000-002/35fc2ebd972641889b6ac5305764051f": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a fern, which is one of the allowed classes, and it contains only one object, making it suitable for physics simulation in video game development."
+    },
+    "tree/000-002/3a6f50d6103c4047b8172de0c1d7f4af": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a ficus plant, which is one of the allowed classes (tree, ficus, fern). It is a single object and suitable for physics simulation in video game development."
+    },
+    "tree/000-003/102cabf0155243e094282c0cd74e79e0": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree, which is one of the allowed classes, and there are no other objects in the image."
+    },
+    "tree/000-003/990aca17a9af487082f84f597b0534ec": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single plant object, which resembles a tree or fern, and is suitable for physics simulation in video game development."
+    },
+    "tree/000-003/9f4d29626636478ca95e6fc86083e2f5": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a fern, which is one of the allowed classes (tree, ficus, fern). The image contains only the fern and no other objects, making it suitable for use in video game development and physics simulation."
+    },
+    "tree/000-003/c6a87205d0b841e59d903476ddb3e8f7": {
+        "is_appropriate": false,
+        "reason": "The image does not clearly depict a tree, ficus, or fern. It appears to be a piece of bark or a branch, rather than a whole tree or plant suitable for physics simulation in a video game. It's hard to classify this object into the given classes."
+    },
+    "tree/000-004/5f540e89fe73437f859fafe0269a1eee": {
+        "is_appropriate": false,
+        "reason": "The image depicts a stylized tree that is too simplistic for realistic physics simulation.  It lacks the necessary detail and complexity to accurately represent the behavior of a real tree in a physics engine."
+    },
+    "tree/000-004/89512444439249aba7f40b263a79fce4": {
+        "is_appropriate": false,
+        "reason": "The image is blank. It does not depict any object."
+    },
+    "tree/000-004/adf1e8832cf74a8a94c98792fa1d9088": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern, suitable for physics simulation."
+    },
+    "tree/000-005/076b5b497cc94b40bfe177148e254e7c": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-005/7016d1d32fe748f0a8b3f5eb39374bc4": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-005/a3a0a6b439a648de82a014722a41fd78": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-005/f118e49485e445c2b3089a0461e21157": {
+        "is_appropriate": false,
+        "reason": "The image is blurry and does not clearly depict a single object.  It appears to be a poorly rendered or incomplete 3D model, making it unsuitable for physics simulation."
+    },
+    "tree/000-005/fdc020c66f8d448eac03d44d203b3ff9": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree trunk, suitable for physics simulation."
+    },
+    "tree/000-006/26882c89c5e248eeabc8f7ef114b64b0": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-006/467b1faa231b40a9936a4458a51a5fea": {
+        "is_appropriate": false,
+        "reason": "The image does not depict a tree, ficus, or fern. It appears to be a piece of a shell or similar object, unsuitable for the specified classes and physics simulation."
+    },
+    "tree/000-006/90ac235041d54125892d5413495db587": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump and a fern, making it unsuitable.  We need images of single objects for physics simulation."
+    },
+    "tree/000-007/1961306004b445adb33f45e633ca1e19": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-007/3b584dccbf404ea787b25481da690db4": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree, suitable for physics simulation."
+    },
+    "tree/000-007/7603a920f9c542b2babcad8fa1f8a43e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-008/4ff47dd59bd7404888545e6780cdce46": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-008/5299c3307b2c4102a6c761cda34c56fc": {
+        "is_appropriate": false,
+        "reason": "The image contains a fern and a rock.  It does not depict a single object."
+    },
+    "tree/000-008/d7cc34988de64de2a079d3047bf5b2a8": {
+        "is_appropriate": false,
+        "reason": "The image depicts a rock, which is not one of the specified classes (tree, ficus, fern).  It is also not suitable for physics simulation in the context of a game involving plants."
+    },
+    "tree/000-009/7430b26f156b4010a3d36abb5549ff18": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, isolated low-poly plant that is suitable for physics simulation in a video game."
+    },
+    "tree/000-009/e8d692bd800e4ab6918e40b0890ea41a": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-010/02638a8d8cae4178aee43f731b8acd6a": {
+        "is_appropriate": false,
+        "reason": "The image contains two objects: a dark, vine-like structure and a bright yellow, geometric object.  It does not depict a single object from the specified classes (tree, ficus, fern)."
+    },
+    "tree/000-010/0685330ee6b44fe9bee60232e4fb2bc4": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-010/24a28ab7c7794778ba23ee8275c1febb": {
+        "is_appropriate": true,
+        "reason": "The image shows a single ficus plant in a pot.  The background is plain white, and the plant is the only object present. It's suitable for physics simulation as the plant's structure and flexibility can be modeled."
+    },
+    "tree/000-011/0216997f680248ea876a806b5fba7baa": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump and ground.  It does not show a single, whole tree, ficus, or fern.  The image is not suitable for isolating the physical properties of a single object for physics simulation."
+    },
+    "tree/000-011/0773992894ef4747b94f03e6eb69d620": {
+        "is_appropriate": true,
+        "reason": "The image contains a single fern, suitable for physics simulation."
+    },
+    "tree/000-011/1053b1f8eeed4ca4b17227ed399c1b8f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-011/11db5146e947452db4cf3f56e0b86129": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump, but also other elements like a stone and a paved area.  It does not show a single isolated tree stump."
+    },
+    "tree/000-011/3179ffc777db4dc3a5e51a241848de84": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects: a tree, a bridge, and a small landscape.  It does not depict a single object from the specified classes."
+    },
+    "tree/000-011/4085b6fd22e3422fb8cd9674ec7d7abf": {
+        "is_appropriate": false,
+        "reason": "The image contains more than one object. There is a tree trunk and some small debris."
+    },
+    "tree/000-011/48e40533d8764c2d956ab6bc5dd21c4d": {
+        "is_appropriate": false,
+        "reason": "The image depicts a simple geometric shape that does not resemble a tree, ficus, or fern. It is not suitable for use in a physics simulation as it lacks the necessary complexity and detail."
+    },
+    "tree/000-011/85a06b2cfe434a4ebed80d932090a75c": {
+        "is_appropriate": true,
+        "reason": "The image shows a single ficus bonsai tree, suitable for physics simulation."
+    },
+    "tree/000-011/b6ff2cbba0f4414cba491dbdcd4b8f8a": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a tree, and it is the only object present.  It's suitable for physics simulation as a tree model."
+    },
+    "tree/000-011/e3a3e0c39f804b77accdd549153feec8": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-011/ecfff4cd0185417b98f4e5aeb458c856": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model on a white background.  It's suitable for physics simulation and game development."
+    },
+    "tree/000-012/692f57ce7dee491e8e0576af8f2e6a07": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects that appear to be parts of a tree, rather than a single, whole tree.  It's not suitable for physics simulation as a single object."
+    },
+    "tree/000-012/a782d47b06c14acc805fb42baf832363": {
+        "is_appropriate": false,
+        "reason": "The image is blank.  It does not depict any object."
+    },
+    "tree/000-012/b357d78cf7aa4a0ea4bd4300ad867b30": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-012/c4febddb98b04f819a80165bd212feb0": {
+        "is_appropriate": false,
+        "reason": "The image depicts a cylindrical object that does not belong to any of the specified classes (tree, ficus, fern).  It appears to be a section of a log or similar, but not a whole plant suitable for physics simulation in a game."
+    },
+    "tree/000-012/cab68ce52c3e4ab4abec7ab20b6cfea2": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk, but also includes surrounding ground cover (rocks and soil), which is not part of the tree itself.  We need images of single objects for physics simulation."
+    },
+    "tree/000-013/bc826f1f48e744438cb9a37394507967": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, simple tree model suitable for physics simulation.  The background is clear, and it's easy to isolate the object."
+    },
+    "tree/000-013/f2bebd100dc94f9c8745a47dcf004661": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump with surrounding ground and moss.  It's not a single, isolated object suitable for physics simulation in a game.  The ground and moss would need to be separated for proper modeling."
+    },
+    "tree/000-014/57feb022bf2f4942b1735260d8b26062": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk with some vegetation on it.  It's not a single, isolated object suitable for physics simulation.  The vegetation makes it difficult to isolate the physical properties of a single object."
+    },
+    "tree/000-014/ba43fd949d4a4d449f51cb653df14ab0": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-015/410e3e70d7a64cf6a059f33407d1afcd": {
+        "is_appropriate": true,
+        "reason": "The image shows a single ficus plant in a pot.  It's suitable for use in a physics simulation as it depicts a single object with clear boundaries."
+    },
+    "tree/000-015/80d5ae4033c7434ba7000c9d5f0a7114": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects (two trees and other elements), violating the requirement of a single object per image."
+    },
+    "tree/000-015/88b1bf03a6254dc2b56cec4dce3f22f1": {
+        "is_appropriate": true,
+        "reason": "The image shows a single ficus plant in a pot.  The background is plain white, making it easy to isolate the plant for use in a game. The plant appears suitable for physics simulation."
+    },
+    "tree/000-015/b3efcfe9a17348a5aed9fde7ea2697ae": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree stump, suitable for physics simulation."
+    },
+    "tree/000-015/e85cea4c83d7414982d0381a16c46530": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple plants and it's not clear what the main object is.  It's not suitable for isolating a single object for physics simulation."
+    },
+    "tree/000-016/4a85d962397c4a0fbb1e4f6c682c2ea5": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk slice, which is not one of the specified classes (tree, ficus, fern).  Additionally, there are other elements present in the image (ground) that make it unsuitable for single-object physics simulation."
+    },
+    "tree/000-016/8780262365a242bbb9a16b85bd15215d": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree in a pot, suitable for physics simulation."
+    },
+    "tree/000-017/400447c29eb14d089941bce2361aee8a": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree and grass.  The request specified only one object per image."
+    },
+    "tree/000-017/75cc74ae4db04a97bd15e229173f8dbd": {
+        "is_appropriate": false,
+        "reason": "The image contains a palm tree, which is not one of the specified classes (tree, ficus, fern)."
+    },
+    "tree/000-018/1aaab4e7d4c64771a73c40aa7c24e462": {
+        "is_appropriate": false,
+        "reason": "The image contains two tree trunks and some leaves,  more than one object. We need images with only one object."
+    },
+    "tree/000-018/358ebf0dad37421195145cafe6e0df92": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-018/540ff1b0818a444c84b8e23eb6d578f4": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a single object.  It's impossible to determine if it's a tree, ficus, or fern."
+    },
+    "tree/000-018/6fa2ac1dc9854d3aa1931b4c8f4c2c10": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a single tree, ficus, or fern.  It's impossible to determine the object or if it's suitable for physics simulation."
+    },
+    "tree/000-018/90ba4d05230e47049141677e0dc89aea": {
+        "is_appropriate": false,
+        "reason": "The image shows a fossil, which is not suitable for physics simulation in a video game."
+    },
+    "tree/000-018/e4999d6251ba42ac8ee2cea7d3e30596": {
+        "is_appropriate": true,
+        "reason": "The image shows a single ficus plant in a pot.  It's suitable for use in a physics simulation as it's a single, clearly defined object."
+    },
+    "tree/000-019/20236fe60ab74543b8e4fe68af9583cf": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single fern plant against a white background.  It's suitable for physics simulation as it shows a distinct shape and structure."
+    },
+    "tree/000-020/50631fd00b6c4197b4ac331a21e6e976": {
+        "is_appropriate": false,
+        "reason": "The image contains a burning tree.  While it depicts a tree, the fire makes it unsuitable for physics simulation in a game without significant modifications to account for the fire's effects.  The focus should be on a single, intact tree for physics parameter learning."
+    },
+    "tree/000-020/9b796b706b7444c7aa1401ce1d813440": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-020/bd7503a48e4546babf004da9dbb11318": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern, suitable for physics simulation."
+    },
+    "tree/000-022/7070e89f7f654ee18af88252fe07532e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation."
+    },
+    "tree/000-022/9403d661104349f5b1fbf948c0e2afb0": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern, suitable for physics simulation."
+    },
+    "tree/000-022/a10458c0d136437ebc99c2e9a7904fee": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-022/a6bb899429824289bcd426380d39c79e": {
+        "is_appropriate": false,
+        "reason": "The image contains two palm trees.  We require images of only one single object."
+    },
+    "tree/000-022/ed4c360e73b247359676675594b15878": {
+        "is_appropriate": false,
+        "reason": "The image contains a pink plane in addition to the green object.  We only want images of single objects."
+    },
+    "tree/000-023/3837d4d05c064d21a16848518a8df516": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-023/45a74e13bdcb433fa77a24b7113c189d": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation."
+    },
+    "tree/000-023/470499f5479f4c63b5ab8e02f0370375": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a single object.  It's impossible to determine if it's a tree, ficus, or fern."
+    },
+    "tree/000-023/747c49f2ca7f4aefa58bd99eb836f6a6": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump with some vegetation at the base.  It's not a single, isolated tree suitable for physics simulation. The presence of additional elements (vegetation) makes it unsuitable."
+    },
+    "tree/000-023/953904fa8c91473e8677600fd0e380fb": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-023/b64381d3ea9547b88581f98178800627": {
+        "is_appropriate": false,
+        "reason": "The image contains artifacts and is not clean.  There are strange transparent shapes near the plant. This makes it unsuitable for use in a physics simulation."
+    },
+    "tree/000-023/d4048aca910f4336936f4615861a0c72": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump with surrounding ground and what appears to be water or some other substance.  It's not a single, isolated tree suitable for physics simulation."
+    },
+    "tree/000-024/0b8df2d98b624c91a34c1cb9bbebdeb7": {
+        "is_appropriate": false,
+        "reason": "The image does not depict a tree, ficus, or fern. It appears to be an abstract geometric shape and is not suitable for use in a physics simulation of plant life."
+    },
+    "tree/000-024/3e08f972eec346319c8d35a0e7584d6e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-024/48715397fb1642ada391f511a5f48af0": {
+        "is_appropriate": true,
+        "reason": "The image shows a single low-poly tree, suitable for physics simulation in a game."
+    },
+    "tree/000-024/f50aa561d38a4d58add7005496d3da89": {
+        "is_appropriate": false,
+        "reason": "The image depicts a stylized object that does not resemble a tree, ficus, or fern.  It's unclear what this object is and it's unlikely to be useful for physics simulation in a game context."
+    },
+    "tree/000-024/f52ac1ff54fe4da99a05a1fbbcf35f4d": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-025/046d5125fe534ba086d9b405362a094c": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-025/07e0aec34de042209bdd9ec186164291": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree.  It's simple enough for physics simulation and suitable for game development."
+    },
+    "tree/000-025/1cec07d259e943da90bfd6c7e1be2ce9": {
+        "is_appropriate": false,
+        "reason": "The image is of a tree, but the unnatural blue color makes it unsuitable for game development.  The unrealistic color would clash with other assets and hinder the visual consistency of the game."
+    },
+    "tree/000-027/26884c099c3c4c639c4a064376e6a49b": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-027/6d73cc3fcbad4f5d83a52ccfa7f61e87": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-028/080cf564597244a7b0161b40fab32371": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree, suitable for physics simulation."
+    },
+    "tree/000-028/84ca0df34dbd4851bb113186ac46bdf6": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-028/c2797588606c4c0b92d3d591ef039527": {
+        "is_appropriate": false,
+        "reason": "The image appears to be a rock or a piece of stone, not a tree, ficus, or fern.  It is not suitable for the intended purpose of physics simulation of plants."
+    },
+    "tree/000-029/82cee3e70c3d464e9e2fad305f69d618": {
+        "is_appropriate": false,
+        "reason": "The image is too messy and doesn't clearly depict a single tree.  It's difficult to discern individual branches and leaves, making it unsuitable for physics simulation where clear geometry is needed."
+    },
+    "tree/000-029/c8bd007d9d2c4f3e9480f8f1e60017ba": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, well-defined low-poly tree model suitable for physics simulation in a video game.  The background is plain white, isolating the object of interest."
+    },
+    "tree/000-030/437e9e2bc4bf4597927b3108e8b9411e": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree with a stick attached to it.  It's not a single, isolated tree suitable for physics simulation."
+    },
+    "tree/000-032/06aa42c3472f4734b82b69c855e91ca6": {
+        "is_appropriate": false,
+        "reason": "The image contains a small patch of ground around the tree.  We only want images of single objects for physics simulation."
+    },
+    "tree/000-032/3f5da263dad14b18a99f3b08eed784db": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree, suitable for physics simulation."
+    },
+    "tree/000-032/f874281b40e74e749d7c7389457ad92d": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-035/22acf4c1d5df489498609ef0d8fc253e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-035/53acd134f4d5440c9be94f08e49507cc": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-035/e949ca79ce42407f81ae43b613a5b94e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern plant on a white background.  It's suitable for use in a physics simulation."
+    },
+    "tree/000-036/32a8d79320184f5b932d490fd1c0a3c4": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple trees.  We require images of single objects for physics simulation parameter extraction."
+    },
+    "tree/000-036/4b086382fea24a139b3b571f61890284": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-036/6d9a710440cc48a8a87fedce9d8a2023": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk with other elements like leaves and ground attached to it.  It's not a single, isolated object suitable for physics simulation."
+    },
+    "tree/000-037/6bebf2ddbc6d4361ad59a5cdb981f5f2": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-037/6fd6f1a8a9844bc5b0b9e32755afde5e": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects (many plants) instead of a single object.  It's not suitable for isolating the physical properties of a single tree, ficus, or fern for physics simulation."
+    },
+    "tree/000-037/f4b18e56a58945e7ac5b293086c4c3b8": {
+        "is_appropriate": false,
+        "reason": "The image contains three objects instead of one.  It's not suitable for isolating the physics properties of a single plant."
+    },
+    "tree/000-038/1e2f0c04b74a4b7ab285d893423fc65a": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple parts of a tree stacked on top of each other, which is not suitable for a single-object physics simulation.  It's not a single, whole tree."
+    },
+    "tree/000-038/74470210547545d1b05804bb35fa3148": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree stump, suitable for physics simulation."
+    },
+    "tree/000-038/8abf9007023443a992f3c2c68ac4e354": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree in a pot, suitable for physics simulation."
+    },
+    "tree/000-039/028032cb97844a1ba2b9542b4e7aab00": {
+        "is_appropriate": false,
+        "reason": "The image appears to be of a rock or a piece of wood, neither of which are among the specified classes (tree, ficus, fern).  It is also not suitable for physics simulation in a video game context as it lacks the necessary detail and characteristics for realistic interaction."
+    },
+    "tree/000-039/40ae149c73e64f3e8647083c6bfe3203": {
+        "is_appropriate": false,
+        "reason": "The image contains a small tree sapling, but it's also surrounded by ground and possibly other elements.  It does not show a single isolated tree suitable for physics simulation."
+    },
+    "tree/000-039/54c38fc5f1ab4edf9d2499d7304a1c51": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model on a white background.  It's suitable for physics simulation as a tree."
+    },
+    "tree/000-039/5eea036525ee4ecca7f575f01573b6c6": {
+        "is_appropriate": false,
+        "reason": "The image depicts a stylized tree, but its low polygon count and simplistic design make it unsuitable for realistic physics simulation.  It lacks the detail and complexity needed to accurately model things like wind interaction or branch flexibility."
+    },
+    "tree/000-039/c25e5fc2bfa54d24a165a8a207c0a6d7": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-040/2f750678e9c34ae4aef62062c61551b1": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern in a pot, suitable for physics simulation."
+    },
+    "tree/000-040/c50630051edd4a7daa9708f6b31c021f": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple cattails, not a single object."
+    },
+    "tree/000-040/db9a1adcde654894a6759b029219ef50": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a single tree.  It's difficult to discern any details necessary for physics simulation."
+    },
+    "tree/000-040/f7ccc4b604a74006878728da48392ecb": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-041/0ed3712dc6164ba1bdf588757d3c99bf": {
+        "is_appropriate": false,
+        "reason": "The image is blurry and does not clearly depict a single object.  It's difficult to identify the object class or determine if it's suitable for physics simulation."
+    },
+    "tree/000-041/240d85422edc47a09c695e2d7fbe2bd5": {
+        "is_appropriate": false,
+        "reason": "The image is blank. It does not depict any object."
+    },
+    "tree/000-041/49baba8e37ec4c508177994efaadfe5e": {
+        "is_appropriate": false,
+        "reason": "The image contains artifacts and is not a clean render of a single tree.  The white areas suggest a rendering error or incomplete model."
+    },
+    "tree/000-041/5de4bf05101e49ca8842e9b21e65fc07": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation in a game."
+    },
+    "tree/000-041/d702d846d7854337861e7852e57c635c": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects and is not clearly depicting a single object from the specified classes (tree, ficus, fern).  It appears to show several dark, indistinct objects on a patch of grass, making it unsuitable for single-object physics simulation."
+    },
+    "tree/000-041/d70ca5e5863b4a94ba79cb01d1c13b6b": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-041/edbc89520f2d40c7ba40969fa2b5ab83": {
+        "is_appropriate": true,
+        "reason": "The image shows a single low-poly tree model, suitable for physics simulation in a game."
+    },
+    "tree/000-042/e012075a64d440c4afb291b51b5b06b4": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree, suitable for physics simulation."
+    },
+    "tree/000-043/8aaafb9e35b7496d8352e12d7c6395e4": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree, but it also includes a stone base around the tree.  The request specified only a single object."
+    },
+    "tree/000-043/d05a4d3312554c6d97bdf0788ea61012": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump with surrounding ground.  It does not depict a single, isolated object suitable for physics simulation.  The ground is an unwanted element."
+    },
+    "tree/000-043/edef091b8c0848ad8732194e34375f66": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-043/fa1b16dbe75d4813a5924b523bcb486d": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a single object.  It's difficult to determine if it's a tree, ficus, or fern, and the low quality makes it unsuitable for physics simulation."
+    },
+    "tree/000-045/71f63bc6510c4180857349204de575e2": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects. There is a main tree and some smaller debris on the left.  We need images with only one object for physics simulation."
+    },
+    "tree/000-046/34f37f0db015421585cc7bfaaf57b3eb": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-046/726a4da9596340ad9cba1212a75a9cb0": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single fern, suitable for physics simulation."
+    },
+    "tree/000-046/cf6e9fe9fde34b799b8d392670824e18": {
+        "is_appropriate": false,
+        "reason": "The image does not clearly depict a tree, ficus, or fern.  It appears to be an abstract, geometric shape and is not suitable for use in a physics simulation requiring realistic object representation."
+    },
+    "tree/000-047/320fe1e4ba8c442f84cb94e833935944": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree in a pot, suitable for physics simulation."
+    },
+    "tree/000-047/4957a0b898f5472aa95bb33fb84d9062": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree trunk, suitable for physics simulation and game development."
+    },
+    "tree/000-047/6848b412756a453192ea33aa30eae5e5": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects (buildings and trees) and does not depict a single tree, ficus, or fern."
+    },
+    "tree/000-048/36541983bf84455786eff55780fba13f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-048/4ecc1a83fe84420ea826290e2e87f56d": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump with surrounding grass.  It's not a single, isolated object suitable for physics simulation in a video game. The grass complicates the physics model."
+    },
+    "tree/000-048/66a8d0ef9b49415a9eaf6af216cb9bce": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-048/a96d9b0f84664c3fa4be448e5f725949": {
+        "is_appropriate": false,
+        "reason": "The image contains a decorated Christmas tree.  While it's a type of tree, the decorations make it unsuitable for physics simulation focused on a single, undecorated tree model.  The decorations would need to be removed for accurate physics modeling."
+    },
+    "tree/000-048/becd807bcde04fae8d206a87badf7593": {
+        "is_appropriate": false,
+        "reason": "The image depicts a stylized, unrealistic tree stump.  It's too simplistic and lacks the detail necessary for realistic physics simulation in a video game.  It's not suitable for representing a tree in a physics engine."
+    },
+    "tree/000-049/3f17f07cab954cde84499e8941742dc1": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-049/41cb36ba609a4f9dab4080b47b2c60c3": {
+        "is_appropriate": true,
+        "reason": "The image shows a single bonsai tree in a pot.  It's a clear depiction of a tree and suitable for physics simulation (e.g., swaying in the wind)."
+    },
+    "tree/000-049/634cff86ba214ea490379ecf0fae534a": {
+        "is_appropriate": false,
+        "reason": "The image does not clearly depict a tree, ficus, or fern. It appears to be a low-poly representation of an undefined object, unsuitable for identifying and using in physics simulation."
+    },
+    "tree/000-049/79c4e69da7184897a903f40f1dbe53f9": {
+        "is_appropriate": false,
+        "reason": "The image contains two fern leaves, violating the requirement of a single object."
+    },
+    "tree/000-049/f7d514ca588548cead3756e3844e14c8": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects and a significant amount of background clutter.  It's not a clear depiction of a single tree, ficus, or fern."
+    },
+    "tree/000-050/0616de35aaa9494ea6e9b99f3f576aa3": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-050/0db99cd3a57540e2b78da2e1ed727329": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-050/0f5eae8aba464ea986d2e907c8f4a9d3": {
+        "is_appropriate": false,
+        "reason": "The image shows a stone structure, which is not one of the specified classes (tree, ficus, fern).  It also appears to be a scene rather than a single, isolated object suitable for physics simulation."
+    },
+    "tree/000-050/19ec2f4036cb4247abf4cf5294cb3467": {
+        "is_appropriate": true,
+        "reason": "The image shows a single low-poly tree, suitable for physics simulation in a game."
+    },
+    "tree/000-050/39c14b1d1d63467588ab6bd44a5525d0": {
+        "is_appropriate": false,
+        "reason": "The image contains a plant in a pot on a stand.  There are multiple objects present, not just a single plant."
+    },
+    "tree/000-050/3eaadee08005473ca78174e0efae5da4": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple trees and a sand dune.  It does not show a single isolated tree, ficus, or fern as required."
+    },
+    "tree/000-050/6125c5ec76454b778bee37b562ec299c": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-050/cc418ac250234c92b3c6e21c3b636acd": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict any of the specified object classes (tree, ficus, fern).  It's impossible to determine if it's a single object suitable for physics simulation."
+    },
+    "tree/000-050/d300ad7588994642ad7e267f55813202": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump, which is not a whole tree.  It's also not suitable for physics simulation in its current state as it's a broken piece and lacks the necessary geometry for realistic interaction."
+    },
+    "tree/000-050/ec92f6cf7de84dd2b95632cba11ce44c": {
+        "is_appropriate": false,
+        "reason": "The image contains a ground plane in addition to the tree.  We only want images of single objects."
+    },
+    "tree/000-051/36adf1780cc94bec8aaa3d854e28400b": {
+        "is_appropriate": false,
+        "reason": "The image is blank.  It does not depict any object."
+    },
+    "tree/000-051/72674aa7a19d4b87811b68aa12cde265": {
+        "is_appropriate": false,
+        "reason": "The image shows a rock, not a tree, ficus, or fern.  It is not suitable for the intended purpose of physics simulation of plants."
+    },
+    "tree/000-051/8df63e28d58f4f66afc2597af40d7df1": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-052/6bb48d96980b43fa8b18b21b211f2bc5": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree.  It's simple, but suitable for physics simulation as its geometry is easily defined."
+    },
+    "tree/000-052/9cb753e6285d4fb19b41f834aa7dd9ab": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern plant against a white background.  It's suitable for use in a physics simulation as it depicts a single object clearly."
+    },
+    "tree/000-053/1fc8798527664dccaf43b11e7bffb943": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-053/713544d91d5e43ad85a3551ee572262f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, well-defined low-poly tree model suitable for physics simulation.  The background is clear, and there are no extraneous objects."
+    },
+    "tree/000-053/c195a0a3158d40dba337c33ab0ebd6d4": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-054/6954be8532d042e4b1bcf9b5ce867a41": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump on a small patch of ground with a white border.  The presence of the ground and border makes it unsuitable; we need an image of only the tree trunk for physics simulation."
+    },
+    "tree/000-054/c238dad36a894ba390b8f81d4fb8a9a7": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, simple tree model suitable for physics simulation.  It's clearly a tree and doesn't contain any other objects."
+    },
+    "tree/000-054/d336c4c9a6d04eba8c7685c037d820b1": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, low-poly tree model suitable for physics simulation in a video game.  The background is clear, and only the tree is present."
+    },
+    "tree/000-055/0049bea70d8d4ab8a5e3d44a82d71c6b": {
+        "is_appropriate": false,
+        "reason": "The image is completely white and does not depict any object.  It is not suitable for identifying or using in physics simulations."
+    },
+    "tree/000-055/205f59a58d38410cb70f5d2fbd9294ea": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree model, suitable for physics simulation."
+    },
+    "tree/000-055/632f88d0c12942ae9ee9c5e1ead58264": {
+        "is_appropriate": false,
+        "reason": "The image is too simplistic and does not represent a realistic tree.  It's unlikely to be useful for physics simulation as it lacks the necessary detail and complexity."
+    },
+    "tree/000-056/2d1d858c4bca475b9eb5d6d95f7b6ea8": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-056/78ea12b76afb43edba15babbb68832da": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-056/ebaeda94c16b4c8eb57111d3901f9319": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation in a game."
+    },
+    "tree/000-057/22b89df35cb941c08210cd8dbb75e8eb": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-057/303a25bfbf05460390f469ede3319be9": {
+        "is_appropriate": false,
+        "reason": "The image contains other objects in addition to the tree.  It includes small plants, rocks, and what appears to be a bottle at the base of the tree. We need images with only one single object."
+    },
+    "tree/000-057/4c5af65697834384bcc5dcd7dd9f3dc2": {
+        "is_appropriate": false,
+        "reason": "The image does not clearly depict a tree, ficus, or fern.  It appears to be a low-poly model of an undefined object and is not suitable for physics simulation in a video game."
+    },
+    "tree/000-057/c41fb0339d0a45b2a8b385c4204673e4": {
+        "is_appropriate": false,
+        "reason": "The image shows a low-poly model of a tree, but the quality is too low for game development.  The object lacks detail and definition, making it unsuitable for realistic physics simulation or visual appeal in a game."
+    },
+    "tree/000-059/e9b8424bfcf34f679f5d6c212a221447": {
+        "is_appropriate": false,
+        "reason": "The image depicts a cartoonish object that is not a tree, ficus, or fern.  It's not suitable for physics simulation in a video game as it doesn't represent a real-world object with realistic physical properties."
+    },
+    "tree/000-060/3d9a9f41acc54e62bfcf207066cda282": {
+        "is_appropriate": false,
+        "reason": "The image depicts a fern, but the rendering is unrealistic and not suitable for game development.  The geometric representation is too simplistic and lacks the necessary detail for realistic physics simulation."
+    },
+    "tree/000-061/3f920fbe857d4fcdab456740d50bc144": {
+        "is_appropriate": true,
+        "reason": "The image shows a single bush-like plant, suitable for physics simulation."
+    },
+    "tree/000-061/61da26c95a4d416eafebfa73df1baa52": {
+        "is_appropriate": false,
+        "reason": "The image depicts a piece of tree bark, not a whole tree.  It's not suitable for physics simulation as a standalone object and doesn't represent a complete tree model."
+    },
+    "tree/000-061/6ad297c614914fd3aaec61d3d4acd8f7": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump with some ground and small plants around it.  It's not a single, isolated tree object suitable for physics simulation."
+    },
+    "tree/000-061/9d5045d33c7e45b6abe94895b93940c3": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-061/c6ced88817194f7aade2230795eaa5f8": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-062/beab28462a14499ebaf3ea88926da55e": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree, suitable for physics simulation."
+    },
+    "tree/000-062/c51100de7bb84e6882f92c9b6ab4b62f": {
+        "is_appropriate": false,
+        "reason": "The image contains two trees instead of one.  We need images of single objects for physics simulation."
+    },
+    "tree/000-062/c533835c126d4b9f95ed8dc114f86747": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree in a pot, suitable for physics simulation and game development."
+    },
+    "tree/000-062/f0175ba9296643189e92173ad1bd52ef": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree trunk, suitable for physics simulation."
+    },
+    "tree/000-064/2c0b18595a6c445994a88dba0355b649": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-064/58cd53de211e4a97b6172c43b82aafca": {
+        "is_appropriate": false,
+        "reason": "The image contains two palm trees.  The prompt requires images of single objects."
+    },
+    "tree/000-064/6008e9741f244dfda3dec50b78760488": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-064/ac77fb8018a64114b0be3d7648c332c8": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree, but also includes other elements like rocks and a patch of ground.  We need images of single objects for physics simulation parameter extraction."
+    },
+    "tree/000-064/ecb91f433f144a7798724890f0528b23": {
+        "is_appropriate": true,
+        "reason": "The image shows a single ficus plant in a pot, suitable for physics simulation."
+    },
+    "tree/000-065/8dd74333efc548888080e57812cd591e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, simple low-poly tree model suitable for physics simulation in a video game.  It's isolated on a white background and contains no other objects."
+    },
+    "tree/000-066/be65b876e67e48e7a2085101c4d788ec": {
+        "is_appropriate": true,
+        "reason": "The image shows a single ficus plant in a pot against a white background.  It's suitable for use in a physics simulation as it depicts a single object with clear geometry."
+    },
+    "tree/000-067/41ba64e142c344279a3724d131c295c1": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects and is not a single, clearly defined tree, ficus, or fern.  It appears to be a pile of debris or a small cluster of plants, making it unsuitable for individual physics simulation."
+    },
+    "tree/000-067/ead050cf2aa74035a077793d4d2e655f": {
+        "is_appropriate": false,
+        "reason": "The image contains two trees.  We only want images with a single object."
+    },
+    "tree/000-068/73ecbe870f5c4825b096adcfcef12940": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-068/7924e69bab474a43975caefb94c3f7b5": {
+        "is_appropriate": false,
+        "reason": "The image is blank.  It does not depict any object."
+    },
+    "tree/000-068/79553afc4edc440d9a7042702a5612bf": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern, suitable for physics simulation."
+    },
+    "tree/000-068/cad3628350404a31b9ddcd87e4651d37": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern, suitable for physics simulation."
+    },
+    "tree/000-068/e0aa365964e14664a5ee5063bd164bf9": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-069/2a00157f8e1b45da8e028c642e953843": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model against a white background.  It's suitable for physics simulation."
+    },
+    "tree/000-069/2bbdcb4eea3f435e917b70fde1b33b65": {
+        "is_appropriate": false,
+        "reason": "The image does not clearly depict a tree, ficus, or fern. It appears to be a stylized, cartoonish object that is not suitable for physics simulation in a video game."
+    },
+    "tree/000-069/32a4aaf489a54a37a6007a4e13264ff6": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree stump, suitable for physics simulation."
+    },
+    "tree/000-069/44318440ad824ba4813f54051ff1a864": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, low-poly tree model suitable for physics simulation in a video game.  The background is clear, and only the tree is present."
+    },
+    "tree/000-069/545b7909f0df46bf8c29b9a0c4e88ea0": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree branch, suitable for physics simulation."
+    },
+    "tree/000-069/841e4bf52bff40eda5c08e567361ae16": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree model, suitable for physics simulation."
+    },
+    "tree/000-069/bb7f63175ff94461b3a55f2e22b87047": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a single object from the specified classes (tree, ficus, fern).  It's not suitable for identifying physical properties for game development."
+    },
+    "tree/000-070/25c0bc372a9444b7ad4483d2b6627fe7": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a tree, ficus, or fern.  It's impossible to determine the object and its features necessary for physics simulation."
+    },
+    "tree/000-070/82869e95f75b44049a2975c44509f455": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple trees and other objects.  We need images of single, isolated objects for physics simulation."
+    },
+    "tree/000-070/af0c9af124934fe49eaf74b1f60da117": {
+        "is_appropriate": false,
+        "reason": "The image contains a green square in addition to the tree.  We only want images of single objects."
+    },
+    "tree/000-070/de2b398179f04e35b823432fef35e861": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a single tree, ficus, or fern.  It's impossible to determine the object or if it would be suitable for physics simulation."
+    },
+    "tree/000-070/df8027ae73a34526a36fc6738a2341f0": {
+        "is_appropriate": false,
+        "reason": "The image is almost entirely white and does not clearly depict any object.  It's impossible to determine if it's a tree, ficus, or fern, or even if it depicts a single object at all."
+    },
+    "tree/000-070/e4ac2dbde50d40b18e2e181a8a8263fb": {
+        "is_appropriate": false,
+        "reason": "The image is blank.  It does not depict any object."
+    },
+    "tree/000-070/f8840ecf1e4741dba81ccb57bf11108d": {
+        "is_appropriate": false,
+        "reason": "The image depicts a structure, not a tree, ficus, or fern.  It's not suitable for the intended purpose of selecting images for video game development focusing on physics simulation of plants."
+    },
+    "tree/000-071/2826823d900347bd97b17708ee04c3ff": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree, suitable for physics simulation."
+    },
+    "tree/000-071/6f7f392accb54094ac1de1f2eec427c2": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-071/cfc5aafb52074563ad9aa839aef9de5d": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation."
+    },
+    "tree/000-072/515ff7eff08144e3be70a89eedbcbcc7": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern, suitable for physics simulation."
+    },
+    "tree/000-072/6c5093dd4b1d4a32a4872cbc2a3d9de7": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree.  It's simple but suitable for physics simulation as it shows a clear trunk and crown."
+    },
+    "tree/000-072/ea3bc5c3accc4917958bd21501fdd0ac": {
+        "is_appropriate": false,
+        "reason": "The image contains artifacts around the tree.  It's not a clean, single object image suitable for physics simulation."
+    },
+    "tree/000-072/uVlNUujjsn0PnG0mwPOR7T52BqU": {
+        "is_appropriate": false,
+        "reason": "The image is too abstract and does not clearly depict a tree, ficus, or fern.  It's not suitable for identifying physical properties for game simulation."
+    },
+    "tree/000-073/1cec99d96a5043e1a6997e106d00c09a": {
+        "is_appropriate": false,
+        "reason": "The image shows a piece of wood, which is not one of the specified classes (tree, ficus, fern).  It also doesn't represent a whole plant suitable for physics simulation in a game."
+    },
+    "tree/000-073/c300cd0e44b64cc9939c1a22091d0560": {
+        "is_appropriate": false,
+        "reason": "The image contains a grid in addition to the tree.  We only want images of single objects for physics simulation."
+    },
+    "tree/000-073/ce1770158f2642c0bce7630a32e8f13a": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-073/ea5e6ed7f9d6445ba69589d503e8cebf": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-073/ff270ea887fd43e9995db7ae2be16040": {
+        "is_appropriate": false,
+        "reason": "The image contains a small piece of ground under the tree.  It should only show the tree."
+    },
+    "tree/000-075/0ff695acb88f46b2b0e9182a20d8c49b": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern, suitable for physics simulation."
+    },
+    "tree/000-075/511fe20c46d54ee7a1cf1674c3f18114": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple leaf clusters on a single stem, making it unsuitable for representing a single object in a physics simulation.  The image is not of a single tree, ficus, or fern."
+    },
+    "tree/000-075/542f5595a1444a419b9103663b8b5a2f": {
+        "is_appropriate": false,
+        "reason": "The image is blank.  It does not depict any object."
+    },
+    "tree/000-075/a758b0cb140e4d53abd83bc571416204": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-075/b07d405a45f24d4e96a4060f69e3f018": {
+        "is_appropriate": false,
+        "reason": "The image appears to be a rock or a similar inorganic object.  It does not depict a tree, ficus, or fern, which are the required classes."
+    },
+    "tree/000-075/dc4db3da723449f2813b31a768412f56": {
+        "is_appropriate": false,
+        "reason": "The image is blank.  It does not depict any object."
+    },
+    "tree/000-075/fd75c4c925954706bd936eaff13c3a3c": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk, but also includes a section of pavement and some plants.  It does not depict a single, isolated object suitable for physics simulation."
+    },
+    "tree/000-076/a519b007fc19492ea07256242f4715d8": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree, but it is unrealistically colored.  The unnatural colors make it unsuitable for realistic game development physics simulation."
+    },
+    "tree/000-076/e5507f69145541c68521492ea445991b": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-077/ffff418f0dd44b45b47380f85891341f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-078/3e66f13da12e4e30829a43a164ebef38": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree and some rocks.  It does not depict a single object."
+    },
+    "tree/000-078/4df29f6d6785424c982c214ae051638f": {
+        "is_appropriate": false,
+        "reason": "The image depicts a very simplistic and unrealistic tree model. It's too low-poly and lacks the detail necessary for a physics simulation.  It's unlikely to behave realistically in a physics engine."
+    },
+    "tree/000-078/5e5cacd6a3724c0f808fa828e24717e7": {
+        "is_appropriate": false,
+        "reason": "The image contains leaves around the tree trunk.  We only want images of single objects for physics simulation."
+    },
+    "tree/000-078/776652e152214446acc1dca03a085d3c": {
+        "is_appropriate": false,
+        "reason": "The image depicts a large, irregular landmass, which is not a single tree, ficus, or fern.  It's unsuitable for isolating physics parameters for a single plant object."
+    },
+    "tree/000-078/aa2a8857049c4152ba3c31c2225d4a01": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-079/07620356513a473ab4d07e2d0da95f8f": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a single tree, ficus, or fern.  It's difficult to discern any details necessary for physics simulation."
+    },
+    "tree/000-080/272aa0d0f8b443d6b4f86ad71081d052": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-080/35a754d0f1624ae4948b6ab67123ba70": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-080/6a5e032e4c4644c4b0763c37403469cf": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-080/c43defd47afa493a94a7178354f08c9c": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree.  It's suitable for physics simulation as it's a simple, well-defined 3D model."
+    },
+    "tree/000-080/ebff4923e17847bab3a86f25618f45b6": {
+        "is_appropriate": false,
+        "reason": "The image is a plain brown color with no discernible object.  It does not depict a tree, ficus, or fern."
+    },
+    "tree/000-080/fb808917c92a4c0eb7524aa4713f2eaf": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree, but also includes a significant amount of ground and other extraneous elements.  It does not isolate a single tree for use in a physics simulation."
+    },
+    "tree/000-081/421e03f43f704da9ae0c697d9596d622": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree, suitable for physics simulation."
+    },
+    "tree/000-081/89f6d58d90264ae09fd9e16c53b77d40": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-081/9fdb67439d3642088619b278ffa192e8": {
+        "is_appropriate": false,
+        "reason": "The image is a plain dark brown color.  It does not depict any of the specified object classes (tree, ficus, fern)."
+    },
+    "tree/000-082/2171a48e819f4d71a923902ef295a6a5": {
+        "is_appropriate": false,
+        "reason": "The image depicts a rock, which is not one of the specified classes (tree, ficus, fern).  It's also not suitable for physics simulation in the context of a video game focused on plants."
+    },
+    "tree/000-083/94eb3b961bf34c3699c1e23172d001b3": {
+        "is_appropriate": false,
+        "reason": "The image contains a bonsai tree in a pot with a water feature.  It depicts more than one object (tree and pot/water feature)."
+    },
+    "tree/000-084/28d7e578f73d442ca433a58854b41a69": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk on the ground, along with ground cover.  It's not a single, isolated object suitable for physics simulation in a video game."
+    },
+    "tree/000-084/3f39aa5485e94477a36b435f7a1a8b54": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-084/42a54553251b4c2bb2c174a904f64876": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-085/b87d99025ff64039bffffaf9fbb7c3b4": {
+        "is_appropriate": true,
+        "reason": "The image shows a single bonsai tree in a pot.  It's a clear depiction of a tree and suitable for physics simulation (e.g., simulating how it sways in the wind)."
+    },
+    "tree/000-085/de923b283a26421299176d0004e636ee": {
+        "is_appropriate": false,
+        "reason": "The image contains more than one object. There is a tree stump in addition to the main tree."
+    },
+    "tree/000-086/366f46ca0f4c4aa7a66545cb6f77f27e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-086/c520a0429a024f18a69342ce79acd5d5": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a single fern, tree, or ficus.  It's difficult to discern any details necessary for physics simulation."
+    },
+    "tree/000-086/c7ba61f09ec94b75b401cd460a2b369e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, isolated on a white background. It is suitable for use in a video game and physics simulation."
+    },
+    "tree/000-087/186cb74147a747858c89cb5005c14faa": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-087/bf16463c58e44ee08aa43ba4fed6baec": {
+        "is_appropriate": false,
+        "reason": "The image is blank.  It does not depict any object."
+    },
+    "tree/000-087/dee0fe76e6484991a04309533450072d": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple trees.  We only want images of single objects."
+    },
+    "tree/000-087/e9cff03e58c44cb0a4f7e1f8b6019801": {
+        "is_appropriate": true,
+        "reason": "The image shows a single bonsai tree in a pot.  It's a clearly defined object suitable for physics simulation (e.g., wind effects on branches)."
+    },
+    "tree/000-087/f1f7418450f14a1e826e1e3199680cb7": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk, but it also includes a significant portion of what appears to be ground or a base beneath it.  The focus should be solely on the tree trunk for accurate physics simulation."
+    },
+    "tree/000-088/3a434ae8cd6f40c0ae5abce8bb89a64e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-088/4886701e316b4d21bb4ff56080d05a27": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-088/7ea04aa13f964b9fa65e4f27a3bd72a2": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, low-poly tree model suitable for physics simulation in a video game.  The background is clear, and only the tree is present."
+    },
+    "tree/000-088/a328a73414794960aecb75d8f7a73b12": {
+        "is_appropriate": false,
+        "reason": "The image contains a palm tree, which is not one of the specified classes (tree, ficus, fern)."
+    },
+    "tree/000-088/d1d1aad219514afc9ab1458aa893e01a": {
+        "is_appropriate": true,
+        "reason": "The image shows a single bonsai tree, suitable for physics simulation."
+    },
+    "tree/000-088/e444f9176e944a379d8ea5c7ca6ba050": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern, suitable for physics simulation."
+    },
+    "tree/000-090/07713471e9f647cf91974929852c70d0": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump, but it's also surrounded by grass and other elements.  It's not a clean, isolated image of a single tree stump suitable for physics simulation."
+    },
+    "tree/000-090/2e545b228a124bd7a0ecba38c231eb4a": {
+        "is_appropriate": false,
+        "reason": "The image depicts a rock, which is not one of the specified classes (tree, ficus, fern).  It is also not suitable for physics simulation in a video game context as it is not a living plant."
+    },
+    "tree/000-091/5b95e29388e74e549f350927e4f4a5fb": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree stump, suitable for physics simulation."
+    },
+    "tree/000-092/035fd1e06ee1412d8a0d29755f742ebf": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-092/da9107fcaf2843ccb222bf3e73db4d17": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-092/db6b856bc1654072b7ec8420b149c1f1": {
+        "is_appropriate": false,
+        "reason": "The image depicts a tree, but the leaves are represented in a way that is not realistic or suitable for physics simulation.  The leaves appear as flat, disjointed squares, making it impossible to accurately model their movement or interaction with physics."
+    },
+    "tree/000-093/6985e1d815014355880b8979cbaab0ba": {
+        "is_appropriate": false,
+        "reason": "The image only shows a small portion of the tree trunk.  It's not enough information to accurately determine its properties for physics simulation or to use it in a game.  A more complete image of the tree is needed."
+    },
+    "tree/000-093/b91733d37e6145468ad7465f2c21ad30": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump, but also a significant amount of ground/grass around it.  We need images of single objects for physics simulation parameter extraction."
+    },
+    "tree/000-093/e5a062c594aa472cab65c4004ec6a166": {
+        "is_appropriate": false,
+        "reason": "The image is too low resolution and does not clearly depict a tree, ficus, or fern.  It's difficult to discern any meaningful shape or structure."
+    },
+    "tree/000-094/6a1d449fc3664aa88eb1b029c13753b8": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and lacks detail to be useful for physics simulation.  It's difficult to discern the individual leaves and branches necessary for accurate material and physics property estimation."
+    },
+    "tree/000-094/9ea6866e40294eaeaa82b2a63794be93": {
+        "is_appropriate": false,
+        "reason": "The image contains a fern, but also includes a significant amount of ground/dirt around it.  We need images with only the single object (fern) for the physics simulation."
+    },
+    "tree/000-094/b88bd1e0b1a54f728eacfbefb51f4517": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree model, suitable for physics simulation."
+    },
+    "tree/000-094/be2bda926bb4484883bbe8520bf68844": {
+        "is_appropriate": false,
+        "reason": "The image depicts a rock, which is not one of the specified classes (tree, ficus, fern).  It's also not suitable for physics simulation in the context of a game featuring plants."
+    },
+    "tree/000-095/5ec1e157943d461cbb858d2957df0bca": {
+        "is_appropriate": false,
+        "reason": "The image is blurry and doesn't clearly depict a single object.  It looks like a flat, textured surface rather than a distinct tree, ficus, or fern.  It's not suitable for physics simulation because it lacks the necessary detail and definition."
+    },
+    "tree/000-096/01c61266170740feb6e204a94320d628": {
+        "is_appropriate": false,
+        "reason": "The image is unclear and does not depict a single tree, ficus, or fern.  It's difficult to determine what the object is from the provided image."
+    },
+    "tree/000-096/a47768b9f834471982d66a747fbaf5b5": {
+        "is_appropriate": false,
+        "reason": "The image contains a scene with multiple objects, including a house, trees, and a car.  It does not depict a single tree, ficus, or fern as required."
+    },
+    "tree/000-096/c383cc8ec0824022b85140bd94999b9e": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk with flowers, which are not part of the tree itself.  We need images of single, isolated objects for physics simulation."
+    },
+    "tree/000-097/33110be314184563b81e4a4b7d44e819": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-098/01269c6a8b9341d280abdeeacbd98c4f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-098/6e64d8e273f1487f999fa6f109d71f04": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-098/8504a3e420b64624928789358cab6694": {
+        "is_appropriate": false,
+        "reason": "The image is almost entirely white and does not depict a tree, ficus, or fern.  It's not suitable for identifying or extracting physical properties for game development."
+    },
+    "tree/000-099/4ab4f373ec7b449eab568275932e1d5f": {
+        "is_appropriate": false,
+        "reason": "The image contains a rock, which is not one of the specified classes (tree, ficus, fern).  It is also not suitable for physics simulation in a game context in the way a tree, ficus, or fern would be."
+    },
+    "tree/000-099/eaec8082c0af4ea6bf7efec8d7253b56": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern plant, suitable for physics simulation."
+    },
+    "tree/000-100/1eb5c08552ec404d8341787356f01587": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk, but also a significant amount of ground/grass around it.  It does not show a single isolated object."
+    },
+    "tree/000-100/2cce60572bb140d7860c92248615acfd": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-100/2d7e5d0947de445dbf557afa507a44c7": {
+        "is_appropriate": false,
+        "reason": "The image contains a green ground plane in addition to the tree.  We only want images of single objects."
+    },
+    "tree/000-100/4c8bd896abda4ac68b5e17d022fa4670": {
+        "is_appropriate": false,
+        "reason": "The image depicts a windmill, which is not one of the specified classes (tree, ficus, fern)."
+    },
+    "tree/000-100/5114ba84d6df44b7a9789d50cc07f94b": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-100/5675b34a63084abaa34ddfb2d1ea9403": {
+        "is_appropriate": false,
+        "reason": "The image is a sphere with a blurry reflection of trees. It does not depict a single, identifiable tree, ficus, or fern.  It's not suitable for representing a single object for physics simulation."
+    },
+    "tree/000-100/ba435e52a82c48288b8a15fb2cdd6588": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-100/d215c57af769429086f0ce8472b015cc": {
+        "is_appropriate": false,
+        "reason": "The image is blank. It does not depict any object."
+    },
+    "tree/000-100/de5501fe68c2455a9c420fd5c8536fba": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-101/60bf40c9dd1a4f7cac3e608dda856797": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree in a pot, suitable for physics simulation."
+    },
+    "tree/000-101/d6bbc051c4b440289869f3d203d3ba1a": {
+        "is_appropriate": false,
+        "reason": "The image contains unrealistic elements (purple spheres) that are not suitable for a physics simulation of a tree.  The focus should be on a realistic depiction of a single tree, ficus, or fern for accurate physics parameter extraction."
+    },
+    "tree/000-102/76c9f546d9a84437a495071c9fd1ef78": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-103/29cd3043ddd2449ea56bfbfb3f9248ff": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects (a tree-like structure and various plants) instead of a single object from one of the specified classes."
+    },
+    "tree/000-103/3a3011d387cf4506b45166ea1de564a0": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple tree stumps and ground debris.  It does not depict a single, isolated object suitable for physics simulation."
+    },
+    "tree/000-103/858a939b35ca49db81e5fd824e245e25": {
+        "is_appropriate": true,
+        "reason": "The image shows a single ficus branch with leaves and figs.  It's suitable for use in a physics simulation as it clearly depicts a single object and its parts."
+    },
+    "tree/000-103/8b02321c0a6344fcb37dca6f2fbb680c": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-103/cb7fd39aabb94be8aa195741845a0e2a": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree, suitable for physics simulation."
+    },
+    "tree/000-104/35e976053bf1437a922bdd83075137c9": {
+        "is_appropriate": false,
+        "reason": "The image is blank or contains no discernible object.  It cannot be used for identifying plant classes or for physics simulation."
+    },
+    "tree/000-104/5c6c533c1ecb43f6b8ba9db3f6eda0ce": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk with a small amount of ground around the base.  It's not a single, isolated object suitable for physics simulation. The ground makes it unsuitable for easy physics parameter extraction."
+    },
+    "tree/000-104/95cd1a77789241ee82a960bad5dfe809": {
+        "is_appropriate": true,
+        "reason": "The image contains a single palm tree, suitable for physics simulation in a game."
+    },
+    "tree/000-104/9f1d845436db4672a1335b77e94ef20e": {
+        "is_appropriate": false,
+        "reason": "The image contains a table, which is not one of the specified classes (tree, ficus, fern)."
+    },
+    "tree/000-104/b64783a7cd384be59595664e77f944ea": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple rocks.  We need images of single objects (tree, ficus, or fern) for physics simulation."
+    },
+    "tree/000-105/b5a58f20d5e647cba149f5a4cb8bbc03": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree trunk, suitable for physics simulation. The background is mostly clear."
+    },
+    "tree/000-106/09248cebdf8546a2a501e2820547ebd3": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, isolated tree model suitable for physics simulation.  It's simple enough to be easily integrated into a game engine."
+    },
+    "tree/000-106/7621c42c674f4b97b5850dfa579ccf60": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree and some rocks.  It does not depict a single object."
+    },
+    "tree/000-106/d87db433834b42079fd9056ca5a6a01f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern plant against a white background.  It's suitable for use in a physics simulation as it's clearly defined and isolated."
+    },
+    "tree/000-106/d914d018191d48dc813936e7f119c10d": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, isolated low-poly tree model suitable for physics simulation in a video game."
+    },
+    "tree/000-107/299535da328a4dbd94452129872f709e": {
+        "is_appropriate": false,
+        "reason": "The image does not depict a tree, ficus, or fern. It appears to be an abstract, non-realistic object."
+    },
+    "tree/000-107/5e7d6f937cb64a41be2256c26b59b167": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple plants and other elements in the background.  It does not isolate a single tree, ficus, or fern."
+    },
+    "tree/000-107/9f3087254b5043269facf2119a841ae2": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, clearly depicted tree.  It's suitable for physics simulation."
+    },
+    "tree/000-107/c6195b907d11468192f6fde8ec948f08": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern plant, suitable for physics simulation and game development."
+    },
+    "tree/000-108/5ddfc1bb3c8a44eda940ada1b7a98bbe": {
+        "is_appropriate": false,
+        "reason": "The image contains more than one object.  There is a tree, but also rocks and other plants at the base.  Only single objects are desired."
+    },
+    "tree/000-108/8ad5ca854c104a32941de291172f9bb7": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-108/b4b8fe3ad3f74b5bb1574e1fa942613e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-108/e84d7739904a40d29343779f150244b2": {
+        "is_appropriate": false,
+        "reason": "The image contains a palm tree, which is not one of the specified classes (tree, ficus, fern)."
+    },
+    "tree/000-109/200fbb44fd6e4ef18d9f8b7105ae89d5": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-109/99a6191de63b4a568926f4009c91e646": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk slice on a piece of paper.  There is more than one object in the image, and the background is not transparent."
+    },
+    "tree/000-110/38531afd86434987b1a0bf5968fe001f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern plant against a white background.  It's suitable for use in a physics simulation as the individual fronds could realistically sway in the wind."
+    },
+    "tree/000-110/4009aa3704844d32ab6835f0d293709f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-110/702f01295e354212b263eb4ead90850b": {
+        "is_appropriate": false,
+        "reason": "The image contains a palm tree, which is not one of the specified classes (tree, ficus, fern)."
+    },
+    "tree/000-110/c017d0fb746d4cc48748cca76ad1efad": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree, suitable for physics simulation."
+    },
+    "tree/000-110/e060a13bda674274b49a0c83e9436e5c": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects.  It shows several different types of trees and plants, not a single isolated object."
+    },
+    "tree/000-110/e8c89b1e4ee84222928765534d751839": {
+        "is_appropriate": false,
+        "reason": "The image contains a small patch of ground around the tree trunk.  It should only show the tree trunk for physics simulation purposes."
+    },
+    "tree/000-111/0c32a322258e42d5884f0b0fb98b1864": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-111/35bcd6f938384ca5a7d23f252256a46a": {
+        "is_appropriate": false,
+        "reason": "The image is not a clear depiction of a single fern. It appears to be a distorted or abstract representation, unsuitable for physics simulation or game asset use."
+    },
+    "tree/000-111/59f558b807774317acd8f1e87e9a613d": {
+        "is_appropriate": false,
+        "reason": "The image is blurry and does not clearly depict a single object.  It's difficult to determine if it's a tree, ficus, or fern, and the low resolution makes it unsuitable for physics simulation."
+    },
+    "tree/000-111/6dee62a996e54c39b7059b62cd6a87d3": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree, suitable for physics simulation."
+    },
+    "tree/000-111/914556be166b4074a4cfd1067434bcb7": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree on a square base.  The base is an unwanted element; we only need the tree itself."
+    },
+    "tree/000-112/afd354a3ece1476d937e5256cb5ff83b": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree.  It's simple, but suitable for use in a physics simulation."
+    },
+    "tree/000-112/d85bfb0d8da6459fb994b9ffca126375": {
+        "is_appropriate": false,
+        "reason": "The image contains a plant in a pot.  We only want images of single plants without pots or other objects."
+    },
+    "tree/000-112/f1462209864b4f5182659c48dd51a428": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern in a pot, suitable for physics simulation."
+    },
+    "tree/000-113/87c06037bdd8451b80f3e69e90182f67": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-113/b1be7a5cd83e41aba1ff8bcdf8c26ad3": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-115/857630ff81604f00b7dd758af88fb13f": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree in a pot.  It's suitable for physics simulation as a tree model."
+    },
+    "tree/000-115/905b154f33a94022b56f58f474c234cd": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-115/e1cc407d552f4332bf697ed2b71cabe3": {
+        "is_appropriate": false,
+        "reason": "The image contains a bonsai tree in a pot.  While it's a tree, the pot is an additional element that violates the requirement for a single object."
+    },
+    "tree/000-116/3978f6dd6d3e4dc5b5562005713ec89e": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple trees.  We need images of single objects for physics simulation."
+    },
+    "tree/000-116/4208b94c93ab443491a9c8dcfcd4a17c": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree. It's simple but suitable for physics simulation."
+    },
+    "tree/000-116/4c8340a998484f989f02eaa698fae30b": {
+        "is_appropriate": false,
+        "reason": "The image is not clear enough to identify any of the target classes (tree, ficus, fern). It appears to be an abstract representation of cubes, not a recognizable plant."
+    },
+    "tree/000-116/614c4e2e413840059fa3880cdf5a5636": {
+        "is_appropriate": false,
+        "reason": "The image contains other plants at the base of the tree.  We need images with only one isolated object."
+    },
+    "tree/000-116/8d30e31d774b4077b58061c1acbadcb1": {
+        "is_appropriate": false,
+        "reason": "The image contains a small tree, but also a significant amount of white space and what appears to be a faint, blurry artifact on the left.  The background is not clean, and therefore the image is not suitable for isolating the tree for physics simulation."
+    },
+    "tree/000-116/b7439dd80e9c4fcd8d8cee9015bd687c": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, simple tree model suitable for physics simulation in a game.  The background is clear, and only the tree is present."
+    },
+    "tree/000-116/d365d69d0cd14259b037dc67f9ce5141": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-117/2c712586dd0948549c8e9b281233b14a": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree and ground cover.  It does not show a single isolated object."
+    },
+    "tree/000-117/30e74d872e3645bbbe6a26c9292eb3a2": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree, suitable for physics simulation."
+    },
+    "tree/000-117/31b3fa826acb4209a99933bf801478f8": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-117/b436ce3bd3f74b42a9294e6ddd6712f9": {
+        "is_appropriate": false,
+        "reason": "The image is blurry and does not clearly depict a single tree.  It's difficult to determine if this is a tree suitable for physics simulation due to the poor quality."
+    },
+    "tree/000-117/f79f03d4552a4a6a9605f2acaee574dc": {
+        "is_appropriate": false,
+        "reason": "The image shows a piece of wood, which is not one of the specified classes (tree, ficus, fern).  While it could be part of a tree, the image does not depict a whole tree or a clearly identifiable part of one suitable for physics simulation (e.g., a branch)."
+    },
+    "tree/000-119/cdc5c36e6f894b50adcc46ace4b3aa84": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-121/24c701a66a2e43c0a85fcc5c8773fc05": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree trunk, suitable for physics simulation."
+    },
+    "tree/000-121/26162cd18f6747c69d3353aae7274c2f": {
+        "is_appropriate": false,
+        "reason": "The image depicts a rock, which is not one of the specified classes (tree, ficus, fern).  It's also not suitable for physics simulation in a video game context as it's not a plant."
+    },
+    "tree/000-121/370bc2771696427381a89f9269d9f4a1": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple trees and a campfire, not a single object."
+    },
+    "tree/000-122/f94c70ac093e408a8219b04215c531dd": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-122/fbbb9f53cd164ba38b47fa3da37196d9": {
+        "is_appropriate": true,
+        "reason": "The image shows a tree stump, which is a single object and suitable for physics simulation (e.g., to simulate its stability or reaction to external forces)."
+    },
+    "tree/000-123/34826a19bb1a42c8bb999ef7c6a0da10": {
+        "is_appropriate": false,
+        "reason": "The image contains leaves on the ground around the tree.  We only want images of single objects."
+    },
+    "tree/000-123/58498c4c22d64948b97453e3f1781623": {
+        "is_appropriate": false,
+        "reason": "The image contains a small amount of ground around the base of the tree.  The image should only contain the tree itself for optimal use in physics simulations."
+    },
+    "tree/000-123/5dafd23db0e946b78de155fcdf5c4c6f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-123/5f401f9b9bc94fc28ffc32a28bac2bb0": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple flowers and ferns, not a single object."
+    },
+    "tree/000-123/9bbdddddc4b644a1bcaed9423eeec7b9": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern plant, suitable for physics simulation."
+    },
+    "tree/000-123/b5041d5648984ac2b833e2bde96fae85": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-124/47809ed8533947c4b148cae37586c25e": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree, suitable for physics simulation."
+    },
+    "tree/000-124/4a652944e6ae45e7a4c3c83b7849fe91": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, clearly depicted tree. It's suitable for physics simulation as it's a simple model that can be easily manipulated."
+    },
+    "tree/000-124/6de571b634364fc59c4e3b98941663ea": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-124/f733ee26041b4714b19f05d4942b3b64": {
+        "is_appropriate": false,
+        "reason": "The image contains an extra leaf besides the tree.  We only want images of single objects."
+    },
+    "tree/000-125/6b85ed2cb6144f9683d3cc0082e88b59": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, simple tree model suitable for physics simulation.  The background is clear."
+    },
+    "tree/000-125/9c53eed5af704267adc82dd7e64932a0": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree, suitable for physics simulation."
+    },
+    "tree/000-126/2efbfb0d5e374a8284b29fb74ec8a4cd": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree, suitable for physics simulation."
+    },
+    "tree/000-126/798d2540be1c468f892d6890f28acda7": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-126/a2a6237a270840e198cc7db1c47f1ef7": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-126/e17b93edac0c434b8a8cca6991e44069": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-128/52d7a2ffb8604dddbc3f0e0fbe3f98c1": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-128/e5b8bb9961b642218163df6f029f82c8": {
+        "is_appropriate": false,
+        "reason": "The image contains a chair, which is not one of the specified classes (tree, ficus, fern).  It's also not an object suitable for physics simulation in the context of a game focused on plants."
+    },
+    "tree/000-129/1e89d7e0312b4cb48f5e2364692e76ac": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects (trees, path, rocks) and does not isolate a single tree, ficus, or fern for individual analysis and use in physics simulation."
+    },
+    "tree/000-129/341fd0422317410692a4ae49ead5dcb4": {
+        "is_appropriate": false,
+        "reason": "The image is almost entirely white and does not depict any recognizable object.  It's unsuitable for determining physical properties or for use in a video game."
+    },
+    "tree/000-129/81e98f9d76234dc2a5aed9a23d8d13a6": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-129/a1e6a9084137440d9b4116b7517099dc": {
+        "is_appropriate": false,
+        "reason": "The image is blank. It does not depict any object."
+    },
+    "tree/000-129/e6520e8f74c847b6b819f59e351af0b4": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk and some ground.  There are other elements in the image besides the single tree trunk, violating the requirement of only one object."
+    },
+    "tree/000-130/594e8b9d51024e06b970ebe0d7cf5ace": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-130/c7de0bf235f546d4b710fc020bd2e452": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree model, suitable for physics simulation in a video game."
+    },
+    "tree/000-131/53aad99a7d5047959e920c925a05acb7": {
+        "is_appropriate": false,
+        "reason": "The image shows a rock, which is not one of the specified classes (tree, ficus, fern).  It's also not suitable for physics simulation in the context of a video game."
+    },
+    "tree/000-131/70d4580c416a41299e76cf5b0ad3dece": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree, suitable for physics simulation."
+    },
+    "tree/000-131/a0acb397930348a99ee52fe6e0ceb60c": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-133/01a30d81b06b454fa44040b37ba5a1de": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump with surrounding ground, violating the requirement of depicting a single object."
+    },
+    "tree/000-133/5d025bda189a44999a1c146d773c98e5": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-133/6380759af7284f83a86e296c8b77d93f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-134/11605b50573b444791624fca0a8665d8": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-134/290b2576a05148b7969c7dbcf5ea7571": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-134/4e94e5b04db64103bf4c6ae8739aaeec": {
+        "is_appropriate": true,
+        "reason": "The image shows a single ficus plant in a pot against a white background.  It's suitable for use in a video game and physics simulation."
+    },
+    "tree/000-134/ae15fdf2779c4845b51971cbebaec981": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree stump, suitable for physics simulation."
+    },
+    "tree/000-134/c95e77f014f04e78b9c0a98f11258b36": {
+        "is_appropriate": false,
+        "reason": "The image is completely white and does not depict any object."
+    },
+    "tree/000-135/3e297315fd474aa78a8d2853ebdd9e36": {
+        "is_appropriate": false,
+        "reason": "The image does not depict a tree, ficus, or fern. It appears to be an abstract image or a rendering error, not suitable for game development."
+    },
+    "tree/000-135/841d4ad3a7734c5fb99b2726267c43ac": {
+        "is_appropriate": false,
+        "reason": "The image does not clearly depict a tree, ficus, or fern.  It appears to be an abstract or incomplete 3D model rendering, and is not suitable for use in a physics simulation requiring a clearly defined object."
+    },
+    "tree/000-135/9a07d6edb4384ad182b0fa7466f67ecc": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-135/acf8f4d156054c2ca1abff5f1c7c530d": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-135/c803f1ee3a6542319b2509b372f0b1fe": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-135/d62f1a348ece4812900c53c00073d70f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-136/11fbf29cf48743abb02437a24fbe6d40": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation and game development."
+    },
+    "tree/000-136/2975c88e50e94740ae7886f3ef3eae3f": {
+        "is_appropriate": false,
+        "reason": "The image depicts a creature, not a tree, ficus, or fern.  It's not relevant to the specified classes and therefore unsuitable for the project."
+    },
+    "tree/000-136/47e57de2e2ce4bbe8a6d06becf9d7fd9": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, simple tree model suitable for physics simulation.  It's clearly a tree and doesn't contain other objects."
+    },
+    "tree/000-136/6b62a52e586b46f7b3228f958785c77f": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk on the ground, but also includes grass and ground.  It does not show a single, isolated object suitable for physics simulation."
+    },
+    "tree/000-137/2f4c3aa70baf48a3a214dc65f515c0ee": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-137/cf114cd2c534475c9e795f42be66c14c": {
+        "is_appropriate": true,
+        "reason": "The image shows a single ficus bonsai in a pot.  It's a clear depiction of the object and suitable for physics simulation."
+    },
+    "tree/000-137/de9c3aca3612458ea147140845131c42": {
+        "is_appropriate": false,
+        "reason": "The image does not depict a tree, ficus, or fern. It appears to be a rendering of an abstract object, not suitable for the specified classes."
+    },
+    "tree/000-137/f3b34416bffd4a6fa130f62638ff1670": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree, but also shows a significant portion of the ground and a concrete structure surrounding the tree.  It does not isolate the tree as a single object for physics simulation."
+    },
+    "tree/000-138/082524a9ea054571bf25c453b0fe6993": {
+        "is_appropriate": false,
+        "reason": "The image contains a Christmas tree with presents at the bottom.  It's not a single, isolated tree suitable for physics simulation in a game."
+    },
+    "tree/000-138/92cfc0f7a047485fb1a1337b6ce14bf7": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, simple low-poly tree model suitable for physics simulation.  The background is clear."
+    },
+    "tree/000-138/999612eb562846f6a8c4029e93b6da14": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-138/aec2cba02c9842599a51588febb32315": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model, suitable for physics simulation."
+    },
+    "tree/000-138/d73f8c893d254ded86b125280261c862": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-138/d9cf781d0d84473c85afff0ba2e12610": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-138/f420ea9edb914e1b9b7adebbacecc7d8": {
+        "is_appropriate": true,
+        "reason": "The image shows a single bonsai tree, suitable for physics simulation."
+    },
+    "tree/000-139/2012a9ab76ae45f5bc02c5905442ed5b": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-139/9fe503dad5cd4631983360a8fbd97f53": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and does not clearly depict a tree, ficus, or fern.  It's impossible to determine the object or its suitability for physics simulation."
+    },
+    "tree/000-139/c6a65b51988648f689bbd4665e87213e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-140/2884eeef3d324910b50d10061dd884ae": {
+        "is_appropriate": false,
+        "reason": "The image contains a palm tree, which is not one of the specified classes (tree, ficus, fern)."
+    },
+    "tree/000-140/b266a2134d9945f697123fc6c8e23522": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree branch, suitable for physics simulation and isolated on a white background."
+    },
+    "tree/000-140/b9f3fdaabeca4bb7a44cd4124a610be0": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-140/da8489defde348378a27eff6bc7a5843": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump with surrounding grass.  It's not a single, isolated object suitable for physics simulation as it includes multiple elements (tree stump and grass)."
+    },
+    "tree/000-140/ff47c6f0296141018f8a1e00a003798e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-141/9662ae04d8354b7cb0f22ecc6c983a60": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern, suitable for physics simulation."
+    },
+    "tree/000-141/ab02bde2768849e89dbb4ef3312c85ff": {
+        "is_appropriate": false,
+        "reason": "The image contains a low-poly model of what seems to be a tree, but it's not clear enough to be used for physics simulation.  The model is too simplistic and lacks detail for realistic physics calculations.  Additionally, the background is not transparent, which is undesirable."
+    },
+    "tree/000-141/b80b06ad8b394a20b3da20daa285989a": {
+        "is_appropriate": false,
+        "reason": "The image depicts a stylized, non-realistic object that does not resemble a tree, ficus, or fern.  It's not suitable for physics simulation as a natural object."
+    },
+    "tree/000-141/be8434c807f4484b8362ec6dd23f6228": {
+        "is_appropriate": false,
+        "reason": "The image is a very low-quality sketch and does not depict a realistic tree, ficus, or fern.  It's not suitable for use in a physics simulation as it lacks the necessary detail and definition."
+    },
+    "tree/000-142/112607585fc546d48eb5e927d74cbf18": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump and some ground.  It is not a single, isolated tree.  The presence of the ground makes it unsuitable for physics simulation as a single object."
+    },
+    "tree/000-142/5357612dced24c01a003edb8f2397896": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-142/6053fda81ea84a21aee5334ebceedc9c": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk, but also a significant amount of ground around it.  We need images of single objects for physics simulation."
+    },
+    "tree/000-142/c2f71ad331c94b2f899ea6d88246dccd": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree and a blue cube.  It does not show only one single object."
+    },
+    "tree/000-143/1fa998fc234348239d61ee78094b5cee": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-143/975f82bce77b4efe8f31a2519c12026f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model on a white background.  It's suitable for physics simulation."
+    },
+    "tree/000-143/9ccf68670adc449888e50c63e393065e": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree, suitable for physics simulation."
+    },
+    "tree/000-143/c2113de2539744209e36d1f6d42c0431": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model on a white background.  It's suitable for physics simulation."
+    },
+    "tree/000-143/cf31c3f5f15d405db46bf2a0b04cb013": {
+        "is_appropriate": false,
+        "reason": "The image is blurry and does not clearly depict a single tree branch.  It's difficult to extract useful information for physics simulation from this image."
+    },
+    "tree/000-143/f2add40433924a77b289bc605929c356": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects.  There is a central object that might be a tree, but it's surrounded by other objects at the base, making it unsuitable for single-object physics simulation."
+    },
+    "tree/000-144/390240fe08d042d38a2419147cab933b": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation."
+    },
+    "tree/000-144/548b9af1e6fb4123a56df328aff617e7": {
+        "is_appropriate": false,
+        "reason": "The image depicts a low-poly, unrealistic representation of a bush or tree.  It's not suitable for a physics simulation as the geometry is too simplistic and lacks the detail needed to accurately model physical properties like bending and swaying."
+    },
+    "tree/000-144/77bc0e4acb18404687f013656c4722da": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-144/e74f8eba9a1c45a5a910393b6735d977": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree, but also a large green plane.  It should only contain the tree."
+    },
+    "tree/000-144/f94a3c2d794441cfb864180de3ac3851": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree model on a plain background.  It's suitable for physics simulation."
+    },
+    "tree/000-145/5d861e5d40e74f7589c07921db55179e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-146/8eb3c01fb9da4d6088e4551ce5176f35": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree on a dark square base.  The base is not part of the tree and should be removed before use."
+    },
+    "tree/000-146/a6df03874e4c4b68b898f2db14a018e6": {
+        "is_appropriate": false,
+        "reason": "The image contains a palm tree on a small island.  The additional element of the island makes it inappropriate. We only want images of single objects."
+    },
+    "tree/000-146/b9922dd105ee4536b9ca983c26f58e66": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree on a white background.  It's suitable for use in a physics simulation as it depicts a single object with clear boundaries."
+    },
+    "tree/000-146/ce0553b3626d47c79bf4690c46e5acb9": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation in a video game."
+    },
+    "tree/000-147/2e28b75aaf43484cb16714cd9c3a6d91": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and unclear to identify the object.  It's impossible to determine if it's a tree, ficus, or fern, or even if it's a single object."
+    },
+    "tree/000-147/345d81aa3f334b73a2c697acc18c0a73": {
+        "is_appropriate": false,
+        "reason": "The image contains two trees.  We require images of only one object at a time."
+    },
+    "tree/000-147/4e2ac935fe08429cb3b194421786cb13": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fern plant against a white background.  It's suitable for use in a physics simulation as it clearly shows the plant's structure and root system."
+    },
+    "tree/000-147/77133c791d744b99a346b71e5336db6b": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump with surrounding ground and vegetation.  It's not a single, isolated object suitable for physics simulation."
+    },
+    "tree/000-147/95b8b35caab04a0b8930233c3e9fbf03": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree stump, suitable for physics simulation in a game."
+    },
+    "tree/000-150/14d3a54212e5406d9f6769bd6d478bd1": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-150/5c1ada982ca744488a7be31111c1911a": {
+        "is_appropriate": false,
+        "reason": "The image does not clearly depict a tree, ficus, or fern. It appears to be a piece of wood or a similar object, unsuitable for the intended purpose."
+    },
+    "tree/000-150/a4277a2f92d343f8b1b3ca0c7a533baf": {
+        "is_appropriate": false,
+        "reason": "The image contains a plant in a pot.  We only want images of single plants without pots for physics simulation."
+    },
+    "tree/000-150/bf58ef1578714285a530c3fb6b58706e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single, low-poly tree model suitable for physics simulation in a video game.  The background is clear, and only the tree is present."
+    },
+    "tree/000-150/dfef8d40d241492fa3f990337a7befd5": {
+        "is_appropriate": true,
+        "reason": "The image clearly depicts a single tree, suitable for physics simulation in a game."
+    },
+    "tree/000-150/f00e3e9722e546058cb356fe4090a8de": {
+        "is_appropriate": false,
+        "reason": "The image is too abstract and does not clearly depict a tree, ficus, or fern.  It's not suitable for identifying physical properties for game simulation."
+    },
+    "tree/000-151/323195c6a19246beb3944167bd433046": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree trunk with roots and some ground visible.  It's not a single, isolated object suitable for physics simulation. The ground around the base needs to be removed for proper use in a game."
+    },
+    "tree/000-152/12fab9e360174e7199c14f45af3cf33f": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-152/5a2339da2dc24456a0035b805b772a73": {
+        "is_appropriate": false,
+        "reason": "The image is too blurry and lacks detail to be useful for physics simulation.  It's difficult to discern the structure of the tree properly."
+    },
+    "tree/000-152/a97c7f0f289d4e90acc82539c6e9f3cc": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree branch, suitable for physics simulation and game development."
+    },
+    "tree/000-152/f3beec38258843f08da94d44f1b72d2b": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-152/fdf59efd292947c5b353167b009760fa": {
+        "is_appropriate": false,
+        "reason": "The image contains two objects: a potted plant and another object at the bottom.  We only want images with a single object."
+    },
+    "tree/000-153/14e39d8e7043497e890d4732cd2ac7c6": {
+        "is_appropriate": false,
+        "reason": "The image contains a palm tree, which is not one of the specified classes (tree, ficus, fern)."
+    },
+    "tree/000-153/2eaa754ce34241c5b686841568a0f214": {
+        "is_appropriate": true,
+        "reason": "The image shows a single log, suitable for physics simulation in a game."
+    },
+    "tree/000-153/870d3dfb2c0b4d9b8b1e5e78ab96a9a6": {
+        "is_appropriate": false,
+        "reason": "The image contains a small tree, but also includes a significant amount of ground around it.  We need images of single, isolated objects for physics simulation."
+    },
+    "tree/000-153/a308b61e6b824a88b5e70aa4120cb941": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects and is too blurry to identify any of them clearly.  It does not depict a single, identifiable tree, ficus, or fern."
+    },
+    "tree/000-154/4fc2f0efee824d6190171e15474e74ed": {
+        "is_appropriate": false,
+        "reason": "The image does not depict a tree, ficus, or fern.  It appears to be an abstract object and is not suitable for physics simulation in a game context."
+    },
+    "tree/000-156/12b68915b25046e088077cd35408bc7f": {
+        "is_appropriate": true,
+        "reason": "The image contains a single tree, suitable for physics simulation."
+    },
+    "tree/000-156/4497fc7cfeea4fcab0efedd89c17f7ac": {
+        "is_appropriate": true,
+        "reason": "The image shows a single tree, suitable for physics simulation."
+    },
+    "tree/000-156/b9c63d54eb7443ebb7c2eb0a6ca49681": {
+        "is_appropriate": false,
+        "reason": "The image contains multiple objects (trees and a tree stump) and a small character.  It does not depict a single object suitable for physics simulation."
+    },
+    "tree/000-156/e9e89dcf3b6e4b088dabf37a51f58a8e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation."
+    },
+    "tree/000-157/1d4afb668a714188935966d3ee9b2e33": {
+        "is_appropriate": true,
+        "reason": "The image shows a single fig, which is clearly a ficus fruit.  It's suitable for use in game development, potentially for physics simulations involving fruit falling or being manipulated."
+    },
+    "tree/000-157/6d4efe0898a44b86b28e7cff3cedbbd8": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree in a pot with rocks.  It does not depict a single, isolated tree suitable for physics simulation."
+    },
+    "tree/000-157/a17f3d8f7f09428a858b56dbb389c379": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump and a rock.  It does not depict a single object."
+    },
+    "tree/000-159/4065ce1f72ed4c9c9de14cd041bbaf58": {
+        "is_appropriate": false,
+        "reason": "The image contains a tree stump with surrounding ground and roots.  It's not a single, isolated object suitable for physics simulation in a video game."
+    },
+    "tree/000-159/50c308517a7045e0b9df11e534e472ea": {
+        "is_appropriate": false,
+        "reason": "The image contains a palm tree with leaves that appear to be made of dollar bills. This is not a realistic representation of a palm tree and is not suitable for use in a physics simulation."
+    },
+    "tree/000-159/74d82855748b4806a34716b9ea67f42e": {
+        "is_appropriate": true,
+        "reason": "The image shows a single palm tree, suitable for physics simulation in a game."
+    }
+}

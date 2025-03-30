@@ -2,7 +2,7 @@ from PIL import Image
 import os
 import argparse
 
-def convert_images(obj_id):
+def convert_images(data_dir, obj_id):
     """
     Remove the alpha channel from images and reorganize the dataset structure.
     
@@ -11,7 +11,7 @@ def convert_images(obj_id):
     """
     # Define paths based on the object ID
     # source_data = f"/mnt/kostas-graid/datasets/vlongle/diffphys3d/data/{obj_id}"
-    source_data = f"data/{obj_id}"
+    source_data = f"{data_dir}/{obj_id}"
     # source_data = f"feat_data/{obj_id}"
     output_dir = f"{source_data}/train"
     os.makedirs(output_dir, exist_ok=True)
@@ -36,6 +36,7 @@ def convert_images(obj_id):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Convert NGP format dataset for use with LERF, F3RM, etc.")
     parser.add_argument("--obj_id", type=str, help="Object ID of the dataset to process")
+    parser.add_argument("--data_dir", type=str, help="Data directory", default="data")
     args = parser.parse_args()
     
-    convert_images(args.obj_id)
+    convert_images(args.data_dir, args.obj_id)

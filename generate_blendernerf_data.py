@@ -35,8 +35,8 @@ def on_desktop():
 
 ## install the addon the first time
 if not on_desktop():
-    bpy.ops.preferences.addon_install(filepath='BlenderNeRF-main.zip')
-    bpy.ops.preferences.addon_enable(module='BlenderNeRF-main')
+    bpy.ops.preferences.addon_install(filepath='/home/vlongle/code/diffPhys3d/BlenderNeRF-main-custom.zip', overwrite=True)
+    bpy.ops.preferences.addon_enable(module='BlenderNeRF-main-custom')
 
 def get_default_output_dir(format_type):
     """Determine the default output directory based on the format."""

@@ -4,10 +4,10 @@ from utils import on_desktop
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--obj_id", type=str, help="Objaverse object ID to process")
-    parser.add_argument("--num_images", type=int, help="Number of images to render", default=100)
+    parser.add_argument("--num_images", type=int, help="Number of images to render", default=200)
     parser.add_argument("--train_steps", type=int, help="Number of training steps", default=5_000)
     parser.add_argument("--camera_dist_min", type=float, help="Minimum camera distance", default=1.2)
-    parser.add_argument("--camera_dist_max", type=float, help="Maximum camera distance", default=1.2)
+    parser.add_argument("--camera_dist_max", type=float, help="Maximum camera distance", default=1.8)
     # parser.add_argument("--camera_dist", type=float, help="Camera distance (deprecated, use min/max instead)", default=1.2)
     parser.add_argument("--transparent_bg", type=bool, help="Use transparent background", default=True)
     parser.add_argument("--scene_scale", type=float, help="Scene scale", default=1.0)
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     blender_render_cmd += f" --scene_scale {args.scene_scale}"
 
     
-    convert_cmd = f"python convert.py --obj_id {args.obj_id}"
+    convert_cmd = f"python convert.py --obj_id {args.obj_id} --data_dir {path_prefix}/data"
     
 
 
@@ -39,8 +39,8 @@ if __name__ == "__main__":
 
 
 
-    os.system(download_cmd)
-    os.system(blender_render_cmd)
+    # os.system(download_cmd)
+    # os.system(blender_render_cmd)
 
 
     os.system(convert_cmd)

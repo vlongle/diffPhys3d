@@ -34,13 +34,26 @@ from f3rm_robot.load import LoadState, load_nerfstudio_outputs
 from f3rm_robot.task import Task, get_tasks
 from f3rm_robot.utils import get_gripper_meshes, get_heatmap, sample_point_cloud
 from f3rm_robot.visualizer import BaseVisualizer, ViserVisualizer
+from f3rm.pca_colormap import apply_pca_colormap
 
 args = OptimizationArgs
 visualizer: Optional[BaseVisualizer] = None
 
 
-def get_filtered_scene_pcd(load_state: LoadState, device: torch.device, voxel_size: float = 0.01) -> o3d.geometry.PointCloud:
-    """Get a filtered scene point cloud using the same techniques as in optimization."""
+def get_filtered_scene_pcd(load_state: LoadState, device: torch.device, voxel_size: float = 0.01, 
+                          query: Optional[str] = None) -> o3d.geometry.PointCloud:
+    """
+    Get a filtered scene point cloud using the same techniques as in optimization.
+    
+    Args:
+        load_state: Loaded scene state
+        device: Device to use for computation
+        voxel_size: Size of voxels for sampling
+        query: Optional text query to visualize query-specific features
+        
+    Returns:
+        Filtered point cloud with PCA-colored features
+    """
     feature_field = load_state.feature_field_adapter()
     
     # Create dense voxel grid
@@ -61,14 +74,56 @@ def get_filtered_scene_pcd(load_state: LoadState, device: torch.device, voxel_si
     voxel_grid = voxel_downsample(voxel_grid, voxel_size)
     voxel_grid, _ = remove_statistical_outliers(voxel_grid, num_points=50, std_ratio=4.0)
     
-    # Get colors for visualization
+    # Get features for visualization
     with torch.no_grad():
-        rgb = feature_field.get_rgb(voxel_grid)
+        outputs = feature_field(voxel_grid)
+
+    ## NOTE: HACK: THE ORIGINAL CODE USES FEATURES WEIGHTED BY ALPHA
+    ## COMPOSITING EQN. ACTUALLY NOT SURE WHY SHOULD WE USE THE ALPHA
+    ## WEIGHTED FEATURES HERE instead of just the raw features.
+    # voxel_feats = outputs["feature"]
+    voxel_feats = get_qp_feats(outputs)
+    
+    # If query is provided, compute query-specific features
+    if query is not None:
+        # Load CLIP model if not already loaded
+        clip_model, _ = clip.load(CLIPArgs.model_name, device=device)
+        
+        # Encode query using CLIP
+        with torch.no_grad():
+            tokens = tokenize(query).to(device)
+            query_emb = clip_model.encode_text(tokens).float()  # Ensure float32 type
+            query_emb /= query_emb.norm(dim=-1, keepdim=True)
+        
+        # Normalize voxel features for cosine similarity
+        voxel_feats = voxel_feats.float()  # Ensure float32 type
+        voxel_feats_norm = voxel_feats / voxel_feats.norm(dim=-1, keepdim=True)
+        
+        # Compute similarity between voxel features and query
+        voxel_sims = voxel_feats_norm @ query_emb.T
+        
+        # Apply colormap to query-specific similarities
+        print(f"Visualizing heatmap for query: '{query}'")
+        clip_pca_colors = get_heatmap(
+            voxel_sims.squeeze(), 
+            cmap_name="Reds",
+            colormap_min=-1.0,
+            colormap_max=1.0,
+
+        )
+        clip_pca_colors = torch.from_numpy(clip_pca_colors).to(device)
+    else:
+        # Apply PCA to general CLIP features
+        print("Visualizing PCA on general CLIP features (no query)")
+        # clip_pca_colors = apply_pca_colormap(voxel_feats)
+        with torch.no_grad():
+            rgb = feature_field.get_rgb(voxel_grid)
+        clip_pca_colors = rgb
     
     # Convert to Open3D point cloud
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(voxel_grid.cpu().numpy())
-    pcd.colors = o3d.utility.Vector3dVector(rgb.cpu().numpy())
+    pcd.colors = o3d.utility.Vector3dVector(clip_pca_colors.cpu().numpy())
     
     return pcd
 
@@ -86,11 +141,24 @@ def get_scene_pcd(load_state: LoadState, num_points: int, voxel_size: float) -> 
     return pcd
 
 
-def visualize_scene(load_state: LoadState, device: torch.device, num_points: int = 200_000, voxel_size: float = 0.005):
-    """Visualize the scene by sampling a point cloud from the NeRF and adding it to the visualizer."""
-    # pcd = get_scene_pcd(load_state, num_points, voxel_size)
-    pcd = get_filtered_scene_pcd(load_state, device, voxel_size=voxel_size)
-    visualizer.add_o3d_point_cloud("scene_pcd", pcd, point_size=voxel_size + 0.001)
+def visualize_scene(load_state: LoadState, device: torch.device, query: Optional[str] = None, 
+                   num_points: int = 200_000, voxel_size: float = 0.005):
+    """
+    Visualize the scene by sampling a point cloud from the NeRF and adding it to the visualizer.
+    
+    Args:
+        load_state: Loaded scene state
+        device: Device to use for computation
+        query: Optional text query to visualize query-specific features
+        num_points: Number of points to sample
+        voxel_size: Size of voxels for sampling
+    """
+    pcd = get_filtered_scene_pcd(load_state, device, voxel_size=voxel_size, query=query)
+    
+    # Use a different name for query-specific visualization
+    pcd_name = f"scene_pcd_{slugify(query)}" if query else "scene_pcd"
+    visualizer.add_o3d_point_cloud(pcd_name, pcd, point_size=voxel_size + 0.001)
+    
     return pcd
 
 
@@ -195,7 +263,6 @@ def get_initial_voxel_grid(
     print(f"Alpha > 0.1: {(alpha > 0.1).sum().item()} voxels")
     print(f"Alpha > 0.01: {(alpha > 0.01).sum().item()} voxels")
     print(f"Alpha > 0.001: {(alpha > 0.001).sum().item()} voxels")
-    exit()
 
     alpha_vg = alpha.reshape(og_voxel_grid_shape[:-1])
     # voxel_grid = marching_cubes_mask(alpha_vg, args.alpha_threshold, args.min_bounds, args.max_bounds)
@@ -469,26 +536,21 @@ def entrypoint():
     feature_field = load_state.feature_field_adapter()
 
     # Setup output directory and save args
-    output_dir = Path(args.scene).parent / "language_pose_optimization" / datetime.now().strftime("%Y-%m-%d_%H%M%S")
-    output_dir.mkdir(parents=True)
+    output_dir = Path(args.scene).parent / "language_visualization" / datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    output_dir.mkdir(parents=True, exist_ok=True)
     with open(output_dir / "args.json", "w") as f:
         json.dump(vars(args), f, indent=4)
 
-    # Visualize scene
+    # Visualize scene with general PCA features
     global visualizer
     if args.visualize:
         visualizer = ViserVisualizer(args.viser_host, args.viser_port)
-        # scene_pcd = visualize_scene(load_state)
+        # Set background color to black
         scene_pcd = visualize_scene(load_state, device, voxel_size=args.voxel_size)
-        o3d.io.write_point_cloud(str(output_dir / "scene.ply"), scene_pcd)
-        print(f"Saved scene point cloud to {output_dir / 'scene.ply'}")
+        # o3d.io.write_point_cloud(str(output_dir / "scene.ply"), scene_pcd)
+        # print(f"Saved scene point cloud to {output_dir / 'scene.ply'}")
 
-    # Load CLIP so we can query via language
-    print("Loading CLIP model...", end=" ")
-    clip_model, _ = clip.load(CLIPArgs.model_name, device=device)
-    print("Done!")
-
-    # Ask for query from user and optimize. If we're using the ViserVisualizer, we can use a textbox in the GUI
+    # Ask for query from user and visualize. If we're using the ViserVisualizer, we can use a textbox in the GUI
     if isinstance(visualizer, ViserVisualizer):
         input_fn, enable_gui = visualizer.add_query_gui()
         print(f"Enter query in the visualizer at: {visualizer.url}")
@@ -507,24 +569,20 @@ def entrypoint():
         if query == "":
             break
 
-        # Optimize for the query!
+        # Visualize the query-specific PCA
         try:
-            results = language_pose_optimization(feature_field, clip_model, query, device)
-        except NoProposalsError as e:
-            # Print error message
-            print(e)
+            query_pcd = visualize_scene(load_state, device, query=query, voxel_size=args.voxel_size)
+            queries.append(query)
+            
+            # Save the query-specific point cloud
+            query_dir = output_dir / slugify(query)
+            query_dir.mkdir(parents=True, exist_ok=True)
+            # o3d.io.write_point_cloud(str(query_dir / "query_pcd.ply"), query_pcd)
+            # print(f"Saved query-specific point cloud to {query_dir / 'query_pcd.ply'}")
+            
+        except Exception as e:
+            print(f"Error visualizing query '{query}': {e}")
             continue
-        queries.append(query)
-
-        # Write results to directory
-        query_dir = output_dir / slugify(query)
-        query_dir.mkdir(parents=True, exist_ok=True)
-        with open(query_dir / "metrics.json", "w") as f:
-            json.dump(results["metrics"], f, indent=4)
-        torch.save(results["grasps_to_world"].cpu(), query_dir / "grasps_to_world.pt")
-        if "gripper_mesh" in results:
-            o3d.io.write_triangle_mesh(str(query_dir / "gripper_mesh.ply"), results["gripper_mesh"])
-        print(f"Saved results to {query_dir}")
 
         # Write queries to file. Save inside loop so we get partial results if we crash
         with open(output_dir / "queries.json", "w") as f:

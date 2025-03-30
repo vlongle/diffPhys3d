@@ -10,3 +10,4 @@ __pycache__
 **slurm_scripts/
 assets/
 tmp.out
+**results

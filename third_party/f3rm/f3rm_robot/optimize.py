@@ -14,6 +14,7 @@ from params_proto import ARGS
 from pytorch3d.transforms import Transform3d, quaternion_to_matrix, random_quaternions
 from slugify import slugify
 from tqdm import tqdm
+import numpy as np
 
 from f3rm.features.clip import clip, tokenize
 from f3rm.features.clip.model import CLIP
@@ -38,6 +39,66 @@ from f3rm.pca_colormap import apply_pca_colormap
 
 args = OptimizationArgs
 visualizer: Optional[BaseVisualizer] = None
+
+
+def remove_floating_clusters(pcd: o3d.geometry.PointCloud, min_points: int = 10, eps: float = 0.02) -> o3d.geometry.PointCloud:
+    """
+    Remove small disconnected clusters from a point cloud using DBSCAN clustering.
+    
+    Args:
+        pcd: Open3D point cloud
+        min_points: Minimum number of points for a cluster to be kept
+        eps: Maximum distance between two points for them to be considered in the same cluster
+        
+    Returns:
+        Filtered point cloud with small clusters removed
+    """
+    if len(pcd.points) == 0:
+        return pcd
+    
+    # Run DBSCAN clustering
+    print(f"Running DBSCAN clustering with eps={eps}, min_points={min_points} on {len(pcd.points)} points")
+    labels = np.array(pcd.cluster_dbscan(eps=eps, min_points=min_points, print_progress=True))
+    
+    # Check if clustering was successful
+    if len(labels) == 0:
+        print("DBSCAN clustering failed. Returning original point cloud.")
+        return pcd
+    
+    # Find the maximum label (excluding noise points labeled as -1)
+    max_label = labels.max()
+    print(f"DBSCAN found {max_label + 1} clusters")
+    
+    # If no clusters were found (all points are noise)
+    if max_label < 0:
+        print("No clusters found. All points classified as noise. Try increasing eps or decreasing min_points.")
+        return pcd
+    
+    # Count points in each cluster
+    unique_labels = np.arange(max_label + 1)  # 0 to max_label
+    counts = np.array([np.sum(labels == i) for i in unique_labels])
+    
+    # Find the largest cluster
+    largest_cluster_idx = np.argmax(counts)
+    largest_cluster_count = counts[largest_cluster_idx]
+    
+    print(f"Largest cluster (label {largest_cluster_idx}) has {largest_cluster_count} points")
+    print(f"Other cluster sizes: {[(i, c) for i, c in enumerate(counts) if i != largest_cluster_idx]}")
+    
+    # Keep only points in the largest cluster
+    largest_cluster_mask = labels == largest_cluster_idx
+    noise_points = np.sum(labels == -1)
+    
+    print(f"Removed {len(labels) - largest_cluster_count - noise_points} points from {max_label} smaller clusters")
+    print(f"Removed {noise_points} noise points")
+    
+    # Create new point cloud with only the largest cluster
+    filtered_pcd = o3d.geometry.PointCloud()
+    filtered_pcd.points = o3d.utility.Vector3dVector(np.asarray(pcd.points)[largest_cluster_mask])
+    if pcd.has_colors():
+        filtered_pcd.colors = o3d.utility.Vector3dVector(np.asarray(pcd.colors)[largest_cluster_mask])
+    
+    return filtered_pcd
 
 
 def get_filtered_scene_pcd(load_state: LoadState, device: torch.device, voxel_size: float = 0.01, 
@@ -109,7 +170,6 @@ def get_filtered_scene_pcd(load_state: LoadState, device: torch.device, voxel_si
             cmap_name="Reds",
             colormap_min=-1.0,
             colormap_max=1.0,
-
         )
         clip_pca_colors = torch.from_numpy(clip_pca_colors).to(device)
     else:
@@ -124,6 +184,9 @@ def get_filtered_scene_pcd(load_state: LoadState, device: torch.device, voxel_si
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(voxel_grid.cpu().numpy())
     pcd.colors = o3d.utility.Vector3dVector(clip_pca_colors.cpu().numpy())
+    
+    # Remove floating clusters
+    pcd = remove_floating_clusters(pcd, min_points=10, eps=voxel_size*2)
     
     return pcd
 
@@ -203,36 +266,42 @@ def retrieve_task(
 
 
 def filter_gray_background(voxel_grid: torch.Tensor, feature_field: FeatureFieldAdapter, 
-                          gray_threshold: float = 0.05, device: torch.device = None) -> torch.Tensor:
+                          gray_threshold: float = 0.05, device: torch.device = None,
+                          return_mask: bool = False) -> torch.Tensor:
     """
-    Filter out voxels that have gray color (likely background).
+    Filter out voxels that have black/gray color (likely background).
     
     Args:
         voxel_grid: Tensor of shape (num_voxels, 3) containing voxel coordinates
         feature_field: Feature field adapter to query RGB values
-        gray_threshold: Threshold for detecting gray (based on RGB standard deviation)
+        gray_threshold: Threshold for detecting background (based on RGB values)
         device: Device to use for computation
+        return_mask: If True, return the boolean mask instead of filtered voxel grid
         
     Returns:
-        Filtered voxel grid without gray background voxels
+        If return_mask is False: Filtered voxel grid without background voxels
+        If return_mask is True: Boolean mask where True indicates non-background voxels
     """
     if len(voxel_grid) == 0:
-        return voxel_grid
+        return torch.zeros(0, dtype=torch.bool, device=device) if return_mask else voxel_grid
         
     # Query RGB values for each voxel
     with torch.no_grad():
         rgb = feature_field.get_rgb(voxel_grid)
     
-    # Gray pixels have similar R, G, B values
-    # Calculate standard deviation across RGB channels for each voxel
-    rgb_std = rgb.std(dim=-1)
+    # For black background (BlenderNeRF), pixels have very low RGB values
+    # Calculate mean intensity across RGB channels for each voxel
+    rgb_mean = rgb.mean(dim=-1)
     
-    # Non-gray voxels have higher standard deviation
-    non_gray_mask = rgb_std > gray_threshold
+    # Non-background voxels have higher intensity
+    non_bg_mask = rgb_mean > gray_threshold
     
-    print(f"Removed {(~non_gray_mask).sum().item()} gray background voxels out of {len(voxel_grid)}")
+    print(f"Removed {(~non_bg_mask).sum().item()} black background voxels out of {len(voxel_grid)}")
     
-    return voxel_grid[non_gray_mask]
+    if return_mask:
+        return non_bg_mask
+    else:
+        return voxel_grid[non_bg_mask]
 
 
 

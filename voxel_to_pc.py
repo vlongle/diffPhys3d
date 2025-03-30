@@ -4,8 +4,6 @@ import numpy as np
 import open3d as o3d
 import torch
 
-import argparse
-import os
 from pathlib import Path
 from typing import Tuple
 
@@ -14,8 +12,10 @@ import torch
 from tqdm import tqdm
 
 from f3rm_robot.load import load_nerfstudio_objaverse_outputs
-from f3rm_robot.initial_proposals import dense_voxel_grid
+from f3rm_robot.initial_proposals import dense_voxel_grid, density_threshold_mask, remove_statistical_outliers, voxel_downsample
+from f3rm_robot.optimize import filter_gray_background, remove_floating_clusters, get_qp_feats, get_alpha
 
+## NOTE: TODO: need to weight the voxel_feat by the alpha compositing eqn.
 
 def extract_clip_voxel_grid(
     scene_path: str,
@@ -24,6 +24,7 @@ def extract_clip_voxel_grid(
     max_bounds: Tuple[float, float, float] = (0.5, 0.5, 0.5),
     voxel_size: float = 0.01,
     batch_size: int = 4096,
+    alpha_weighted: bool = True,
     device: str = "cuda" if torch.cuda.is_available() else "cpu",
 ):
     """
@@ -36,6 +37,7 @@ def extract_clip_voxel_grid(
         max_bounds: Maximum bounds of the voxel grid in world coordinates
         voxel_size: Size of each voxel
         batch_size: Number of voxels to process at once
+        alpha_weighted: Whether to weight features by alpha (density)
         device: Device to use for computation
     """
     # Load the feature field
@@ -108,8 +110,14 @@ def extract_clip_voxel_grid(
             # Get alpha values (density)
             alpha = feature_field.get_alpha(batch, voxel_size)
             
-            # Get features
-            feature = outputs["feature"]
+            # Get features - either raw or alpha-weighted
+            if alpha_weighted:
+                # Weight features by alpha (density) as in get_qp_feats
+                feature = get_qp_feats(outputs)
+                print(f"Using alpha-weighted features (batch {i})" if i == 0 else "", end="\r")
+            else:
+                feature = outputs["feature"]
+                print(f"Using raw features (batch {i})" if i == 0 else "", end="\r")
             
             # Get RGB values
             rgb = feature_field.get_rgb(batch)
@@ -123,7 +131,7 @@ def extract_clip_voxel_grid(
             del outputs, alpha, feature, rgb
             torch.cuda.empty_cache()
     
-    print(f"Features shape: {features_cpu.shape}")
+    print(f"\nFeatures shape: {features_cpu.shape}")
     print(f"RGB shape: {rgb_cpu.shape}")
     
     # Reshape to original grid shape
@@ -135,9 +143,6 @@ def extract_clip_voxel_grid(
     # Create output directory if it doesn't exist
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     
-    # Save the feature grid and alpha values
-    print(f"Saving feature grid to {output_path}...")
-    
     # Save metadata
     output_data = {
         "min_bounds": min_bounds,
@@ -145,6 +150,7 @@ def extract_clip_voxel_grid(
         "voxel_size": voxel_size,
         "feature_dim": feature_dim,
         "grid_shape": original_shape,
+        "alpha_weighted": alpha_weighted,
     }
     
     # Save metadata and arrays separately
@@ -168,8 +174,6 @@ def extract_clip_voxel_grid(
     return output_path
 
 
-
-
 def compute_occupancy_point_cloud(
     feature_grid_path: str,
     alpha_threshold: float = 0.01,
@@ -183,7 +187,7 @@ def compute_occupancy_point_cloud(
     Args:
         feature_grid_path: Path to the saved feature grid metadata (.npz file)
         alpha_threshold: Threshold for density values to consider a voxel occupied
-        gray_threshold: Threshold for detecting gray (based on RGB standard deviation)
+        gray_threshold: Threshold for detecting black background
         voxel_downsample_size: Size for downsampling the resulting point cloud
         device: Device to use for computation
         
@@ -241,18 +245,30 @@ def compute_occupancy_point_cloud(
     
     print(f"After density filtering: {coords_filtered.shape[0]} points")
     
-    # Apply gray background filtering
-    print(f"Applying gray background filtering with threshold {gray_threshold}...")
-    # Calculate standard deviation across RGB channels for each voxel
-    rgb_std = rgb_filtered.std(dim=-1)
+    # Create a mock feature field adapter for black background filtering
+    class MockFeatureFieldAdapter:
+        def get_rgb(self, points):
+            return rgb_filtered
     
-    # Non-gray voxels have higher standard deviation
-    non_gray_mask = rgb_std > gray_threshold
+    mock_feature_field = MockFeatureFieldAdapter()
     
-    coords_filtered = coords_filtered[non_gray_mask]
-    rgb_filtered = rgb_filtered[non_gray_mask]
+    # Apply black background filtering using the centralized function
+    print(f"Applying black background filtering with threshold {gray_threshold}...")
+    non_bg_mask = filter_gray_background(coords_filtered, mock_feature_field, gray_threshold, device,
+                                         return_mask=True)
     
-    print(f"After gray filtering: {coords_filtered.shape[0]} points")
+    # If filter_gray_background returns the filtered points directly
+    if isinstance(non_bg_mask, torch.Tensor) and non_bg_mask.shape == coords_filtered.shape:
+        coords_filtered = non_bg_mask
+        # We need to get the RGB values for these filtered points
+        with torch.no_grad():
+            rgb_filtered = mock_feature_field.get_rgb(coords_filtered)
+    else:
+        # If it returns a mask
+        coords_filtered = coords_filtered[non_bg_mask]
+        rgb_filtered = rgb_filtered[non_bg_mask]
+    
+    print(f"After black background filtering: {coords_filtered.shape[0]} points")
     
     # Create Open3D point cloud
     print("Creating point cloud...")
@@ -272,6 +288,10 @@ def compute_occupancy_point_cloud(
     # Remove statistical outliers
     print("Removing outliers...")
     pcd, _ = pcd.remove_statistical_outlier(nb_neighbors=50, std_ratio=4.0)
+    
+    # Remove floating clusters
+    print("Removing floating clusters...")
+    pcd = remove_floating_clusters(pcd, min_points=10, eps=voxel_downsample_size*5)
     
     print(f"Final point cloud has {len(pcd.points)} points")
     return pcd
@@ -297,28 +317,21 @@ def main():
     parser = argparse.ArgumentParser(description="Extract CLIP features in voxel grid format from a trained F3RM model")
     parser.add_argument("--scene", type=str, required=True, help="Path to the trained F3RM model")
     parser.add_argument("--output", type=str, required=True, help="Path to save the extracted feature grid")
-    # parser.add_argument("--min_x", type=float, default=-1.0, help="Minimum x bound")
-    # parser.add_argument("--min_y", type=float, default=-1.0, help="Minimum y bound")
-    # parser.add_argument("--min_z", type=float, default=-2.0, help="Minimum z bound")
-    # parser.add_argument("--max_x", type=float, default=1.0, help="Maximum x bound")
-    # parser.add_argument("--max_y", type=float, default=1.0, help="Maximum y bound")
-    # parser.add_argument("--max_z", type=float, default=0.25, help="Maximum z bound")
-
     parser.add_argument("--min_x", type=float, default=-0.5, help="Minimum x bound")
     parser.add_argument("--min_y", type=float, default=-0.5, help="Minimum y bound")
     parser.add_argument("--min_z", type=float, default=-0.5, help="Minimum z bound")
     parser.add_argument("--max_x", type=float, default=0.5, help="Maximum x bound")
     parser.add_argument("--max_y", type=float, default=0.5, help="Maximum y bound")
     parser.add_argument("--max_z", type=float, default=0.5, help="Maximum z bound")
-
     parser.add_argument("--voxel_size", type=float, default=0.01, help="Size of each voxel")
     parser.add_argument("--batch_size", type=int, default=4096, help="Number of voxels to process at once")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu", help="Device to use")
+    parser.add_argument("--alpha_weighted", action="store_true", default=True, help="Weight features by alpha (density)")
     
     # Add arguments for point cloud extraction
     parser.add_argument("--extract_pc", action="store_true", help="Extract point cloud from saved voxel grid")
     parser.add_argument("--alpha_threshold", type=float, default=0.01, help="Threshold for density values")
-    parser.add_argument("--gray_threshold", type=float, default=0.05, help="Threshold for gray background filtering")
+    parser.add_argument("--gray_threshold", type=float, default=0.05, help="Threshold for black background filtering")
     parser.add_argument("--pc_output", type=str, help="Path to save the extracted point cloud")
     
     args = parser.parse_args()
@@ -335,6 +348,7 @@ def main():
             max_bounds,
             args.voxel_size,
             args.batch_size,
+            args.alpha_weighted,
             args.device
         )
     else:

@@ -1,4 +1,3 @@
 initial: 1000000
-density_masked: 66412
-gray_filtered: 19439
-language_masked: 7720
+point_cloud: 49593
+language_masked: 9761

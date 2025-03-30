@@ -13,7 +13,8 @@ from f3rm_robot.load import LoadState
 
 
 def get_heatmap(
-    values: Float[Union[torch.Tensor, np.ndarray], "n"], cmap_name: str = "turbo", invert: bool = False
+    values: Float[Union[torch.Tensor, np.ndarray], "n"], cmap_name: str = "turbo", invert: bool = False,
+    colormap_min=0.0, colormap_max=1.0,
 ) -> Float[np.ndarray, "n 3"]:
     """
     Get the RGB heatmap for a given set of values. We normalize the values to [0, 1] and then use the given
@@ -29,6 +30,7 @@ def get_heatmap(
     if invert:
         values = -values
     values = (values - values.min()) / (values.max() - values.min())
+    values = values * (colormap_max - colormap_min) + colormap_min
     if isinstance(values, torch.Tensor):
         values = values.detach().cpu().numpy()
     rgb = colormaps[cmap_name](values)[..., :3]  # don't need alpha channel

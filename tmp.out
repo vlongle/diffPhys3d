@@ -8,17 +8,7 @@ Device enabled (CPU) = False
 Device enabled (OPTIX) = False
 Device enabled (OPTIX) = False
 Device enabled (OPTIX) = False
-23:56:50 | INFO: Data are loaded, start creating Blender stuff
-23:56:50 | INFO: Blender create Mesh node Cube_Pot_0
-23:56:50 | INFO: Blender create Mesh node Cube_Bark_0
-23:56:50 | INFO: Blender create Mesh node Cube_LeafSet_0
-23:56:50 | INFO: glTF import finished in 0.06s
-Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 01:31:14)
-Fra:1 Mem:23.82M (Peak 23.82M) | Time:00:00.49 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Cube_Pot_0
-Fra:1 Mem:23.82M (Peak 23.82M) | Time:00:00.49 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Cube_LeafSet_0
-Fra:1 Mem:35.63M (Peak 42.34M) | Time:00:00.52 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
-Fra:1 Mem:35.62M (Peak 42.34M) | Time:00:00.52 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Image_8
-Fra:1 Mem:35.62M (Peak 42.34M) | Time:00:00.52 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Image_0
-Fra:1 Mem:35.62M (Peak 42.34M) | Time:00:00.52 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Image_7
-Fra:1 Mem:71.18M (Peak 127.69M) | Time:00:00.61 | Mem:36.00M, Peak:36.00M | Scene, ViewLayer | Waiting for render to start
-Fra:1 Mem:71.18M (Peak 127.69M) | Time:00:00.61 | Mem:36.00M, Peak:36.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+23:57:35 | INFO: Data are loaded, start creating Blender stuff
+23:57:35 | INFO: Blender create Mesh node TreeTrunk_lambert2_0
+23:57:35 | INFO: Blender create Mesh node polySurface7_lambert3_0
+23:57:35 | INFO: glTF import finished in 0.01s

@@ -9,3 +9,4 @@ __pycache__
 **slurm_outs/
 **slurm_scripts/
 assets/
+tmp.out

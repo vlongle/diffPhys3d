@@ -1,13 +1,15 @@
 import argparse
 import os
 from utils import on_desktop
+import time
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--obj_id", type=str, help="Objaverse object ID to process")
+    parser.add_argument("--obj_id", type=str, help="Objaverse object ID to process", required=True)
     parser.add_argument("--obj_path", type=str, help="Path to the object file to process", default=None)
     parser.add_argument("--num_images", type=int, help="Number of images to render", default=200)
     parser.add_argument("--train_steps", type=int, help="Number of training steps", default=5_000)
+    # parser.add_argument("--train_steps", type=int, help="Number of training steps", default=10_000)
     parser.add_argument("--camera_dist_min", type=float, help="Minimum camera distance", default=1.2)
     parser.add_argument("--camera_dist_max", type=float, help="Maximum camera distance", default=1.8)
     # parser.add_argument("--camera_dist", type=float, help="Camera distance (deprecated, use min/max instead)", default=1.2)
@@ -15,12 +17,15 @@ if __name__ == "__main__":
     parser.add_argument("--scene_scale", type=float, help="Scene scale", default=1.0)
     args = parser.parse_args()
 
+    start_time = time.time()
+
     is_on_desktop = on_desktop()
     path_prefix = "/mnt/kostas-graid/datasets/vlongle/diffphys3d" if not is_on_desktop else "."
 
     # Only download if obj_path is not provided
     if args.obj_path is None:
         download_cmd = f"python download_objaverse.py --obj_id {args.obj_id}"
+        os.system(download_cmd)
         os.system(download_cmd)
     
     # Use obj_path if provided, otherwise use obj_id
@@ -41,9 +46,9 @@ if __name__ == "__main__":
     train_cmd = f"ns-train {method} --data {path_prefix}/data/{args.obj_id} --max-num-iterations {args.train_steps} --viewer.quit-on-train-completion True --save_only_latest_checkpoint False --output_dir {path_prefix}/outputs"
 
 
-    # os.system(blender_render_cmd)
-    # os.system(convert_cmd)
-    # os.system(train_cmd)
+    os.system(blender_render_cmd)
+    os.system(convert_cmd)
+    os.system(train_cmd)
     
     # # #  # Find the latest config file in the output directory
     output_dir = f"{path_prefix}/outputs/{args.obj_id}/{method}"
@@ -61,3 +66,5 @@ if __name__ == "__main__":
     voxel_pc_cmd = voxel_cmd + " --extract_pc"
     os.system(voxel_pc_cmd)
 
+    end_time = time.time()
+    print(f"Total time taken: {end_time - start_time} seconds")

@@ -53,7 +53,7 @@ parser.add_argument(
     help="Objaverse object ID to process",
 )
 parser.add_argument(
-    "--object_path",
+    "--obj_path",
     type=str,
     help="Path to the object file (alternative to obj_id)",
 )
@@ -74,8 +74,8 @@ parser.add_argument("--scene_scale", type=float, default=1.0, help="Scale factor
 argv = sys.argv[sys.argv.index("--") + 1 :]
 args = parser.parse_args(argv)
 
-if args.obj_id is None and args.object_path is None:
-    raise ValueError("Either --obj_id or --object_path must be provided")
+if args.obj_id is None and args.obj_path is None:
+    raise ValueError("Either --obj_id or --obj_path must be provided")
 
 # If obj_id is provided, get the object path from Objaverse
 if args.obj_id is not None:
@@ -83,8 +83,8 @@ if args.obj_id is not None:
     objects = objaverse.load_objects(uids=[args.obj_id])
     if not objects or args.obj_id not in objects:
         raise ValueError(f"Could not find object with ID: {args.obj_id}")
-    args.object_path = objects[args.obj_id]
-    print(f"Found object path: {args.object_path}")
+    args.obj_path = objects[args.obj_id]
+    print(f"Found object path: {args.obj_path}")
 
 
 
@@ -239,16 +239,16 @@ def reset_scene() -> None:
 
 
 # load the model
-def load_object(object_path: str) -> None:
+def load_object(obj_path: str) -> None:
     """Loads a 3D model into the scene."""
-    if object_path.endswith(".glb"):
-        bpy.ops.import_scene.gltf(filepath=object_path, merge_vertices=True)
-    elif object_path.endswith(".fbx"):
-        bpy.ops.import_scene.fbx(filepath=object_path)
-    elif object_path.endswith(".obj"):
-        bpy.ops.import_scene.obj(filepath=object_path)
+    if obj_path.endswith(".glb"):
+        bpy.ops.import_scene.gltf(filepath=obj_path, merge_vertices=True)
+    elif obj_path.endswith(".fbx"):
+        bpy.ops.import_scene.fbx(filepath=obj_path)
+    elif obj_path.endswith(".obj"):
+        bpy.ops.import_scene.obj(filepath=obj_path)
     else:
-        raise ValueError(f"Unsupported file type: {object_path}")
+        raise ValueError(f"Unsupported file type: {obj_path}")
 
 def scene_bbox(single_obj=None, ignore_matrix=False):
     bbox_min = (math.inf,) * 3
@@ -381,13 +381,13 @@ def download_object(object_url: str) -> str:
     local_path = os.path.abspath(local_path)
     return local_path
 
-def process_object(object_path: str) -> None:
+def process_object(obj_path: str) -> None:
     """Process a single object: load, normalize, and render."""
     reset_scene()
     
     # Load the object
-    load_object(object_path)
-    object_uid = os.path.basename(object_path).split(".")[0]
+    load_object(obj_path)
+    object_uid = os.path.basename(obj_path).split(".")[0]
     
     # Normalize the scene
     normalize_scene()
@@ -404,10 +404,10 @@ if __name__ == "__main__":
     try:
         start_i = time.time()
         
-        if args.object_path.startswith("http"):
-            local_path = download_object(args.object_path)
+        if args.obj_path.startswith("http"):
+            local_path = download_object(args.obj_path)
         else:
-            local_path = args.object_path
+            local_path = args.obj_path
         
         process_object(local_path)
         
@@ -415,10 +415,10 @@ if __name__ == "__main__":
         print("Finished", local_path, "in", end_i - start_i, "seconds")
         
         # Delete the object if it was downloaded
-        if args.object_path.startswith("http") and not args.only_normalize:
+        if args.obj_path.startswith("http") and not args.only_normalize:
             os.remove(local_path)
             
     except Exception as e:
-        print("Failed to process", args.object_path)
+        print("Failed to process", args.obj_path)
         print(e)
 

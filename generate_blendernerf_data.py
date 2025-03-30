@@ -35,8 +35,8 @@ def on_desktop():
 
 ## install the addon the first time
 if not on_desktop():
-    bpy.ops.preferences.addon_install(filepath='BlenderNeRF-main.zip')
-    bpy.ops.preferences.addon_enable(module='BlenderNeRF-main')
+    bpy.ops.preferences.addon_install(filepath='/home/vlongle/code/diffPhys3d/BlenderNeRF-main-custom.zip', overwrite=True)
+    bpy.ops.preferences.addon_enable(module='BlenderNeRF-main-custom')
 
 def get_default_output_dir(format_type):
     """Determine the default output directory based on the format."""
@@ -63,10 +63,14 @@ parser.add_argument(
     "--engine", type=str, default="CYCLES", choices=["CYCLES", "BLENDER_EEVEE_NEXT", "BLENDER_WORKBENCH"]
 )
 parser.add_argument("--num_images", type=int, default=12)
-parser.add_argument("--camera_dist", type=float, default=1.5)
+parser.add_argument("--camera_dist_min", type=float, default=1.0, help="Minimum camera distance")
+parser.add_argument("--camera_dist_max", type=float, default=1.4, help="Maximum camera distance")
+# Keep camera_dist for backward compatibility
+parser.add_argument("--camera_dist", type=float, default=1.2, help="Camera distance (deprecated, use min/max instead)")
 parser.add_argument("--format", type=str, default="NERF", choices=["NERF", "NGP"])
 parser.add_argument("--only_normalize", action='store_true', help="Only normalize the scene, don't render")
 parser.add_argument("--transparent_bg", action='store_true', help="Render with transparent background")
+parser.add_argument("--scene_scale", type=float, default=1.0, help="Scale factor to apply after normalization")
 argv = sys.argv[sys.argv.index("--") + 1 :]
 args = parser.parse_args(argv)
 
@@ -105,7 +109,7 @@ render.resolution_y = 512
 render.resolution_percentage = 100
 
 scene.cycles.device = "GPU"
-scene.cycles.samples = 128
+scene.cycles.samples = 32
 scene.cycles.diffuse_bounces = 1
 scene.cycles.glossy_bounces = 1
 scene.cycles.transparent_max_bounces = 3
@@ -276,7 +280,7 @@ def normalize_scene():
     bbox_min, bbox_max = scene_bbox()
     scale = 1 / max(bbox_max - bbox_min)
     for obj in scene_root_objects():
-        obj.scale = obj.scale * scale
+        obj.scale = obj.scale * scale * args.scene_scale
     
     # Apply scale to matrix_world.
     bpy.context.view_layer.update()
@@ -316,7 +320,9 @@ def render_with_blendernerf(object_uid: str) -> None:
     # Global parameters
     scene.train_data = True
     scene.test_data = False
-    scene.aabb = 4  # Smaller bounding box to focus on the object
+    # scene.aabb = 4  # Smaller bounding box to focus on the object
+    # scene.aabb = 2 # Smaller bounding box to focus on the object
+    scene.aabb = 32
     scene.render_frames = True
     scene.nerf = args.format == "NERF"  # True for NeRF format, False for NGP format
     scene.save_path = output_dir
@@ -326,11 +332,21 @@ def render_with_blendernerf(object_uid: str) -> None:
     scene.sphere_location = (0.0, 0.0, 0.0)  # Centered at origin after normalization
     scene.sphere_rotation = (0.0, 0.0, 0.0)
     scene.sphere_scale = (1.0, 1.0, 1.0)
-    scene.sphere_radius = args.camera_dist / 2
+    
+    # Use the new radius min/max properties if available in the add-on
+    # Otherwise fall back to the original sphere_radius property
+    if hasattr(scene, 'sphere_radius_min') and hasattr(scene, 'sphere_radius_max'):
+        scene.sphere_radius_min = args.camera_dist_min / 2
+        scene.sphere_radius_max = args.camera_dist_max / 2
+        # Set sphere_radius to the average for visualization
+        scene.sphere_radius = (args.camera_dist_min + args.camera_dist_max) / 4
+    else:
+        # Fallback to original behavior
+        scene.sphere_radius = args.camera_dist / 2
+        
     scene.focal = 20.0  # lens focal length in mm
     scene.cos_nb_frames = args.num_images
     scene.seed = 0
-    # scene.upper_views = False
     scene.upper_views = True
     scene.outwards = False
     
@@ -339,7 +355,7 @@ def render_with_blendernerf(object_uid: str) -> None:
         bpy.ops.object.camera_on_sphere()
         print(f"Successfully rendered {args.num_images} images using BlenderNerf add-on")
     except Exception as e:
-        pass
+        print(f"Error during BlenderNerf rendering: {e}")
 
 
     shutil.unpack_archive( output_dir + "/dataset.zip", output_dir)

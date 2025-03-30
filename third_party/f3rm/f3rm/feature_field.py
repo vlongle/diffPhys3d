@@ -10,6 +10,8 @@ from nerfstudio.fields.base_field import Field
 from torch import Tensor
 import torch
 import os
+from nerfstudio.utils.rich_utils import CONSOLE
+from nerfstudio.data.scene_box import SceneBox
 
 class FeatureFieldHeadNames:
     GRID_FEATURES: str = "grid_features"
@@ -17,10 +19,13 @@ class FeatureFieldHeadNames:
 
 
 class FeatureField(Field):
+    aabb: Tensor
+
     def __init__(
         self,
         feature_dim: int,
         spatial_distortion: SpatialDistortion,
+        aabb: Tensor,
         # Positional encoding
         use_pe: bool = True,
         pe_n_freq: int = 6,
@@ -39,6 +44,9 @@ class FeatureField(Field):
         super().__init__()
         self.feature_dim = feature_dim
         self.spatial_distortion = spatial_distortion
+        self.register_buffer("aabb", aabb)
+        CONSOLE.print(f">> DEBUG: F3RM FEATURE_FIELD.PY:Spatial distortion: {self.spatial_distortion}")
+        CONSOLE.print(f">> DEBUG: F3RM FEATURE_FIELD.PY:AABB: {aabb}")
 
         # Feature field has its own hash grid
         growth_factor = np.exp((np.log(max_res) - np.log(start_res)) / (num_levels - 1))
@@ -129,9 +137,14 @@ class FeatureField(Field):
         # grid_features = self.get_grid_features_nearest(positions)
         # outputs[FeatureFieldHeadNames.GRID_FEATURES] = grid_features
 
-        positions = ray_samples.frustums.get_positions().detach()
-        positions = self.spatial_distortion(positions)
-        positions = (positions + 2.0) / 4.0
+
+        if self.spatial_distortion is not None:
+            positions = ray_samples.frustums.get_positions().detach()
+            positions = self.spatial_distortion(positions)
+            positions = (positions + 2.0) / 4.0
+        else:
+            positions = SceneBox.get_normalized_positions(ray_samples.frustums.get_positions(), self.aabb)
+
         positions_flat = positions.view(-1, 3)
 
         # Get features from the neural network

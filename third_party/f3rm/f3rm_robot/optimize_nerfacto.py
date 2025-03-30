@@ -34,27 +34,61 @@ from f3rm_robot.load import LoadState, load_nerfstudio_outputs
 from f3rm_robot.task import Task, get_tasks
 from f3rm_robot.utils import get_gripper_meshes, get_heatmap, sample_point_cloud
 from f3rm_robot.visualizer import BaseVisualizer, ViserVisualizer
-from f3rm.pca_colormap import apply_pca_colormap
 
 args = OptimizationArgs
 visualizer: Optional[BaseVisualizer] = None
 
+from nerfstudio.cameras.rays import Frustums, RaySamples
+def ray_samples_from_coords(coords: Float[torch.Tensor, "*b n 3"]) -> RaySamples:
+    return RaySamples(
+        frustums=Frustums(origins=coords, directions=torch.zeros_like(coords), starts=0, ends=0, pixel_area=None),
+        camera_indices=torch.ones(1),
+    )
 
-def get_filtered_scene_pcd(load_state: LoadState, device: torch.device, voxel_size: float = 0.01, 
-                          query: Optional[str] = None) -> o3d.geometry.PointCloud:
+
+
+class SimpleFieldAdapter:
     """
-    Get a filtered scene point cloud using the same techniques as in optimization.
-    
-    Args:
-        load_state: Loaded scene state
-        device: Device to use for computation
-        voxel_size: Size of voxels for sampling
-        query: Optional text query to visualize query-specific features
+    A simplified field adapter that only provides RGB and density functionality
+    for standard NerfactoModel.
+    """
+    def __init__(self, model, world_to_nerf):
+        self.model = model
+        self.field = model.field
+        self.world_to_nerf = world_to_nerf
         
-    Returns:
-        Filtered point cloud with PCA-colored features
-    """
-    feature_field = load_state.feature_field_adapter()
+    def get_ray_samples(self, world_points):
+        """Get ray samples from world points by transforming into NeRF frame."""
+        nerf_points = self.world_to_nerf.transform_points(world_points)
+        return ray_samples_from_coords(nerf_points)
+        
+    def get_density(self, world_points):
+        """Get density from NeRF."""
+        ray_samples = self.get_ray_samples(world_points)
+        density, _ = self.field.get_density(ray_samples)
+        return density
+        
+    def get_alpha(self, world_points, delta):
+        """Get alpha from NeRF."""
+        from f3rm_robot.field_adapter import get_alpha
+        return get_alpha(self.get_density(world_points), delta)
+        
+    def get_rgb(self, world_points):
+        """Get RGB only from NeRF"""
+        ray_samples = self.get_ray_samples(world_points)
+        density, density_embedding = self.field.get_density(ray_samples)
+        from nerfstudio.field_components.field_heads import FieldHeadNames
+        field_outputs = self.field.get_outputs(ray_samples, density_embedding)
+        rgb = field_outputs[FieldHeadNames.RGB]
+        return rgb
+
+def get_filtered_scene_pcd(load_state, device, voxel_size=0.01):
+    """Get a filtered scene point cloud using density thresholding."""
+    # Create a simplified adapter for the NerfactoModel
+    feature_field = SimpleFieldAdapter(
+        model=load_state.pipeline.model, 
+        world_to_nerf=load_state.nerf_to_world.inverse()
+    )
     
     # Create dense voxel grid
     voxel_grid = dense_voxel_grid(args.min_bounds, args.max_bounds, voxel_size).to(device)
@@ -64,8 +98,16 @@ def get_filtered_scene_pcd(load_state: LoadState, device: torch.device, voxel_si
     # Apply density thresholding
     with torch.no_grad():
         alpha = feature_field.get_alpha(voxel_grid, voxel_size)
+    
     alpha_vg = alpha.reshape(og_voxel_grid_shape[:-1])
-    voxel_grid = density_threshold_mask(alpha_vg, args.alpha_threshold * 0.1, args.min_bounds, args.max_bounds)
+    
+    # Create mask for voxels with alpha above threshold
+    mask = alpha.squeeze(-1) > args.alpha_threshold * 0.1
+    voxel_grid = voxel_grid[mask]
+    
+    if len(voxel_grid) == 0:
+        print("No voxels above threshold found!")
+        return o3d.geometry.PointCloud()
     
     # Apply gray background filtering
     voxel_grid = filter_gray_background(voxel_grid, feature_field, gray_threshold=0.05, device=device)
@@ -74,61 +116,44 @@ def get_filtered_scene_pcd(load_state: LoadState, device: torch.device, voxel_si
     voxel_grid = voxel_downsample(voxel_grid, voxel_size)
     voxel_grid, _ = remove_statistical_outliers(voxel_grid, num_points=50, std_ratio=4.0)
     
-    # Get features for visualization
+    # Get colors for visualization
     with torch.no_grad():
-        outputs = feature_field(voxel_grid)
-
-    ## NOTE: HACK: THE ORIGINAL CODE USES FEATURES WEIGHTED BY ALPHA
-    ## COMPOSITING EQN. ACTUALLY NOT SURE WHY SHOULD WE USE THE ALPHA
-    ## WEIGHTED FEATURES HERE instead of just the raw features.
-    # voxel_feats = outputs["feature"]
-    voxel_feats = get_qp_feats(outputs)
-    
-    # If query is provided, compute query-specific features
-    if query is not None:
-        # Load CLIP model if not already loaded
-        clip_model, _ = clip.load(CLIPArgs.model_name, device=device)
-        
-        # Encode query using CLIP
-        with torch.no_grad():
-            tokens = tokenize(query).to(device)
-            query_emb = clip_model.encode_text(tokens).float()  # Ensure float32 type
-            query_emb /= query_emb.norm(dim=-1, keepdim=True)
-        
-        # Normalize voxel features for cosine similarity
-        voxel_feats = voxel_feats.float()  # Ensure float32 type
-        voxel_feats_norm = voxel_feats / voxel_feats.norm(dim=-1, keepdim=True)
-        
-        # Compute similarity between voxel features and query
-        voxel_sims = voxel_feats_norm @ query_emb.T
-        
-        # Apply colormap to query-specific similarities
-        print(f"Visualizing heatmap for query: '{query}'")
-        clip_pca_colors = get_heatmap(
-            voxel_sims.squeeze(), 
-            cmap_name="Reds",
-            colormap_min=-1.0,
-            colormap_max=1.0,
-
-        )
-        clip_pca_colors = torch.from_numpy(clip_pca_colors).to(device)
-    else:
-        # Apply PCA to general CLIP features
-        print("Visualizing PCA on general CLIP features (no query)")
-        # clip_pca_colors = apply_pca_colormap(voxel_feats)
-        with torch.no_grad():
-            rgb = feature_field.get_rgb(voxel_grid)
-        clip_pca_colors = rgb
+        rgb = feature_field.get_rgb(voxel_grid)
     
     # Convert to Open3D point cloud
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(voxel_grid.cpu().numpy())
-    pcd.colors = o3d.utility.Vector3dVector(clip_pca_colors.cpu().numpy())
+    pcd.colors = o3d.utility.Vector3dVector(rgb.cpu().numpy())
     
     return pcd
 
+def filter_gray_background(voxel_grid, feature_field, gray_threshold=0.05, device=None):
+    """
+    Filter out voxels that have gray color (likely background).
+    """
+    if len(voxel_grid) == 0:
+        return voxel_grid
+        
+    # Query RGB values for each voxel
+    with torch.no_grad():
+        rgb = feature_field.get_rgb(voxel_grid)
+    
+    # Gray pixels have similar R, G, B values
+    # Calculate standard deviation across RGB channels for each voxel
+    rgb_std = rgb.std(dim=-1)
+    
+    # Non-gray voxels have higher standard deviation
+    non_gray_mask = rgb_std > gray_threshold
+    
+    print(f"Removed {(~non_gray_mask).sum().item()} gray background voxels out of {len(voxel_grid)}")
+    
+    return voxel_grid[non_gray_mask]
 
-
+def visualize_scene(load_state, device, num_points=200_000, voxel_size=0.005):
+    """Visualize the scene by sampling a point cloud from the NeRF and adding it to the visualizer."""
+    pcd = get_filtered_scene_pcd(load_state, device, voxel_size=voxel_size)
+    visualizer.add_o3d_point_cloud("scene_pcd", pcd, point_size=voxel_size + 0.001)
+    return pcd
 
 def get_scene_pcd(load_state: LoadState, num_points: int, voxel_size: float) -> o3d.geometry.PointCloud:
     # Set z to -0.01, so we can show the table as well in the point cloud
@@ -140,34 +165,11 @@ def get_scene_pcd(load_state: LoadState, num_points: int, voxel_size: float) -> 
     pcd, _ = pcd.remove_statistical_outlier(nb_neighbors=20, std_ratio=1.0)
     return pcd
 
-
-def visualize_scene(load_state: LoadState, device: torch.device, query: Optional[str] = None, 
-                   num_points: int = 200_000, voxel_size: float = 0.005):
-    """
-    Visualize the scene by sampling a point cloud from the NeRF and adding it to the visualizer.
-    
-    Args:
-        load_state: Loaded scene state
-        device: Device to use for computation
-        query: Optional text query to visualize query-specific features
-        num_points: Number of points to sample
-        voxel_size: Size of voxels for sampling
-    """
-    pcd = get_filtered_scene_pcd(load_state, device, voxel_size=voxel_size, query=query)
-    
-    # Use a different name for query-specific visualization
-    pcd_name = f"scene_pcd_{slugify(query)}" if query else "scene_pcd"
-    visualizer.add_o3d_point_cloud(pcd_name, pcd, point_size=voxel_size + 0.001)
-    
-    return pcd
-
-
 def get_qp_feats(outputs: Dict[str, torch.Tensor]) -> Float[torch.Tensor, "n c"]:
     """Get the alpha-weighted features for the given outputs from the feature field."""
     alpha = get_alpha(outputs["density"], delta=args.voxel_size)
     features = outputs["feature"]
     return alpha * features
-
 
 def compute_task_embedding(task: Task) -> Float[torch.Tensor, "num_qps num_channels"]:
     """Compute the Task Embedding which is the mean of the alpha-weighted features for the given task."""
@@ -175,7 +177,6 @@ def compute_task_embedding(task: Task) -> Float[torch.Tensor, "num_qps num_chann
     assert qp_feats.shape == (task.num_demos, task.num_query_points, task.num_channels)
     task_emb = qp_feats.mean(dim=0)
     return task_emb
-
 
 def retrieve_task(
     query: str, clip_model: CLIP, device: torch.device
@@ -199,42 +200,6 @@ def retrieve_task(
     task_idx = torch.argmax(task_sims)
     task_emb = task_embs[task_idx]
     return tasks[task_idx], task_emb, query_emb
-
-
-
-def filter_gray_background(voxel_grid: torch.Tensor, feature_field: FeatureFieldAdapter, 
-                          gray_threshold: float = 0.05, device: torch.device = None) -> torch.Tensor:
-    """
-    Filter out voxels that have gray color (likely background).
-    
-    Args:
-        voxel_grid: Tensor of shape (num_voxels, 3) containing voxel coordinates
-        feature_field: Feature field adapter to query RGB values
-        gray_threshold: Threshold for detecting gray (based on RGB standard deviation)
-        device: Device to use for computation
-        
-    Returns:
-        Filtered voxel grid without gray background voxels
-    """
-    if len(voxel_grid) == 0:
-        return voxel_grid
-        
-    # Query RGB values for each voxel
-    with torch.no_grad():
-        rgb = feature_field.get_rgb(voxel_grid)
-    
-    # Gray pixels have similar R, G, B values
-    # Calculate standard deviation across RGB channels for each voxel
-    rgb_std = rgb.std(dim=-1)
-    
-    # Non-gray voxels have higher standard deviation
-    non_gray_mask = rgb_std > gray_threshold
-    
-    print(f"Removed {(~non_gray_mask).sum().item()} gray background voxels out of {len(voxel_grid)}")
-    
-    return voxel_grid[non_gray_mask]
-
-
 
 def get_initial_voxel_grid(
     feature_field: FeatureFieldAdapter, query: str, clip_model: CLIP, device: torch.device
@@ -263,6 +228,7 @@ def get_initial_voxel_grid(
     print(f"Alpha > 0.1: {(alpha > 0.1).sum().item()} voxels")
     print(f"Alpha > 0.01: {(alpha > 0.01).sum().item()} voxels")
     print(f"Alpha > 0.001: {(alpha > 0.001).sum().item()} voxels")
+    exit()
 
     alpha_vg = alpha.reshape(og_voxel_grid_shape[:-1])
     # voxel_grid = marching_cubes_mask(alpha_vg, args.alpha_threshold, args.min_bounds, args.max_bounds)
@@ -344,7 +310,6 @@ def get_initial_voxel_grid(
         )
     return voxel_grid, voxel_sims, metrics
 
-
 def get_language_guidance_fn(voxel_sims: Float[torch.Tensor, "num_voxels"], query_emb: Float[torch.Tensor, "1 c"]):
     """
     Get the function for computing the language guidance given query point features and the embedded user query.
@@ -369,7 +334,6 @@ def get_language_guidance_fn(voxel_sims: Float[torch.Tensor, "num_voxels"], quer
         return lang_multiplier
 
     return language_guidance
-
 
 def language_pose_optimization(
     feature_field: FeatureFieldAdapter, clip_model: CLIP, query: str, device: torch.device
@@ -524,73 +488,38 @@ def language_pose_optimization(
 
     return results
 
-
 def entrypoint():
     ARGS.parse_args()
     validate_args()
 
     # Load feature field
-    print(f"Loading feature field from {args.scene}...")
+    print(f"Loading NeRF model from {args.scene}...")
     load_state = load_nerfstudio_outputs(args.scene)
     device = load_state.pipeline.device
-    feature_field = load_state.feature_field_adapter()
-
+    
     # Setup output directory and save args
-    output_dir = Path(args.scene).parent / "language_visualization" / datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    output_dir = Path(args.scene).parent / "scene_visualization" / datetime.now().strftime("%Y-%m-%d_%H%M%S")
     output_dir.mkdir(parents=True, exist_ok=True)
     with open(output_dir / "args.json", "w") as f:
         json.dump(vars(args), f, indent=4)
 
-    # Visualize scene with general PCA features
+    # Visualize scene
     global visualizer
     if args.visualize:
         visualizer = ViserVisualizer(args.viser_host, args.viser_port)
-        # Set background color to black
         scene_pcd = visualize_scene(load_state, device, voxel_size=args.voxel_size)
-        # o3d.io.write_point_cloud(str(output_dir / "scene.ply"), scene_pcd)
-        # print(f"Saved scene point cloud to {output_dir / 'scene.ply'}")
-
-    # Ask for query from user and visualize. If we're using the ViserVisualizer, we can use a textbox in the GUI
-    if isinstance(visualizer, ViserVisualizer):
-        input_fn, enable_gui = visualizer.add_query_gui()
-        print(f"Enter query in the visualizer at: {visualizer.url}")
-    else:
-        input_fn = lambda: input("Enter query (empty to exit): ")
-        enable_gui = lambda: None
-
-    queries = []
-    while True:
-        enable_gui()
+        o3d.io.write_point_cloud(str(output_dir / "scene.ply"), scene_pcd)
+        print(f"Saved scene point cloud to {output_dir / 'scene.ply'}")
+        
+        # Keep the visualizer running until user presses Ctrl+C
+        print("Visualization running. Press Ctrl+C to exit.")
         try:
-            query = input_fn().strip()
+            while True:
+                pass
         except KeyboardInterrupt:
-            print()
-            break
-        if query == "":
-            break
-
-        # Visualize the query-specific PCA
-        try:
-            query_pcd = visualize_scene(load_state, device, query=query, voxel_size=args.voxel_size)
-            queries.append(query)
-            
-            # Save the query-specific point cloud
-            query_dir = output_dir / slugify(query)
-            query_dir.mkdir(parents=True, exist_ok=True)
-            # o3d.io.write_point_cloud(str(query_dir / "query_pcd.ply"), query_pcd)
-            # print(f"Saved query-specific point cloud to {query_dir / 'query_pcd.ply'}")
-            
-        except Exception as e:
-            print(f"Error visualizing query '{query}': {e}")
-            continue
-
-        # Write queries to file. Save inside loop so we get partial results if we crash
-        with open(output_dir / "queries.json", "w") as f:
-            json.dump(queries, f, indent=4)
-
-    print(f"Results saved to {output_dir}")
-    print("Exiting...")
-
+            print("\nExiting...")
+    
+    return 0
 
 if __name__ == "__main__":
     entrypoint()

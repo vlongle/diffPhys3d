@@ -42,14 +42,30 @@ Install objaverse for blender's python
 ```
 /mnt/kostas-graid/sw/envs/vlongle/blender/blender-4.3.2-linux-x64/4.3/python/bin/python3.11 -m pip install objaverse
 ```
+Might have to install pip for older blender version:
+```
+# First, download get-pip.py
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+
+# Then install pip using Blender's Python
+/home/vlongle/code/diffPhys3d/objaverse_renderer/blender-3.2.2-linux-x64/3.2/python/bin/python3.10 get-pip.py
+
+# Now you should be able to install objaverse
+/home/vlongle/code/diffPhys3d/objaverse_renderer/blender-3.2.2-linux-x64/3.2/python/bin/python3.10 -m pip install objaverse
+```
 
 Install some f3rm robot specific stuff
 ```
 pip install --upgrade PyMCubes==0.1.4
 pip install params-proto python-slugify
 ```
+
+
+We also modify the BlenderNerf add-on to allow random sampling of sphere radius. Under `third_party/BlenderNerf-main-custom`. You should zip this folder and install it as a Blender add-on using the GUI.
+
+
 ## Workflow
-1. Download the object
+<!-- 1. Download the object
 ```
 python download_objaverse.py --obj_id ecb91f433f144a7798724890f0528b23
 ```
@@ -77,7 +93,7 @@ ns-render dataset --load-config outputs/f420ea9edb914e1b9b7adebbacecc7d8/f3rm/20
 
 ```
 python voxel_to_pc.py --scene outputs/ecb91f433f144a7798724890f0528b23/f3rm/2025-03-26_083416/config.yml --output outputs/ecb91f433f144a7798724890f0528b23/f3rm/2025-03-26_083416/clip_features.npz
-```
+``` -->
 
 ## Command
 My Blender version: 4.3.2
@@ -142,5 +158,56 @@ f3rm_robot/args.py is important for checking min_bounds and max_bounds.
 
 
 
+Poor results on synthetic dataset:
 
 
+https://github.com/graphdeco-inria/gaussian-splatting/issues/1035
+
+https://github.com/nerfstudio-project/nerfstudio/issues/806
+
+
+https://github.com/graphdeco-inria/gaussian-splatting/issues/1035
+
+https://github.com/nerfstudio-project/nerfstudio/issues/2472
+
+
+## TODO:
+need to 
+Check this
+
+```
+collider_params:
+  far_plane: 6.0
+  near_plane: 2.0
+enable_collider: true
+```
+and
+```
+"aabb_scale": 4
+```
+in the data generation
+
+and
+
+```
+auto_scale_poses: true
+...
+scene_scale: 1.0
+```
+in the config file.
+
+
+## DEBUG
+Right now, two issues:
+- the inconsistent scene bound after training
+    + a bit hard to debug because the hard-coded contraction stuff in `feature_field.py`
+- inability to train from further zoom probably due to non-volume region from near and far plane.
+
+
+
+Normalization stuff
+- dataparser autoscale
+- `aabb_scale` in NGP. Actually doesn't seem to matter for nerfstudio as it uses its own scene bounding box. Verified. [x]
+- scene contraction for nerfacto. Disable scene contraction [x]
+-  near and far plane default and collider. In nerfacto.py and also in base_model.py. seems that they both matter.
+- NOTE: f3rm has its own hacky scaling that needs to be fixed.

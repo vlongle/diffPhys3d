@@ -72,6 +72,16 @@ pip install -e gaussian-splatting/submodules/diff-gaussian-rasterization/
 ```
 
 ## Workflow
+
+```
+python run.py --obj_id ecb91f433f144a7798724890f0528b23 --camera_dist_min 1.2 --camera_dist_max 1.8 --scene_scale 1.0 --num_images 200
+```
+This code will:
+1. Render nerf data using our custom BlenderNerf add-on.
+2. Convert the nerf data to a format that can be used by nerfstudio.
+3. Train a f3rm model (nerf + clip distilled feature)
+4. Voxelize the scene to obtain the feature grid.
+
 <!-- 1. Download the object
 ```
 python download_objaverse.py --obj_id ecb91f433f144a7798724890f0528b23

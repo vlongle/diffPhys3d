@@ -11,3 +11,13 @@ __pycache__
 assets/
 tmp.out
 **results
+data
+.vscode
+output
+*.ply
+*.pyc
+*.png
+*.jpg
+model
+log
+**output

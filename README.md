@@ -64,6 +64,13 @@ pip install params-proto python-slugify
 We also modify the BlenderNerf add-on to allow random sampling of sphere radius. Under `third_party/BlenderNerf-main-custom`. You should zip this folder and install it as a Blender add-on using the GUI.
 
 
+Install PhysGaussian dependencies
+```
+cd third_party/PhysGaussian
+pip install -e gaussian-splatting/submodules/simple-knn/
+pip install -e gaussian-splatting/submodules/diff-gaussian-rasterization/
+```
+
 ## Workflow
 <!-- 1. Download the object
 ```

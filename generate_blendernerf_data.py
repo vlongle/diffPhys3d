@@ -392,6 +392,22 @@ def process_object(obj_path: str) -> None:
     # Normalize the scene
     normalize_scene()
     print(f"Scene normalized for {object_uid}")
+
+    # Save the normalized scene as GLB
+    output_dir = os.path.join(args.output_dir, object_uid)
+    os.makedirs(output_dir, exist_ok=True)
+    normalized_path = os.path.join(output_dir, "normalized_scene.glb")
+    
+    # Select all objects before export
+    bpy.ops.object.select_all(action='SELECT')
+    
+    # Export as GLB
+    bpy.ops.export_scene.gltf(
+        filepath=normalized_path,
+        export_format='GLB',
+        use_selection=True
+    )
+    print(f"Saved normalized scene to {normalized_path}")
     
     if not args.only_normalize:
         # Add lighting

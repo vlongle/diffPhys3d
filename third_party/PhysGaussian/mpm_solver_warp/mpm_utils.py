@@ -338,6 +338,7 @@ def p2g_apic_with_stress(state: MPMStateStruct, model: MPMModelStruct, dt: float
         )
         dw = wp.mat33(fx - wp.vec3(1.5), -2.0 * (fx - wp.vec3(1.0)), fx - wp.vec3(0.5))
 
+        material = state.particle_material[p]
         for i in range(0, 3):
             for j in range(0, 3):
                 for k in range(0, 3):
@@ -355,13 +356,14 @@ def p2g_apic_with_stress(state: MPMStateStruct, model: MPMModelStruct, dt: float
                         C - wp.transpose(C)
                     )
                     if model.rpic_damping < -0.001:
+            # Default all particles to material type 0 (jelly)
                         # standard pic
                         C = wp.mat33(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
                     elastic_force = -state.particle_vol[p] * stress * dweight
                     
                     # For stationary particles, we might want to handle them differently
-                    if model.material == 6:  # 6 = stationary material
+                    if material == 6:  # 6 = stationary material
                         # For stationary particles, we still contribute mass to the grid
                         # but we don't add velocity or elastic forces
                         wp.atomic_add(
@@ -435,8 +437,9 @@ def g2p(state: MPMStateStruct, model: MPMModelStruct, dt: float):
                     dweight = compute_dweight(model, w, dw, i, j, k)
                     new_F = new_F + wp.outer(grid_v, dweight)
 
+        material = state.particle_material[p]
         # Only update velocity and position for non-stationary materials
-        if model.material != 6:  # 6 = stationary material
+        if material != 6:  # 6 = stationary material
             state.particle_v[p] = new_v
             state.particle_x[p] = state.particle_x[p] + dt * new_v
             state.particle_C[p] = new_C
@@ -461,21 +464,22 @@ def compute_stress_from_F_trial(
     state: MPMStateStruct, model: MPMModelStruct, dt: float
 ):
     p = wp.tid()
+    material = state.particle_material[p]
     if state.particle_selection[p] == 0:
         # apply return mapping
-        if model.material == 1:  # metal
+        if material == 1:  # metal
             state.particle_F[p] = von_mises_return_mapping(
                 state.particle_F_trial[p], model, p
             )
-        elif model.material == 2:  # sand
+        elif material == 2:  # sand
             state.particle_F[p] = sand_return_mapping(
                 state.particle_F_trial[p], state, model, p
             )
-        elif model.material == 3:  # visplas, with StVk+VM, no thickening
+        elif material == 3:  # visplas, with StVk+VM, no thickening
             state.particle_F[p] = viscoplasticity_return_mapping_with_StVK(
                 state.particle_F_trial[p], model, p, dt
             )
-        elif model.material == 5:
+        elif material == 5:
             state.particle_F[p] = von_mises_return_mapping_with_damage(
                 state.particle_F_trial[p], model, p
             )
@@ -489,19 +493,19 @@ def compute_stress_from_F_trial(
         sig = wp.vec3(0.0)
         stress = wp.mat33(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
         wp.svd3(state.particle_F[p], U, sig, V)
-        if model.material == 0 or model.material == 5:
+        if material == 0 or material == 5:
             stress = kirchoff_stress_FCR(
                 state.particle_F[p], U, V, J, model.mu[p], model.lam[p]
             )
-        if model.material == 1:
+        if material == 1:
             stress = kirchoff_stress_StVK(
                 state.particle_F[p], U, V, sig, model.mu[p], model.lam[p]
             )
-        if model.material == 2:
+        if material == 2:
             stress = kirchoff_stress_drucker_prager(
                 state.particle_F[p], U, V, sig, model.mu[p], model.lam[p]
             )
-        if model.material == 3:
+        if material == 3:
             # temporarily use stvk, subject to change
             stress = kirchoff_stress_StVK(
                 state.particle_F[p], U, V, sig, model.mu[p], model.lam[p]
@@ -645,3 +649,5 @@ def selection_enforce_particle_velocity_cylinder(
         velocity_modifier.mask[p] = 1
     else:
         velocity_modifier.mask[p] = 0
+
+            # Default all particles to material type 0 (jelly)

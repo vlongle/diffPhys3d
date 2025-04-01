@@ -126,6 +126,11 @@ class MPM_Simulator_WARP:
             device=device,
         )
 
+
+ 
+    
+
+
         self.time = 0.0
 
         self.grid_postprocess = []
@@ -291,6 +296,18 @@ class MPM_Simulator_WARP:
             dtype=wp.vec3,
             device=device,
         )
+        ## NOTE: newly added. a new array to store material type for each particle
+        # Add a new array to store material type for each particle
+        self.mpm_state.particle_material = wp.zeros(
+            shape=self.n_particles, dtype=int, device=device
+        )  # particle material type
+            
+        wp.launch(
+                kernel=set_value_to_int_array,
+                dim=self.n_particles,
+                inputs=[self.mpm_state.particle_material, self.mpm_model.material],
+                device=device,
+            )
 
         if "E" in kwargs:
             wp.launch(

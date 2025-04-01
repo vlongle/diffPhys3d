@@ -69,6 +69,9 @@ class MPMStateStruct:
         dtype=wp.vec3, ndim=3
     )  # grid node momentum/velocity, after grid update
 
+    ## NOTE: newly added. a new array to store material type for each particle
+    particle_material: wp.array(dtype=int)
+
 
 # for various boundary conditions
 @wp.struct
@@ -218,6 +221,12 @@ def add_vec3_to_vec3(
 def set_value_to_float_array(target_array: wp.array(dtype=float), value: float):
     tid = wp.tid()
     target_array[tid] = value
+
+@wp.kernel
+def set_value_to_int_array(target_array: wp.array(dtype=int), value: int):
+    tid = wp.tid()
+    target_array[tid] = value
+
 
 
 @wp.kernel

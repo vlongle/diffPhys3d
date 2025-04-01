@@ -39,36 +39,15 @@ from utils.decode_param import *
 from utils.transformation_utils import *
 from utils.camera_view_utils import *
 from utils.render_utils import *
-import glob
+import glob    
+from plyfile import PlyData
+import numpy as np
 
 wp.init()
 wp.config.verify_cuda = True
 
 ti.init(arch=ti.cuda, device_memory_GB=8.0)
 
-
-class PipelineParamsNoparse:
-    """Same as PipelineParams but without argument parser."""
-
-    def __init__(self):
-        self.convert_SHs_python = False
-        self.compute_cov3D_python = False
-        self.debug = False
-
-
-def load_checkpoint(model_path, sh_degree=3, iteration=-1):
-    # Find checkpoint
-    checkpt_dir = os.path.join(model_path, "point_cloud")
-    if iteration == -1:
-        iteration = searchForMaxIteration(checkpt_dir)
-    checkpt_path = os.path.join(
-        checkpt_dir, f"iteration_{iteration}", "point_cloud.ply"
-    )
-
-    # Load guassians
-    gaussians = GaussianModel(sh_degree)
-    gaussians.load_ply(checkpt_path)
-    return gaussians
 
 
 def load_point_cloud(ply_path, opacity_value=0.5, sh_degree=3):
@@ -83,8 +62,7 @@ def load_point_cloud(ply_path, opacity_value=0.5, sh_degree=3):
     Returns:
         Dictionary with positions, default covariances, and opacities
     """
-    from plyfile import PlyData
-    import numpy as np
+
     
     # Load the point cloud
     plydata = PlyData.read(ply_path)
@@ -152,8 +130,79 @@ def load_point_cloud(ply_path, opacity_value=0.5, sh_degree=3):
         "colors": colors_tensor
     }
 
+import os
+import trimesh
+import numpy as np
 
-def visualize_point_cloud(positions, output_path, frame_number, color=None, point_size=1):
+
+def visualize_point_cloud_trimesh(positions, output_path, frame_number, camera_params=None, color=None, 
+                                  camera_transform=None):
+    """
+    Visualize a point cloud using trimesh with a consistent camera view across frames.
+    
+    Args:
+        positions: Tensor of 3D point positions [N, 3]
+        output_path: Directory to save the rendered image
+        frame_number: Current frame number for filename
+        camera_params: Dictionary of camera parameters to ensure consistency across frames
+        color: Optional color array for points
+        point_size: Size of points in the plot
+        show_axes: Whether to display coordinate axes
+    """
+    # Convert positions to numpy
+    positions_np = positions.cpu().numpy()
+    
+    # Create a PointCloud object
+    point_cloud = trimesh.PointCloud(positions_np)
+    
+    # Handle colors
+    if color is not None:
+        if isinstance(color, np.ndarray):
+            point_cloud.colors = color
+        else:
+            if isinstance(color, (list, tuple)) and len(color) == 3:
+                if max(color) <= 1.0:
+                    color = [int(c * 255) for c in color]
+                colors = np.tile(color, (positions_np.shape[0], 1))
+                point_cloud.colors = colors
+    
+    # Create a scene and add the point cloud
+    scene = trimesh.Scene()
+    scene.add_geometry(point_cloud)
+    
+    
+    camera_params = {
+            'fov': (60, 60),
+            'resolution': [1000, 1000],
+            'center': [0, 0, 0],
+            'distance': 1.0,
+            'angle': np.deg2rad([90, 0, 180])  # [elevation, azimuth, roll]
+        }
+    
+    # Set camera using the provided or default parameters
+    scene.set_camera(angles=camera_params['angle'],
+                     resolution=camera_params['resolution'],
+                     fov=camera_params['fov'])
+    
+    if camera_transform is not None:
+        scene.camera_transform = camera_transform
+    # Render the image
+    rendered = scene.save_image(resolution=camera_params['resolution'],
+                                visible=True,
+                                flags={'auto_view': False})
+    
+    # Save the image
+    output_file = os.path.join(output_path, f"{frame_number:04d}.png")
+    with open(output_file, 'wb') as f:
+        f.write(rendered)
+    
+    # Return dimensions of the saved image
+    return camera_params['resolution'][0], camera_params['resolution'][1], scene.camera_transform
+
+
+
+def visualize_point_cloud(positions, output_path, frame_number, color=None, point_size=1,
+                          zoom_factor=1.0):
     """
     Visualize a point cloud using matplotlib's 3D scatter plot.
     
@@ -166,41 +215,31 @@ def visualize_point_cloud(positions, output_path, frame_number, color=None, poin
     """
     # Convert positions to numpy
     positions_np = positions.cpu().numpy()
+
+    ## save positions_np to a ply file
+    # np.save(os.path.join(output_path, f"{frame_number:04d}_positions.npy"), positions_np)
     
     # Create figure
     fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot(111, projection='3d')
     
-    ax.scatter(positions_np[:, 0], positions_np[:, 1], positions_np[:, 2], s=1, 
+    ax.scatter(positions_np[:, 0], positions_np[:, 1], positions_np[:, 2], s=point_size, 
                c=color)
     # Set consistent view angle
     ax.view_init(elev=0, azim=90)
 
-    # ax.view_init(elev=20, azim=30)
-    
-    # # Set axis limits - adjust these based on your scene
-    # # Find the bounding box of the points
-    # min_x, max_x = positions_np[:, 0].min(), positions_np[:, 0].max()
-    # min_y, max_y = positions_np[:, 1].min(), positions_np[:, 1].max()
-    # min_z, max_z = positions_np[:, 2].min(), positions_np[:, 2].max()
-    
-    # # Add some padding
-    # padding = max(max_x - min_x, max_y - min_y, max_z - min_z) * 0.1
-    # ax.set_xlim(min_x - padding, max_x + padding)
-    # ax.set_ylim(min_y - padding, max_y + padding)
-    # ax.set_zlim(min_z - padding, max_z + padding)
-    
-    # # Add title with frame number
-    # ax.set_title(f"Frame {frame_number}")
+    limit = 0.5 * zoom_factor
+    x_min, x_max = -limit, limit
+    y_min, y_max = -limit, limit
+    z_min, z_max = -limit, limit
 
 
-    x_min, x_max = -0.5, 0.5
-    y_min, y_max = -0.5, 0.5
-    z_min, z_max = -0.5, 0.5
     ax.set_xlim(x_min, x_max)
     ax.set_ylim(y_min, y_max)
     ax.set_zlim(z_min, z_max)
-    
+
+
+    ax.set_axis_off()
 
     
     # Save figure
@@ -216,8 +255,6 @@ def visualize_point_cloud(positions, output_path, frame_number, color=None, poin
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    # parser.add_argument("--model_path", type=str, required=False, 
-    #                     help="Path to Gaussian Splatting model (optional if point_cloud_path is provided)")
     parser.add_argument("--output_path", type=str, default=None)
     parser.add_argument("--config", type=str, required=True)
     parser.add_argument("--output_ply", action="store_true")
@@ -229,13 +266,6 @@ if __name__ == "__main__":
     parser.add_argument("--point_cloud_path", type=str, help="Path to input point cloud PLY file")
     args = parser.parse_args()
 
-    # # Check that at least one of model_path or point_cloud_path is provided
-    # if args.model_path is None and args.point_cloud_path is None:
-    #     raise ValueError("Either --model_path or --point_cloud_path must be provided")
-
-    # # If model_path is provided, check that it exists
-    # if args.model_path is not None and not os.path.exists(args.model_path):
-    #     raise AssertionError("Model path does not exist!")
         
     if not os.path.exists(args.config):
         raise AssertionError("Scene config does not exist!")
@@ -252,27 +282,10 @@ if __name__ == "__main__":
         camera_params,
     ) = decode_param_json(args.config)
 
-    # Load input data (either Gaussian Splatting model or point cloud)
-    if args.point_cloud_path is not None:
-        print(f"Loading point cloud from {args.point_cloud_path}...")
-        if not os.path.exists(args.point_cloud_path):
-            raise AssertionError("Point cloud path does not exist!")
-        params = load_point_cloud(args.point_cloud_path)
-        # Create a proper gaussians object from the point cloud data
-        # gaussians = create_gaussian_from_point_cloud(params)
-        gaussians = None
-        pipeline = PipelineParamsNoparse()
-        pipeline.compute_cov3D_python = True
-        # model_path = args.model_path
-    else:
-        # load gaussians
-        print("Loading gaussians...")
-        model_path = args.model_path
-        gaussians = load_checkpoint(model_path)
-        pipeline = PipelineParamsNoparse()
-        pipeline.compute_cov3D_python = True
-        # Load parameters from Gaussian Splatting model
-        params = load_params_from_gs(gaussians, pipeline)
+    print(f"Loading point cloud from {args.point_cloud_path}...")
+    if not os.path.exists(args.point_cloud_path):
+        raise AssertionError("Point cloud path does not exist!")
+    params = load_point_cloud(args.point_cloud_path)
 
     # Set background color
     background = (
@@ -289,15 +302,7 @@ if __name__ == "__main__":
     init_screen_points = params["screen_points"]
     init_opacity = params["opacity"]
     init_shs = params["shs"]
-
      
-    ## TODO: HACK: using the same "gt" opacity filtering for
-    ## testing
-
-    ## HACK
-    # if gaussians is None:
-    #     gaussians = load_checkpoint(model_path)
-    # init_opacity = load_params_from_gs(gaussians, pipeline)["opacity"]
     init_opacity = params["opacity"]
     # throw away low opacity kernels
     mask = init_opacity[:, 0] > preprocessing_params["opacity_threshold"]
@@ -527,60 +532,13 @@ if __name__ == "__main__":
     height = None
     width = None
 
+    
+    camera_transform=None
+
+
+
     # frame_num = 1
     for frame in tqdm(range(frame_num)):
-        # When getting camera view, handle the case where gaussians is None
-        # if gaussians is None and args.model_path is None:
-        #     # Create a simple camera for rendering
-        #     # This is a simplified version - you might need to adjust based on your needs
-        #     current_camera = get_camera_view(
-        #         model_path,
-        #         default_camera_index=camera_params["default_camera_index"],
-        #         center_view_world_space=viewpoint_center_worldspace,
-        #         observant_coordinates=observant_coordinates,
-        #         show_hint=camera_params["show_hint"],
-        #         init_azimuthm=camera_params["init_azimuthm"],
-        #         init_elevation=camera_params["init_elevation"],
-        #         init_radius=camera_params["init_radius"],
-        #         move_camera=camera_params["move_camera"],
-        #         current_frame=frame,
-        #         delta_a=camera_params["delta_a"],
-        #         delta_e=camera_params["delta_e"],
-        #         delta_r=camera_params["delta_r"],
-        #     )
-        # else:
-        #     # Use the original camera view function with the model path
-        #     current_camera = get_camera_view(
-        #         model_path,
-        #         default_camera_index=camera_params["default_camera_index"],
-        #         center_view_world_space=viewpoint_center_worldspace,
-        #         observant_coordinates=observant_coordinates,
-        #         show_hint=camera_params["show_hint"],
-        #         init_azimuthm=camera_params["init_azimuthm"],
-        #         init_elevation=camera_params["init_elevation"],
-        #         init_radius=camera_params["init_radius"],
-        #         move_camera=camera_params["move_camera"],
-        #         current_frame=frame,
-        #         delta_a=camera_params["delta_a"],
-        #         delta_e=camera_params["delta_e"],
-        #         delta_r=camera_params["delta_r"],
-        #     )
-        
-        # Initialize rasterizer - handle case where gaussians is None
-        # if gaussians is None:
-        #     # Create a simple dummy gaussians object for rendering
-        #     # dummy_gaussians = create_gaussian_from_point_cloud(params)
-        #     rasterize = initialize_resterize(
-        #         current_camera, dummy_gaussians, pipeline, background
-        #     )
-        # else:
-        
-
-
-        # rasterize = initialize_resterize(
-        #         current_camera, gaussians, pipeline, background
-        #     )
-
         for step in range(step_per_frame):
             mpm_solver.p2g2p(frame, substep_dt, device=device)
             
@@ -622,20 +580,31 @@ if __name__ == "__main__":
                 pos = torch.cat([pos, unselected_pos], dim=0)
             
             # Visualize point cloud
-            height, width = visualize_point_cloud(
-                pos, 
-                args.output_path, 
+            # height, width = visualize_point_cloud(
+            #     pos, 
+            #     args.output_path, 
+            #     frame,
+            #     color=params['colors'].cpu().numpy(),
+            #     point_size=2,  # Adjust point size as needed,
+            #     zoom_factor=0.5,
+            # )
+
+
+            
+            ## NOTE: TODO: the visualize_point_cloud with matplotlib is correct but
+            ## the result looks kinda sparse and shitty. trimesh looks better but
+            ## somehow the pot is also swaying, which IS NOT CORRECT.
+            ## I think point_cloud_trimesh actually renders out a voxel-ish looking
+            ## thing, which is nicer than just point projection like the matplotlib one.
+            height, width, camera_transform = visualize_point_cloud_trimesh(
+                pos,
+                args.output_path,
                 frame,
                 color=params['colors'].cpu().numpy(),
-                point_size=2  # Adjust point size as needed
+                camera_transform=camera_transform
             )
-
-    # if args.render_img and args.compile_video:
-    #     fps = int(1.0 / time_params["frame_dt"])
-    #     os.system(
-    #         f"ffmpeg -framerate {fps} -i {args.output_path}/%04d.png -c:v libx264 -s {width}x{height} -y -pix_fmt yuv420p {args.output_path}/output.mp4"
-    #     )
-
+            
+            
     if args.render_img and args.compile_video:
         # Get all saved PNG frames (assuming they are named as 0000.png, 0001.png, etc.)
         frame_files = sorted(glob.glob(os.path.join(args.output_path, '*.png')))

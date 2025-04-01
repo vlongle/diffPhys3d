@@ -36,7 +36,7 @@ From voxelizing the groundtruth mesh:
 From using the nerf voxelized point cloud:
 
 ```
-  python gs_simulation_pc.py --point_cloud_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features_pc.ply --output_path nerf_pc_custom_output --config ./config/custom_config.json --render_img --compile_video --white_bg --debug 
+ xvfb-run -a  python gs_simulation_pc.py --point_cloud_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features_pc.ply --output_path nerf_pc_custom_output --config ./config/custom_config.json --render_img --compile_video --white_bg --debug
 ```
 
 

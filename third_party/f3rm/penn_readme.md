@@ -168,3 +168,6 @@ ns-render dataset --load-config  outputs/39c14b1d1d63467588ab6bd44a5525d0/f3rm/2
 
 
 ns-render dataset --load-config  outputs/39c14b1d1d63467588ab6bd44a5525d0/f3rm/2025-03-25_223114/config.yml --output-path clip_grid_outputs/39c14b1d1d63467588ab6bd44a5525d0 --split=train --rendered_output_names=feature_pca --lang_positives pot --grid_feature_path  outputs/ecb91f433f144a7798724890f0528b23/f3rm/2025-03-24_235407/clip_features.npz
+
+
+TODO:

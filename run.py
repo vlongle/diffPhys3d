@@ -16,6 +16,7 @@ if __name__ == "__main__":
     parser.add_argument("--transparent_bg", type=bool, help="Use transparent background", default=True)
     parser.add_argument("--scene_scale", type=float, help="Scene scale", default=1.0)
     parser.add_argument("--only_normalize", type=bool, help="Only normalize the scene", default=False)
+    parser.add_argument("--voxel_size", type=float, help="Voxel size", default=0.01)
     args = parser.parse_args()
 
     start_time = time.time()
@@ -49,25 +50,25 @@ if __name__ == "__main__":
     train_cmd = f"ns-train {method} --data {path_prefix}/data/{args.obj_id} --max-num-iterations {args.train_steps} --viewer.quit-on-train-completion True --save_only_latest_checkpoint False --output_dir {path_prefix}/outputs"
 
 
-    os.system(blender_render_cmd)
+    # os.system(blender_render_cmd)
     # os.system(convert_cmd)
     # os.system(train_cmd)
     
-    # # # #  # Find the latest config file in the output directory
-    # output_dir = f"{path_prefix}/outputs/{args.obj_id}/{method}"
-    # # output_dir = f"{path_prefix}/outputs/{args.obj_id}_cam_1/f3rm"
-    # latest_run = max([os.path.join(output_dir, d) for d in os.listdir(output_dir) if os.path.isdir(os.path.join(output_dir, d))], key=os.path.getmtime)
-    # config_path = os.path.join(latest_run, "config.yml")
+    # # #  # Find the latest config file in the output directory
+    output_dir = f"{path_prefix}/outputs/{args.obj_id}/{method}"
+    # output_dir = f"{path_prefix}/outputs/{args.obj_id}_cam_1/f3rm"
+    latest_run = max([os.path.join(output_dir, d) for d in os.listdir(output_dir) if os.path.isdir(os.path.join(output_dir, d))], key=os.path.getmtime)
+    config_path = os.path.join(latest_run, "config.yml")
     
-    # render_output_dir = f"{path_prefix}/render_outputs/{args.obj_id}"
-    # ns_render_cmd = f"ns-render dataset --load-config {config_path} --output-path {render_output_dir} --split=train --rendered_output_names=rgb"
-    # # os.system(ns_render_cmd)
+    render_output_dir = f"{path_prefix}/render_outputs/{args.obj_id}"
+    ns_render_cmd = f"ns-render dataset --load-config {config_path} --output-path {render_output_dir} --split=train --rendered_output_names=rgb"
+    # os.system(ns_render_cmd)
 
-    # voxel_cmd = f"python voxel_to_pc.py --scene {config_path} --output {render_output_dir}/clip_features.npz"
-    # os.system(voxel_cmd)
+    voxel_cmd = f"python voxel_to_pc.py --scene {config_path} --output {render_output_dir}/clip_features.npz --voxel_size {args.voxel_size}"
+    os.system(voxel_cmd)
 
-    # voxel_pc_cmd = voxel_cmd + " --extract_pc"
-    # os.system(voxel_pc_cmd)
+    voxel_pc_cmd = voxel_cmd + " --extract_pc"
+    os.system(voxel_pc_cmd)
 
-    # end_time = time.time()
-    # print(f"Total time taken: {end_time - start_time} seconds")
+    end_time = time.time()
+    print(f"Total time taken: {end_time - start_time} seconds")

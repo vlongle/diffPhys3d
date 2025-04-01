@@ -228,3 +228,65 @@ Normalization stuff
 - scene contraction for nerfacto. Disable scene contraction [x]
 -  near and far plane default and collider. In nerfacto.py and also in base_model.py. seems that they both matter.
 - NOTE: f3rm has its own hacky scaling that needs to be fixed.
+
+
+## TODO
+
+optimize the rendering in `gs_simulation_pc.py`.
+Without rendering, the simulation is at 7it/s. With rendering, it's at 4s/it so MUCH slower.
+
+
+- Modify the code to work with non-uniform material.
+
+```
+@wp.struct
+class MPMModelStruct:
+    ####### essential #######
+    grid_lim: float
+    n_particles: int
+    n_grid: int
+    dx: float
+    inv_dx: float
+    grid_dim_x: int
+    grid_dim_y: int
+    grid_dim_z: int
+    mu: wp.array(dtype=float)
+    lam: wp.array(dtype=float)
+    E: wp.array(dtype=float)
+    nu: wp.array(dtype=float)
+    material: int
+```
+
+
+
+
+```
+        self.mpm_model.E = wp.zeros(shape=n_particles, dtype=float, device=device)
+        self.mpm_model.nu = wp.zeros(shape=n_particles, dtype=float, device=device)
+        self.mpm_model.mu = wp.zeros(shape=n_particles, dtype=float, device=device)
+        self.mpm_model.lam = wp.zeros(shape=n_particles, dtype=float, device=device)
+```
+and `set_parameters_dict`
+In the `mpm_solver_warp.py`, we need to modify the `MPMModelStruct` to include the material field.
+
+The material is used under `mpm_utils.py` as
+
+if model.material == 0 or model.material == 5:
+            stress = kirchoff_stress_FCR(
+                state.particle_F[p], U, V, J, model.mu[p], model.lam[p]
+            )
+        if model.material == 1:
+            stress = kirchoff_stress_StVK(
+                state.particle_F[p], U, V, sig, model.mu[p], model.lam[p]
+            )
+        if model.material == 2:
+            stress = kirchoff_stress_drucker_prager(
+                state.particle_F[p], U, V, sig, model.mu[p], model.lam[p]
+            )
+        if model.material == 3:
+            # temporarily use stvk, subject to change
+            stress = kirchoff_stress_StVK(
+                state.particle_F[p], U, V, sig, model.mu[p], model.lam[p]
+            )
+
+to select the stress model based on the material.

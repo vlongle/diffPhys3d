@@ -8,9 +8,9 @@
     ],
     "substep_dt": 0.0001,
     "frame_dt": 0.04,
-    "frame_num": 5,
+    "frame_num": 40,
     "nu": 0.4,
-    "E": 2000000.0,
+    "E": 500000.0,
     "material": "foam",
     "density": 200,
     "g": [

@@ -10,8 +10,8 @@
     "frame_dt": 0.04,
     "frame_num": 40,
     "nu": 0.4,
-    "E": 100000.0,
-    "material": "sand",
+    "E": 20000.0,
+    "material": "jelly",
     "density": 200,
     "g": [
         0,
@@ -88,6 +88,5 @@
     "move_camera": true,
     "delta_a": 0.4,
     "delta_e": 0.0,
-    "delta_r": 0.0,
-    "friction_angle": 30.0
+    "delta_r": 0.0
 }

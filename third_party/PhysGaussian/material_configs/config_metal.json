@@ -8,9 +8,9 @@
     ],
     "substep_dt": 0.0001,
     "frame_dt": 0.04,
-    "frame_num": 5,
-    "nu": 0.4,
-    "E": 2000000.0,
+    "frame_num": 40,
+    "nu": 0.3,
+    "E": 10000000.0,
     "material": "metal",
     "density": 200,
     "g": [

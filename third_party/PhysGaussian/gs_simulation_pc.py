@@ -618,6 +618,7 @@ if __name__ == "__main__":
             # Set frames per second; here we use frame_dt from time_params
             fps = int(1.0 / time_params["frame_dt"])
             
+
             # Define the codec and create VideoWriter object
             # 'mp4v' is widely supported; adjust if necessary
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -634,4 +635,36 @@ if __name__ == "__main__":
             
             video_writer.release()
             print("Video successfully saved to:", video_path)
+            
+            # Also create a GIF from the frames
+            try:
+                from PIL import Image
+                
+                # Create GIF
+                gif_path = os.path.join(args.output_path, 'output.gif')
+                frames = []
+                
+                # Determine GIF frame duration in milliseconds
+                # Lower duration = faster animation
+                duration = int(1000 / fps)  # Convert fps to milliseconds per frame
+                
+                # Load all frames
+                for frame_file in frame_files:
+                    img = Image.open(frame_file)
+                    frames.append(img.copy())
+                    
+                # Save as GIF
+                frames[0].save(
+                    gif_path,
+                    format='GIF',
+                    append_images=frames[1:],
+                    save_all=True,
+                    duration=duration,
+                    loop=0  # 0 means loop forever
+                )
+                print("GIF successfully saved to:", gif_path)
+            except ImportError:
+                print("PIL library not found. GIF creation skipped.")
+            except Exception as e:
+                print(f"Error creating GIF: {e}")
 

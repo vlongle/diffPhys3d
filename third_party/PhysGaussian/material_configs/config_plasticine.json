@@ -10,8 +10,8 @@
     "frame_dt": 0.04,
     "frame_num": 40,
     "nu": 0.4,
-    "E": 100000.0,
-    "material": "sand",
+    "E": 800000.0,
+    "material": "plasticine",
     "density": 200,
     "g": [
         0,
@@ -89,5 +89,5 @@
     "delta_a": 0.4,
     "delta_e": 0.0,
     "delta_r": 0.0,
-    "friction_angle": 30.0
+    "yield_stress": 10000.0
 }

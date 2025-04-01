@@ -289,4 +289,7 @@ if model.material == 0 or model.material == 5:
                 state.particle_F[p], U, V, sig, model.mu[p], model.lam[p]
             )
 
-to select the stress model based on the material.
+to select the stress model based on the material. `compute_stress_from_F_trial` and 
+
+
+- Also, numerical stability with the params as well...

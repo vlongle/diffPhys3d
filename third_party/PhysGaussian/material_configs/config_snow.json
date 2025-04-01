@@ -8,9 +8,9 @@
     ],
     "substep_dt": 0.0001,
     "frame_dt": 0.04,
-    "frame_num": 5,
+    "frame_num": 40,
     "nu": 0.4,
-    "E": 2000000.0,
+    "E": 100000.0,
     "material": "snow",
     "density": 200,
     "g": [
@@ -88,5 +88,6 @@
     "move_camera": true,
     "delta_a": 0.4,
     "delta_e": 0.0,
-    "delta_r": 0.0
+    "delta_r": 0.0,
+    "softening": 0.2
 }

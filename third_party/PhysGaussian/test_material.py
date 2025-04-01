@@ -34,20 +34,20 @@ def run_simulation(material):
     config["material"] = material
     
     # Adjust other parameters based on material if needed
-    # if material == "metal":
-    #     config["E"] = 1e7  # Higher Young's modulus for metal
-    #     config["nu"] = 0.3  # Different Poisson ratio
-    # elif material == "sand":
-    #     config["E"] = 1e5  # Lower Young's modulus for sand
-    #     config["friction_angle"] = 30.0  # Add friction angle for sand
-    # elif material == "foam":
-    #     config["E"] = 5e5  # Moderate Young's modulus for foam
-    # elif material == "snow":
-    #     config["E"] = 1e5  # Lower Young's modulus for snow
-    #     config["softening"] = 0.2  # More softening for snow
-    # elif material == "plasticine":
-    #     config["E"] = 8e5  # Moderate Young's modulus for plasticine
-    #     config["yield_stress"] = 1e4  # Add yield stress for plasticine
+    if material == "metal":
+        config["E"] = 1e7  # Higher Young's modulus for metal
+        config["nu"] = 0.3  # Different Poisson ratio
+    elif material == "sand":
+        config["E"] = 1e5  # Lower Young's modulus for sand
+        config["friction_angle"] = 30.0  # Add friction angle for sand
+    elif material == "foam":
+        config["E"] = 5e5  # Moderate Young's modulus for foam
+    elif material == "snow":
+        config["E"] = 1e5  # Lower Young's modulus for snow
+        config["softening"] = 0.2  # More softening for snow
+    elif material == "plasticine":
+        config["E"] = 8e5  # Moderate Young's modulus for plasticine
+        config["yield_stress"] = 1e4  # Add yield stress for plasticine
     
     # Save the modified config
     config_path = config_dir / f"config_{material}.json"
@@ -59,7 +59,7 @@ def run_simulation(material):
     
     # Run the simulation command
     cmd = [
-        "xvfb-run -a",
+        "xvfb-run", "-a",
         "python", "gs_simulation_pc.py",
         "--point_cloud_path", point_cloud_path,
         "--output_path", output_path,

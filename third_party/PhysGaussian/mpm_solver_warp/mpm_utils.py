@@ -318,10 +318,6 @@ def update_cov(state: MPMStateStruct, p: int, grad_v: wp.mat33, dt: float):
 
 @wp.kernel
 def p2g_apic_with_stress(state: MPMStateStruct, model: MPMModelStruct, dt: float):
-    # input given to p2g:   particle_stress
-    #                       particle_x
-    #                       particle_v
-    #                       particle_C
     p = wp.tid()
     if state.particle_selection[p] == 0:
         stress = state.particle_stress[p]
@@ -363,16 +359,26 @@ def p2g_apic_with_stress(state: MPMStateStruct, model: MPMModelStruct, dt: float
                         C = wp.mat33(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
                     elastic_force = -state.particle_vol[p] * stress * dweight
-                    v_in_add = (
-                        weight
-                        * state.particle_mass[p]
-                        * (state.particle_v[p] + C * dpos)
-                        + dt * elastic_force
-                    )
-                    wp.atomic_add(state.grid_v_in, ix, iy, iz, v_in_add)
-                    wp.atomic_add(
-                        state.grid_m, ix, iy, iz, weight * state.particle_mass[p]
-                    )
+                    
+                    # For stationary particles, we might want to handle them differently
+                    if model.material == 6:  # 6 = stationary material
+                        # For stationary particles, we still contribute mass to the grid
+                        # but we don't add velocity or elastic forces
+                        wp.atomic_add(
+                            state.grid_m, ix, iy, iz, weight * state.particle_mass[p]
+                        )
+                    else:
+                        # Normal particles contribute both velocity and mass
+                        v_in_add = (
+                            weight
+                            * state.particle_mass[p]
+                            * (state.particle_v[p] + C * dpos)
+                            + dt * elastic_force
+                        )
+                        wp.atomic_add(state.grid_v_in, ix, iy, iz, v_in_add)
+                        wp.atomic_add(
+                            state.grid_m, ix, iy, iz, weight * state.particle_mass[p]
+                        )
 
 
 # add gravity
@@ -429,12 +435,21 @@ def g2p(state: MPMStateStruct, model: MPMModelStruct, dt: float):
                     dweight = compute_dweight(model, w, dw, i, j, k)
                     new_F = new_F + wp.outer(grid_v, dweight)
 
-        state.particle_v[p] = new_v
-        state.particle_x[p] = state.particle_x[p] + dt * new_v
-        state.particle_C[p] = new_C
-        I33 = wp.mat33(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
-        F_tmp = (I33 + new_F * dt) * state.particle_F[p]
-        state.particle_F_trial[p] = F_tmp
+        # Only update velocity and position for non-stationary materials
+        if model.material != 6:  # 6 = stationary material
+            state.particle_v[p] = new_v
+            state.particle_x[p] = state.particle_x[p] + dt * new_v
+            state.particle_C[p] = new_C
+            I33 = wp.mat33(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
+            F_tmp = (I33 + new_F * dt) * state.particle_F[p]
+            state.particle_F_trial[p] = F_tmp
+        else:
+            # For stationary material, we only update the deformation gradient
+            # but not the position or velocity
+            state.particle_C[p] = new_C
+            I33 = wp.mat33(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
+            F_tmp = (I33 + new_F * dt) * state.particle_F[p]
+            state.particle_F_trial[p] = F_tmp
 
         if model.update_cov_with_F:
             update_cov(state, p, new_F, dt)

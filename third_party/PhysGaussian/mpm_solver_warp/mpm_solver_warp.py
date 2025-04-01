@@ -258,6 +258,8 @@ class MPM_Simulator_WARP:
                 self.mpm_model.material = 4
             elif kwargs["material"] == "plasticine":
                 self.mpm_model.material = 5
+            elif kwargs["material"] == "stationary":
+                self.mpm_model.material = 6
             else:
                 raise TypeError("Undefined material type")
 

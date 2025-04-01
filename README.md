@@ -83,6 +83,12 @@ This code will:
 4. Voxelize the scene to obtain the feature grid.
 
 
+Run physics simulation
+
+```
+xvfb-run -a  python gs_simulation_pc.py --point_cloud_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features_pc.ply --output_path nerf_pc_ununiform_custom_output --config ./config/custom_config.json --render_img --compile_video --white_bg --debug
+```
+
 ## Command
 My Blender version: 4.3.2
 ### Curating objaverse dataset

@@ -453,6 +453,8 @@ def g2p(state: MPMStateStruct, model: MPMModelStruct, dt: float):
             I33 = wp.mat33(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
             F_tmp = (I33 + new_F * dt) * state.particle_F[p]
             state.particle_F_trial[p] = F_tmp
+            ## NOTE: explicitly set velocity to zero for stationary material
+            state.particle_v[p] = wp.vec3(0.0, 0.0, 0.0) 
 
         if model.update_cov_with_F:
             update_cov(state, p, new_F, dt)

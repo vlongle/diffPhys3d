@@ -379,7 +379,7 @@ if __name__ == "__main__":
                     # Clamp particles to keep them in bounds
                     pos_clamped = torch.clamp(pos, min=0.01, max=material_params["grid_lim"]-0.01)
                     # Update particle positions in the solver
-                    mpm_solver.load_particle_x_from_torch(pos_clamped)
+                    mpm_solver.import_particle_x_from_torch(pos_clamped)
                     print("Particles have been clamped to stay within grid bounds")
 
         if args.output_ply or args.output_h5:

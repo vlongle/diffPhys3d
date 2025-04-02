@@ -498,9 +498,9 @@ if __name__ == "__main__":
         n_grid=material_params["n_grid"],
         grid_lim=material_params["grid_lim"],
     )
-    mpm_solver.set_parameters_dict(material_params)
+    # mpm_solver.set_parameters_dict(material_params)
 
-    # Note: boundary conditions may depend on mass, so the order cannot be changed!
+    # Note: boundary conditions may depend on mass, so the order cannot be changedpart_labels!
     set_boundary_conditions(mpm_solver, bc_params, time_params)
 
     print(">>> APPLYING MATERIAL FIELD TO SIMULATION")

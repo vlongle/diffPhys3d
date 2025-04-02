@@ -2,6 +2,7 @@ import argparse
 import os
 from utils import on_desktop
 import time
+from utils import str2bool
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -13,9 +14,9 @@ if __name__ == "__main__":
     parser.add_argument("--camera_dist_min", type=float, help="Minimum camera distance", default=1.2)
     parser.add_argument("--camera_dist_max", type=float, help="Maximum camera distance", default=1.8)
     # parser.add_argument("--camera_dist", type=float, help="Camera distance (deprecated, use min/max instead)", default=1.2)
-    parser.add_argument("--transparent_bg", type=bool, help="Use transparent background", default=True)
+    parser.add_argument("--transparent_bg", type=str2bool, help="Use transparent background", default=True)
     parser.add_argument("--scene_scale", type=float, help="Scene scale", default=1.0)
-    parser.add_argument("--only_normalize", type=bool, help="Only normalize the scene", default=False)
+    parser.add_argument("--only_normalize", type=str2bool, help="Only normalize the scene", default=False)
     parser.add_argument("--voxel_size", type=float, help="Voxel size", default=0.01)
     args = parser.parse_args()
 

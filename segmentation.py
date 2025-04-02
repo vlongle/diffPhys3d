@@ -4,7 +4,7 @@ from typing import Tuple, Dict, List
 import trimesh
 from f3rm.features.clip import clip
 from f3rm.features.clip_extract import CLIPArgs
-
+from utils import str2bool
 def get_initial_voxel_grid_from_saved(
     grid_feature_path: str,
     occupancy_path: str = None,  # Add parameter for point cloud path
@@ -274,6 +274,7 @@ def save_segmented_point_cloud(
             print("Using default material properties instead")
     
     if use_actual_rgb and original_pc_path:
+        print(">>> USING ACTUAL RGB")
         # Load original point cloud to get RGB values
         original_pc = trimesh.load(original_pc_path)
         original_vertices = np.asarray(original_pc.vertices)
@@ -293,6 +294,7 @@ def save_segmented_point_cloud(
         colors[:, :3] = original_colors[indices, :3]
         colors[:, 3] = 1.0  # Full alpha
     else:
+        print(">>> USING PART SEGMENTATION COLORS")
         # Create a colormap with distinct colors for each part
         num_parts = part_labels_np.max() + 1
         cmap = plt.colormaps[cmap_name]
@@ -378,6 +380,7 @@ def save_segmented_point_cloud(
     print(f"Segmented point cloud saved to {output_path}")
 
 
+
 import argparse
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -387,7 +390,8 @@ if __name__ == "__main__":
     parser.add_argument("--part_queries", type=str, required=True)
     parser.add_argument("--material_dict_path", type=str, default=None, 
                         help="Path to JSON file mapping part queries to material properties")
-    parser.add_argument("--use_spatial_smoothing", type=bool, default=False)
+    parser.add_argument("--use_spatial_smoothing", type=str2bool, default=False)
+    parser.add_argument("--use_actual_rgb", type=str2bool, default=True)
     args = parser.parse_args()
 
     # Parse part queries from comma-separated string
@@ -399,6 +403,8 @@ if __name__ == "__main__":
                                                                                 args.occupancy_path)
     if args.use_spatial_smoothing:
         part_labels = local_post_process_segmentation(coords_filtered, part_labels)
+    
+
     save_segmented_point_cloud(coords_filtered, part_labels, args.output_path, part_scores,
-                               use_actual_rgb=True, original_pc_path=args.occupancy_path,
+                               use_actual_rgb=args.use_actual_rgb, original_pc_path=args.occupancy_path,
                                part_queries=part_queries, material_dict_path=args.material_dict_path)

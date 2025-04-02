@@ -13,21 +13,14 @@ def apply_material_field_to_simulation(mpm_solver, params, device="cuda:0"):
         params: Dictionary containing material properties extracted from the point cloud
         device: Device to run computations on
     """
-    import warp as wp
-    import numpy as np
-    from mpm_solver_warp.mpm_utils import set_value_to_float_array, get_float_array_product
-    
     # Check if material properties exist in the params
-    if not all(key in params for key in ['part_label', 'density', 'E', 'nu', 'material_id']):
-        print("Warning: Material field data not found in params. Using default material properties.")
-        mpm_solver.finalize_mu_lam(device=device)
-        return
+    assert all(key in params for key in ['part_labels', 'density', 'E', 'nu', 'material_id']), f"Missing material properties in params: {params.keys()}"
     
     # Get the number of particles
     n_particles = mpm_solver.n_particles
     
     # Extract material properties from params
-    part_labels = params['part_label'].cpu().numpy() if torch.is_tensor(params['part_label']) else params['part_label']
+    part_labels = params['part_labels'].cpu().numpy() if torch.is_tensor(params['part_labels']) else params['part_labels']
     densities = params['density'].cpu().numpy() if torch.is_tensor(params['density']) else params['density']
     E_values = params['E'].cpu().numpy() if torch.is_tensor(params['E']) else params['E']
     nu_values = params['nu'].cpu().numpy() if torch.is_tensor(params['nu']) else params['nu']
@@ -53,7 +46,6 @@ def apply_material_field_to_simulation(mpm_solver, params, device="cuda:0"):
             "material": int(material_ids[i]),
         })
     
-    print("material_params", material_params["additional_material_params"])
     # Apply these parameters
     mpm_solver.set_parameters_dict(material_params, device=device)
     # Finalize by computing mu and lambda parameters

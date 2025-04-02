@@ -91,8 +91,35 @@ xvfb-run -a  python gs_simulation_pc.py --point_cloud_path /home/vlongle/code/di
 ## Run simulator with non-uniform material (based on segmentation)
 
 ```
-python segmentation.py --grid_feature_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features.npz --occupancy_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features_pc.ply --output_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/material_field.ply --part_queries "pot, trunk, leaves" --material_dict_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/material_dict.json
+python segmentation.py --grid_feature_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features.npz --occupancy_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features_pc.ply --output_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/material_field.ply --part_queries "pot, trunk, leaves" --material_dict_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/material_dict.json --use_spatial_smoothing True
 ```
+add `use_actual_rgb False` to see the semantic segmentation instead of the actual rgb colors.
+
+where `material_dict.json` is like
+```
+{
+  "pot": {
+    "density": 300,
+    "E": 5e6,
+    "nu": 0.3,
+    "material_id": 6
+  },
+  "trunk": {
+    "density": 300,
+    "E": 2e7,
+    "nu": 0.4,
+    "material_id": 0
+  },
+  "leaves": {
+    "density": 200,
+    "E": 2e6,
+    "nu": 0.4,
+    "material_id": 0
+  }
+}
+```
+specifying the text_query for each part and the material properties for each part. We'd use CLIP to segment the scene to the part names and apply the material properties to the parts.
+
 
 ```
 cd third_party/PhysGaussian

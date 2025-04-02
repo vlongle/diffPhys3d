@@ -223,7 +223,6 @@ def save_segmented_point_cloud(
     part_scores: torch.Tensor = None,
     use_scores_for_alpha: bool = False,
     cmap_name: str = 'tab10',
-    use_actual_rgb: bool = False,
     original_pc_path: str = None,
     part_queries: List[str] = None,
     material_dict_path: str = None
@@ -238,7 +237,6 @@ def save_segmented_point_cloud(
         part_scores: Optional tensor of shape (num_points) with similarity scores
         use_scores_for_alpha: If True, use scores to determine point alpha
         cmap_name: Name of the colormap to use for part colors
-        use_actual_rgb: If True, use original RGB colors from the original point cloud
         original_pc_path: Path to the original point cloud file (required if use_actual_rgb=True)
         part_queries: List of part query strings corresponding to part_labels
         material_dict_path: Path to JSON file mapping part queries to material properties
@@ -248,13 +246,15 @@ def save_segmented_point_cloud(
     import matplotlib.pyplot as plt
     import trimesh
     import json
+    import os
     
     # Convert tensors to numpy arrays
     coords_np = coords.cpu().numpy()
     part_labels_np = part_labels.cpu().numpy()
     
-    # Initialize colors array
-    colors = np.zeros((coords_np.shape[0], 4), dtype=np.float32)
+    # Initialize colors array for RGB and semantic colors
+    rgb_colors = np.zeros((coords_np.shape[0], 4), dtype=np.float32)
+    semantic_colors = np.zeros((coords_np.shape[0], 4), dtype=np.float32)
     
     # Initialize material property arrays
     density = np.zeros(coords_np.shape[0], dtype=np.float32)
@@ -273,8 +273,9 @@ def save_segmented_point_cloud(
             print(f"Error loading material properties: {e}")
             print("Using default material properties instead")
     
-    if use_actual_rgb and original_pc_path:
-        print(">>> USING ACTUAL RGB")
+    # Get RGB colors from original point cloud if available
+    if original_pc_path:
+        print(">>> LOADING ORIGINAL RGB")
         # Load original point cloud to get RGB values
         original_pc = trimesh.load(original_pc_path)
         original_vertices = np.asarray(original_pc.vertices)
@@ -291,34 +292,39 @@ def save_segmented_point_cloud(
         _, indices = tree.query(coords_np, k=1)
         
         # Get the corresponding colors
-        colors[:, :3] = original_colors[indices, :3]
-        colors[:, 3] = 1.0  # Full alpha
+        rgb_colors[:, :3] = original_colors[indices, :3]
+        rgb_colors[:, 3] = 1.0  # Full alpha
     else:
-        print(">>> USING PART SEGMENTATION COLORS")
-        # Create a colormap with distinct colors for each part
-        num_parts = part_labels_np.max() + 1
-        cmap = plt.colormaps[cmap_name]
-        
-        # Generate colors for each point based on its part label
-        for i in range(num_parts):
-            mask = (part_labels_np == i)
-            if not np.any(mask):
-                continue
-                
-            base_color = cmap(i % cmap.N)  # RGBA tuple
+        # If no original point cloud, use white for RGB
+        rgb_colors[:, :3] = 1.0  # White
+        rgb_colors[:, 3] = 1.0  # Full alpha
+    
+    # Create semantic colors based on part labels
+    print(">>> CREATING SEMANTIC COLORS")
+    # Create a colormap with distinct colors for each part
+    num_parts = part_labels_np.max() + 1
+    cmap = plt.colormaps[cmap_name]
+    
+    # Generate colors for each point based on its part label
+    for i in range(num_parts):
+        mask = (part_labels_np == i)
+        if not np.any(mask):
+            continue
             
-            if use_scores_for_alpha and part_scores is not None:
-                # Use scores for alpha
-                alphas = part_scores.cpu().numpy()[mask]
-                alphas = np.clip(alphas, 0.1, 1.0)  # Ensure minimum visibility
-                
-                # Set RGB values
-                colors[mask, :3] = np.array(base_color[:3])
-                # Set alpha values
-                colors[mask, 3] = alphas
-            else:
-                # Use fixed alpha
-                colors[mask] = np.array(base_color)
+        base_color = cmap(i % cmap.N)  # RGBA tuple
+        
+        if use_scores_for_alpha and part_scores is not None:
+            # Use scores for alpha
+            alphas = part_scores.cpu().numpy()[mask]
+            alphas = np.clip(alphas, 0.1, 1.0)  # Ensure minimum visibility
+            
+            # Set RGB values
+            semantic_colors[mask, :3] = np.array(base_color[:3])
+            # Set alpha values
+            semantic_colors[mask, 3] = alphas
+        else:
+            # Use fixed alpha
+            semantic_colors[mask] = np.array(base_color)
     
     # Assign material properties based on part labels
     for i in range(part_labels_np.max() + 1):
@@ -345,11 +351,14 @@ def save_segmented_point_cloud(
             material_id[mask] = 0
             print(f"Using default material properties for {part_name}")
     
-    # Convert floating point colors [0,1] to uint8 [0,255]
-    colors_uint8 = (colors * 255).astype(np.uint8)
+    # Save both RGB and semantic point clouds
     
-    # Create structured array for PLY file
-    vertex_data = np.zeros(
+    # 1. Save RGB point cloud
+    # Convert floating point colors [0,1] to uint8 [0,255]
+    rgb_colors_uint8 = (rgb_colors * 255).astype(np.uint8)
+    
+    # Create structured array for RGB PLY file
+    vertex_data_rgb = np.zeros(
         coords_np.shape[0],
         dtype=[
             ('x', 'f4'), ('y', 'f4'), ('z', 'f4'),
@@ -359,25 +368,62 @@ def save_segmented_point_cloud(
         ]
     )
     
-    # Fill in the data
-    vertex_data['x'] = coords_np[:, 0]
-    vertex_data['y'] = coords_np[:, 1]
-    vertex_data['z'] = coords_np[:, 2]
-    vertex_data['red'] = colors_uint8[:, 0]
-    vertex_data['green'] = colors_uint8[:, 1]
-    vertex_data['blue'] = colors_uint8[:, 2]
-    vertex_data['alpha'] = colors_uint8[:, 3]
-    vertex_data['part_label'] = part_labels_np
-    vertex_data['density'] = density
-    vertex_data['E'] = E
-    vertex_data['nu'] = nu
-    vertex_data['material_id'] = material_id
+    # Fill in the data for RGB point cloud
+    vertex_data_rgb['x'] = coords_np[:, 0]
+    vertex_data_rgb['y'] = coords_np[:, 1]
+    vertex_data_rgb['z'] = coords_np[:, 2]
+    vertex_data_rgb['red'] = rgb_colors_uint8[:, 0]
+    vertex_data_rgb['green'] = rgb_colors_uint8[:, 1]
+    vertex_data_rgb['blue'] = rgb_colors_uint8[:, 2]
+    vertex_data_rgb['alpha'] = rgb_colors_uint8[:, 3]
+    vertex_data_rgb['part_label'] = part_labels_np
+    vertex_data_rgb['density'] = density
+    vertex_data_rgb['E'] = E
+    vertex_data_rgb['nu'] = nu
+    vertex_data_rgb['material_id'] = material_id
     
-    # Create PLY element and save to file
-    vertex_element = PlyElement.describe(vertex_data, 'vertex')
-    PlyData([vertex_element], text=False).write(output_path)
+    # Create PLY element and save RGB file
+    vertex_element_rgb = PlyElement.describe(vertex_data_rgb, 'vertex')
+    PlyData([vertex_element_rgb], text=False).write(output_path)
+    print(f"RGB point cloud saved to {output_path}")
     
-    print(f"Segmented point cloud saved to {output_path}")
+    # 2. Save semantic point cloud
+    # Generate semantic output path
+    base_name, ext = os.path.splitext(output_path)
+    semantic_output_path = f"{base_name}_semantics{ext}"
+    
+    # Convert semantic colors to uint8
+    semantic_colors_uint8 = (semantic_colors * 255).astype(np.uint8)
+    
+    # Create structured array for semantic PLY file
+    vertex_data_semantic = np.zeros(
+        coords_np.shape[0],
+        dtype=[
+            ('x', 'f4'), ('y', 'f4'), ('z', 'f4'),
+            ('red', 'u1'), ('green', 'u1'), ('blue', 'u1'), ('alpha', 'u1'),
+            ('part_label', 'i4'), ('density', 'f4'), ('E', 'f4'), ('nu', 'f4'),
+            ('material_id', 'i4')
+        ]
+    )
+    
+    # Fill in the data for semantic point cloud
+    vertex_data_semantic['x'] = coords_np[:, 0]
+    vertex_data_semantic['y'] = coords_np[:, 1]
+    vertex_data_semantic['z'] = coords_np[:, 2]
+    vertex_data_semantic['red'] = semantic_colors_uint8[:, 0]
+    vertex_data_semantic['green'] = semantic_colors_uint8[:, 1]
+    vertex_data_semantic['blue'] = semantic_colors_uint8[:, 2]
+    vertex_data_semantic['alpha'] = semantic_colors_uint8[:, 3]
+    vertex_data_semantic['part_label'] = part_labels_np
+    vertex_data_semantic['density'] = density
+    vertex_data_semantic['E'] = E
+    vertex_data_semantic['nu'] = nu
+    vertex_data_semantic['material_id'] = material_id
+    
+    # Create PLY element and save semantic file
+    vertex_element_semantic = PlyElement.describe(vertex_data_semantic, 'vertex')
+    PlyData([vertex_element_semantic], text=False).write(semantic_output_path)
+    print(f"Semantic point cloud saved to {semantic_output_path}")
 
 
 
@@ -391,7 +437,6 @@ if __name__ == "__main__":
     parser.add_argument("--material_dict_path", type=str, default=None, 
                         help="Path to JSON file mapping part queries to material properties")
     parser.add_argument("--use_spatial_smoothing", type=str2bool, default=False)
-    parser.add_argument("--use_actual_rgb", type=str2bool, default=True)
     args = parser.parse_args()
 
     # Parse part queries from comma-separated string
@@ -404,7 +449,7 @@ if __name__ == "__main__":
     if args.use_spatial_smoothing:
         part_labels = local_post_process_segmentation(coords_filtered, part_labels)
     
-
+    # Always save both RGB and semantic point clouds
     save_segmented_point_cloud(coords_filtered, part_labels, args.output_path, part_scores,
-                               use_actual_rgb=args.use_actual_rgb, original_pc_path=args.occupancy_path,
+                               original_pc_path=args.occupancy_path,
                                part_queries=part_queries, material_dict_path=args.material_dict_path)

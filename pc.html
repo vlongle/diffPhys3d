@@ -48,6 +48,10 @@
         const loader = new THREE.PLYLoader();
         const obj_id = "ecb91f433f144a7798724890f0528b23"
         const path = `render_outputs/${obj_id}/material_field.ply`
+
+
+
+
         loader.load(path, function (geometry) {
             // Create point cloud material
             const material = new THREE.PointsMaterial({

@@ -120,6 +120,17 @@ where `material_dict.json` is like
 ```
 specifying the text_query for each part and the material properties for each part. We'd use CLIP to segment the scene to the part names and apply the material properties to the parts.
 
+For debugging, run
+
+```
+python -m http.server 8000        
+```
+then visualize `pc.html` in the browser, which loaded the saved material field under 
+ ```
+ const path = `render_outputs/${obj_id}/material_field.ply`
+```
+
+For running physics simulation, run
 
 ```
 cd third_party/PhysGaussian

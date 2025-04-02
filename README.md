@@ -90,33 +90,13 @@ xvfb-run -a  python gs_simulation_pc.py --point_cloud_path /home/vlongle/code/di
 
 ## Run simulator with non-uniform material (based on segmentation)
 
-
-For segmentation first download nerf data from:
 ```
-gdown --folder "https://drive.google.com/drive/folders/1pe9-cOQeYuSkB07tFixekSw_KdER2J6p" -O nerf_model
+python segmentation.py --grid_feature_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features.npz --occupancy_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features_pc.ply --output_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/material_field.ply --part_queries "pot, trunk, leaves" --material_dict_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/material_dict.json
 ```
 
-Then to run segmentation with the query "leaves":
-
 ```
-python segmentation.py \
-    --query leaves \
-    --result_dir nerf_model/ \
-    --threshold 0.2
-```
-
-This will generate a dense_similarities.npy file which contains {1, 0} values for whether the query applies at each point in the point cloud. Then run the sim:
-
-```
-python gs_simulation_pc_nonuniform.py \
-    --point_cloud_path ../../segmentation/nerf_model/pc.ply \
-    --similarity_path ../../segmentation/outputs_segmentation/dense_similarities.npy \
-    --output_path nerf_pc_ununiform_custom_output \
-    --config ./config/custom_config.json \
-    --render_img \
-    --compile_video \
-    --white_bg \
-    --debug
+cd third_party/PhysGaussian
+xvfb-run -a  python gs_simulation_pc.py --point_cloud_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/material_field.ply --output_path nerf_pc_ununiform_custom_output --config ./config/custom_config.json --render_img --compile_video --white_bg --debug
 ```
 
 ## Command

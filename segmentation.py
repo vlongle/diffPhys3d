@@ -208,8 +208,8 @@ def local_post_process_segmentation(
         _, indices = tree.query(point.reshape(1, -1), k=k)
         neighbor_labels = labels_np[indices[0]]
         # Compute the mode (most frequent label) among the neighbors
-        m = mode(neighbor_labels)
-        new_labels_np[i] = m.mode[0]
+        m = mode(neighbor_labels, keepdims=False)
+        new_labels_np[i] = m.mode
     
     # Return as a torch tensor on the original device
     return torch.tensor(new_labels_np, device=part_labels.device)
@@ -224,7 +224,9 @@ def save_segmented_point_cloud(
     use_scores_for_alpha: bool = False,
     cmap_name: str = 'tab10',
     use_actual_rgb: bool = False,
-    original_pc_path: str = None
+    original_pc_path: str = None,
+    part_queries: List[str] = None,
+    material_dict_path: str = None
 ):
     """
     Save segmented point cloud to a PLY file with colors based on part labels.
@@ -238,11 +240,14 @@ def save_segmented_point_cloud(
         cmap_name: Name of the colormap to use for part colors
         use_actual_rgb: If True, use original RGB colors from the original point cloud
         original_pc_path: Path to the original point cloud file (required if use_actual_rgb=True)
+        part_queries: List of part query strings corresponding to part_labels
+        material_dict_path: Path to JSON file mapping part queries to material properties
     """
     import numpy as np
     from plyfile import PlyData, PlyElement
     import matplotlib.pyplot as plt
     import trimesh
+    import json
     
     # Convert tensors to numpy arrays
     coords_np = coords.cpu().numpy()
@@ -250,6 +255,23 @@ def save_segmented_point_cloud(
     
     # Initialize colors array
     colors = np.zeros((coords_np.shape[0], 4), dtype=np.float32)
+    
+    # Initialize material property arrays
+    density = np.zeros(coords_np.shape[0], dtype=np.float32)
+    E = np.zeros(coords_np.shape[0], dtype=np.float32)
+    nu = np.zeros(coords_np.shape[0], dtype=np.float32)
+    material_id = np.zeros(coords_np.shape[0], dtype=np.int32)
+    
+    # Load material properties dictionary if provided
+    material_props = {}
+    if material_dict_path and part_queries:
+        try:
+            with open(material_dict_path, 'r') as f:
+                material_props = json.load(f)
+            print(f"Loaded material properties from {material_dict_path}")
+        except Exception as e:
+            print(f"Error loading material properties: {e}")
+            print("Using default material properties instead")
     
     if use_actual_rgb and original_pc_path:
         # Load original point cloud to get RGB values
@@ -296,6 +318,31 @@ def save_segmented_point_cloud(
                 # Use fixed alpha
                 colors[mask] = np.array(base_color)
     
+    # Assign material properties based on part labels
+    for i in range(part_labels_np.max() + 1):
+        mask = (part_labels_np == i)
+        if not np.any(mask):
+            continue
+        
+        # Get part query string for this label
+        part_name = part_queries[i] if part_queries and i < len(part_queries) else f"part_{i}"
+        
+        # Get material properties for this part
+        if part_name in material_props:
+            props = material_props[part_name]
+            density[mask] = props.get("density", 200)
+            E[mask] = props.get("E", 2e6)
+            nu[mask] = props.get("nu", 0.4)
+            material_id[mask] = props.get("material_id", 0)
+            print(f"Applied material properties for {part_name}: {props}")
+        else:
+            # Default values if part not found in material dictionary
+            density[mask] = 200
+            E[mask] = 2e6
+            nu[mask] = 0.4
+            material_id[mask] = 0
+            print(f"Using default material properties for {part_name}")
+    
     # Convert floating point colors [0,1] to uint8 [0,255]
     colors_uint8 = (colors * 255).astype(np.uint8)
     
@@ -318,15 +365,11 @@ def save_segmented_point_cloud(
     vertex_data['green'] = colors_uint8[:, 1]
     vertex_data['blue'] = colors_uint8[:, 2]
     vertex_data['alpha'] = colors_uint8[:, 3]
-
     vertex_data['part_label'] = part_labels_np
-
-    vertex_data['density'] = np.ones_like(part_labels_np) * 200
-    vertex_data['E'] = np.ones_like(part_labels_np) * 2e6
-    vertex_data['nu'] = np.ones_like(part_labels_np) * 0.4
-    
-    # "jelly" is 0
-    vertex_data['material_id'] = np.ones_like(part_labels_np) * 0
+    vertex_data['density'] = density
+    vertex_data['E'] = E
+    vertex_data['nu'] = nu
+    vertex_data['material_id'] = material_id
     
     # Create PLY element and save to file
     vertex_element = PlyElement.describe(vertex_data, 'vertex')
@@ -342,11 +385,20 @@ if __name__ == "__main__":
     parser.add_argument("--occupancy_path", type=str, required=True)
     parser.add_argument("--output_path", type=str, required=True)
     parser.add_argument("--part_queries", type=str, required=True)
+    parser.add_argument("--material_dict_path", type=str, default=None, 
+                        help="Path to JSON file mapping part queries to material properties")
+    parser.add_argument("--use_spatial_smoothing", type=bool, default=False)
     args = parser.parse_args()
 
+    # Parse part queries from comma-separated string
+    part_queries = [q.strip() for q in args.part_queries.split(',')]
+    print(">> PART_QUERIES", part_queries)
+    
     coords_filtered, part_labels, part_scores, metrics = clip_part_segmentation(args.grid_feature_path, 
-                                                                                args.part_queries,
+                                                                                part_queries,
                                                                                 args.occupancy_path)
-    part_labels = local_post_process_segmentation(coords_filtered, part_labels)
+    if args.use_spatial_smoothing:
+        part_labels = local_post_process_segmentation(coords_filtered, part_labels)
     save_segmented_point_cloud(coords_filtered, part_labels, args.output_path, part_scores,
-                               use_actual_rgb=True, original_pc_path=args.occupancy_path)
+                               use_actual_rgb=True, original_pc_path=args.occupancy_path,
+                               part_queries=part_queries, material_dict_path=args.material_dict_path)

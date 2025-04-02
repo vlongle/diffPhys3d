@@ -226,7 +226,7 @@ def main(query='leaves',
 
     # ------------------- PART 2: KD-TREE DENSE MAPPING -------------------
     print(f"\n--- PART 2: KD-tree mapping for dense point cloud (threshold={threshold}) ---")
-    ply_file = f"{result_dir}/pc.ply"
+    ply_file = f"{result_dir}/clip_features_pc.ply"
     if not os.path.exists(ply_file):
         raise FileNotFoundError(f"Could not find pc.ply at: {ply_file}")
 
@@ -301,7 +301,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Unified script for CLIP-based voxel filtering + KD-tree mapping.")
     parser.add_argument("--query", type=str, default="leaves", 
                         help="Query string for CLIP-based filtering (default: 'leaves').")
-    parser.add_argument("--result_dir", type=str, default="nerf_model/",
+    parser.add_argument("--result_dir", type=str, default="nerf_model",
                         help="Path containing 'pc.ply' and 'clip_features.npz' (default: the sample path).")
     parser.add_argument("--threshold", type=float, default=0.2,
                         help="Similarity threshold for final KD-tree assignment (default: 0.2).")

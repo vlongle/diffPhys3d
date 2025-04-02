@@ -1,3 +1,3 @@
-initial: 1000000
-point_cloud: 30956
-language_masked: 8628
+initial: 8000000
+point_cloud: 140166
+language_masked: 43498

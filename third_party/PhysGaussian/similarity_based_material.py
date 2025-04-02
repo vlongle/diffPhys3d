@@ -61,6 +61,25 @@ def create_similarity_based_materials(config_path, similarity_path, output_path=
     
     return config
 
+
+# def apply_material_field_to_simulation(mpm_solver, material_field_path, device="cuda:0"):
+#     ## material_field_path is a .ply file where each point has 
+#     ## instead of color, the material features including E, nu, density
+#     import plyfile
+#     import numpy as np
+
+#     plydata = plyfile.PlyData.read(material_field_path)
+#     vertex_element = plydata['vertex']
+#     x = vertex_element['x']
+#     y = vertex_element['y']
+#     z = vertex_element['z']
+#     positions = np.column_stack((x, y, z))
+
+#     E = vertex_element['E']
+#     nu = vertex_element['nu']
+#     density = vertex_element['density']
+
+
 def apply_similarity_based_materials_to_simulation(mpm_solver, similarity_path, 
                                                   light_material, stiff_material,
                                                   device="cuda:0"):

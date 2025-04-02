@@ -42,6 +42,7 @@ from utils.render_utils import *
 import glob    
 from plyfile import PlyData
 import numpy as np
+from similarity_based_material import apply_material_field_to_simulation
 
 wp.init()
 wp.config.verify_cuda = True
@@ -264,6 +265,7 @@ if __name__ == "__main__":
     parser.add_argument("--white_bg", action="store_true")
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--point_cloud_path", type=str, help="Path to input point cloud PLY file")
+    parser.add_argument("--material_field_path", type=str, help="Path to a material field file")
     args = parser.parse_args()
 
         
@@ -487,7 +489,12 @@ if __name__ == "__main__":
     # Note: boundary conditions may depend on mass, so the order cannot be changed!
     set_boundary_conditions(mpm_solver, bc_params, time_params)
 
-    mpm_solver.finalize_mu_lam()
+    if args.material_field_path and os.path.exists(args.material_field_path):
+        print(f"Applying material field from {args.material_field_path}")
+        apply_material_field_to_simulation(mpm_solver, args.material_field_path,
+                                           device=device)
+    else:
+        mpm_solver.finalize_mu_lam()
 
     # camera setting
     mpm_space_viewpoint_center = (

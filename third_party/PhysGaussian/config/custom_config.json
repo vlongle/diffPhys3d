@@ -67,7 +67,8 @@
             ],
             "nu": 0.4,
             "E": 2e6,
-            "density": 70
+            "density": 70,
+            "material": 0
         }
     ],
     "mpm_space_vertical_upward_axis": [

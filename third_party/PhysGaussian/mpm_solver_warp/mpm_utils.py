@@ -596,6 +596,7 @@ def apply_additional_params(
         model.E[p] = params_modifier.E
         model.nu[p] = params_modifier.nu
         state.particle_density[p] = params_modifier.density
+        state.particle_material[p] = params_modifier.material
 
 
 @wp.kernel

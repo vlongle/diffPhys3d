@@ -42,7 +42,7 @@ from utils.render_utils import *
 import glob    
 from plyfile import PlyData
 import numpy as np
-from similarity_based_material import apply_material_field_to_simulation
+from material_field import apply_material_field_to_simulation
 
 wp.init()
 wp.config.verify_cuda = True
@@ -115,6 +115,13 @@ def load_point_cloud(ply_path, opacity_value=0.5, sh_degree=3):
     screen_points = torch.zeros((positions.shape[0], 3), device="cuda")
     
     positions_tensor = torch.tensor(positions, device="cuda").float()
+
+    ## material field
+    part_labels = vertex_element['part_label']
+    density = vertex_element['density']
+    E = vertex_element['E']
+    nu = vertex_element['nu']
+    material_id = vertex_element['material_id']
     
     print(f"Loaded point cloud with {positions.shape[0]} points")
     if has_colors:
@@ -128,7 +135,14 @@ def load_point_cloud(ply_path, opacity_value=0.5, sh_degree=3):
         "opacity": opacities,
         "shs": shs,
         "screen_points": screen_points,
-        "colors": colors_tensor
+        "colors": colors_tensor,
+
+        ### material field
+        "part_labels": part_labels,
+        "density": density,
+        "E": E,
+        "nu": nu,
+        "material_id": material_id,
     }
 
 import os
@@ -489,12 +503,17 @@ if __name__ == "__main__":
     # Note: boundary conditions may depend on mass, so the order cannot be changed!
     set_boundary_conditions(mpm_solver, bc_params, time_params)
 
-    if args.material_field_path and os.path.exists(args.material_field_path):
-        print(f"Applying material field from {args.material_field_path}")
-        apply_material_field_to_simulation(mpm_solver, args.material_field_path,
-                                           device=device)
-    else:
-        mpm_solver.finalize_mu_lam()
+    print(">>> APPLYING MATERIAL FIELD TO SIMULATION")
+    apply_material_field_to_simulation(mpm_solver, params, device=device)
+
+    # if args.material_field_path and os.path.exists(args.material_field_path):
+    #     print(f"Applying material field from {args.material_field_path}")
+    #     # apply_material_field_to_simulation(mpm_solver, args.material_field_path,
+    #     #                                    device=device)
+    # else:
+    #     mpm_solver.finalize_mu_lam()
+
+    
 
     # camera setting
     mpm_space_viewpoint_center = (

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Point Cloud Viewer</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/PLYLoader.js"></script>
+    <script>
+        // Set up scene
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf0f0f0);
+
+        // Set up camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        // Set up renderer
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Add orbit controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Add lights
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+        // Load PLY file
+        const loader = new THREE.PLYLoader();
+        const obj_id = "ecb91f433f144a7798724890f0528b23"
+        const path = `render_outputs/${obj_id}/segmented_parts_smoothed.ply`
+        loader.load(path, function (geometry) {
+            // Create point cloud material
+            const material = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true
+            });
+
+            // Create point cloud
+            const pointCloud = new THREE.Points(geometry, material);
+
+            // Center the point cloud
+            geometry.computeBoundingBox();
+            const center = geometry.boundingBox.getCenter(new THREE.Vector3());
+            pointCloud.position.sub(center);
+
+            scene.add(pointCloud);
+
+            // Adjust camera position based on bounding box
+            const boundingBox = geometry.boundingBox;
+            const size = boundingBox.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            camera.position.set(0, 0, maxDim * 2);
+            camera.lookAt(0, 0, 0);
+
+            controls.update();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>

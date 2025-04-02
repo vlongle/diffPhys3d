@@ -380,6 +380,7 @@ class MPM_Simulator_WARP:
                 param_modifier.density = params["density"]
                 param_modifier.E = params["E"]
                 param_modifier.nu = params["nu"]
+                param_modifier.material = params["material"]
                 wp.launch(
                     kernel=apply_additional_params,
                     dim=self.n_particles,

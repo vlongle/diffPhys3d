@@ -157,6 +157,7 @@ class MaterialParamsModifier:
     E: float
     nu: float
     density: float
+    material: int
 
 
 @wp.struct

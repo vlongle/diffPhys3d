@@ -15,7 +15,7 @@ import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from similarity_based_material import apply_similarity_based_materials_to_simulation
+from third_party.PhysGaussian.material_field import apply_similarity_based_materials_to_simulation
 
 # Gaussian splatting dependencies
 from utils.sh_utils import eval_sh

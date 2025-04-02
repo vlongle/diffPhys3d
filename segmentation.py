@@ -213,3 +213,140 @@ def local_post_process_segmentation(
     
     # Return as a torch tensor on the original device
     return torch.tensor(new_labels_np, device=part_labels.device)
+
+
+
+def save_segmented_point_cloud(
+    coords: torch.Tensor,
+    part_labels: torch.Tensor,
+    output_path: str,
+    part_scores: torch.Tensor = None,
+    use_scores_for_alpha: bool = False,
+    cmap_name: str = 'tab10',
+    use_actual_rgb: bool = False,
+    original_pc_path: str = None
+):
+    """
+    Save segmented point cloud to a PLY file with colors based on part labels.
+    
+    Args:
+        coords: Tensor of shape (num_points, 3) containing point coordinates
+        part_labels: Tensor of shape (num_points) containing part indices
+        output_path: Path to save the PLY file
+        part_scores: Optional tensor of shape (num_points) with similarity scores
+        use_scores_for_alpha: If True, use scores to determine point alpha
+        cmap_name: Name of the colormap to use for part colors
+        use_actual_rgb: If True, use original RGB colors from the original point cloud
+        original_pc_path: Path to the original point cloud file (required if use_actual_rgb=True)
+    """
+    import numpy as np
+    from plyfile import PlyData, PlyElement
+    import matplotlib.pyplot as plt
+    import trimesh
+    
+    # Convert tensors to numpy arrays
+    coords_np = coords.cpu().numpy()
+    part_labels_np = part_labels.cpu().numpy()
+    
+    # Initialize colors array
+    colors = np.zeros((coords_np.shape[0], 4), dtype=np.float32)
+    
+    if use_actual_rgb and original_pc_path:
+        # Load original point cloud to get RGB values
+        original_pc = trimesh.load(original_pc_path)
+        original_vertices = np.asarray(original_pc.vertices)
+        original_colors = np.asarray(original_pc.colors)
+        
+        # Normalize colors if needed
+        if original_colors.max() > 1.0:
+            original_colors = original_colors / 255.0
+            
+        # We need to map the filtered coordinates back to the original point cloud
+        # This is a simple implementation that finds the nearest neighbor
+        from scipy.spatial import cKDTree
+        tree = cKDTree(original_vertices)
+        _, indices = tree.query(coords_np, k=1)
+        
+        # Get the corresponding colors
+        colors[:, :3] = original_colors[indices, :3]
+        colors[:, 3] = 1.0  # Full alpha
+    else:
+        # Create a colormap with distinct colors for each part
+        num_parts = part_labels_np.max() + 1
+        cmap = plt.colormaps[cmap_name]
+        
+        # Generate colors for each point based on its part label
+        for i in range(num_parts):
+            mask = (part_labels_np == i)
+            if not np.any(mask):
+                continue
+                
+            base_color = cmap(i % cmap.N)  # RGBA tuple
+            
+            if use_scores_for_alpha and part_scores is not None:
+                # Use scores for alpha
+                alphas = part_scores.cpu().numpy()[mask]
+                alphas = np.clip(alphas, 0.1, 1.0)  # Ensure minimum visibility
+                
+                # Set RGB values
+                colors[mask, :3] = np.array(base_color[:3])
+                # Set alpha values
+                colors[mask, 3] = alphas
+            else:
+                # Use fixed alpha
+                colors[mask] = np.array(base_color)
+    
+    # Convert floating point colors [0,1] to uint8 [0,255]
+    colors_uint8 = (colors * 255).astype(np.uint8)
+    
+    # Create structured array for PLY file
+    vertex_data = np.zeros(
+        coords_np.shape[0],
+        dtype=[
+            ('x', 'f4'), ('y', 'f4'), ('z', 'f4'),
+            ('red', 'u1'), ('green', 'u1'), ('blue', 'u1'), ('alpha', 'u1'),
+            ('part_label', 'i4'), ('density', 'f4'), ('E', 'f4'), ('nu', 'f4'),
+            ('material_id', 'i4')
+        ]
+    )
+    
+    # Fill in the data
+    vertex_data['x'] = coords_np[:, 0]
+    vertex_data['y'] = coords_np[:, 1]
+    vertex_data['z'] = coords_np[:, 2]
+    vertex_data['red'] = colors_uint8[:, 0]
+    vertex_data['green'] = colors_uint8[:, 1]
+    vertex_data['blue'] = colors_uint8[:, 2]
+    vertex_data['alpha'] = colors_uint8[:, 3]
+
+    vertex_data['part_label'] = part_labels_np
+
+    vertex_data['density'] = np.ones_like(part_labels_np) * 200
+    vertex_data['E'] = np.ones_like(part_labels_np) * 2e6
+    vertex_data['nu'] = np.ones_like(part_labels_np) * 0.4
+    
+    # "jelly" is 0
+    vertex_data['material_id'] = np.ones_like(part_labels_np) * 0
+    
+    # Create PLY element and save to file
+    vertex_element = PlyElement.describe(vertex_data, 'vertex')
+    PlyData([vertex_element], text=False).write(output_path)
+    
+    print(f"Segmented point cloud saved to {output_path}")
+
+
+import argparse
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--grid_feature_path", type=str, required=True)
+    parser.add_argument("--occupancy_path", type=str, required=True)
+    parser.add_argument("--output_path", type=str, required=True)
+    parser.add_argument("--part_queries", type=str, required=True)
+    args = parser.parse_args()
+
+    coords_filtered, part_labels, part_scores, metrics = clip_part_segmentation(args.grid_feature_path, 
+                                                                                args.part_queries,
+                                                                                args.occupancy_path)
+    part_labels = local_post_process_segmentation(coords_filtered, part_labels)
+    save_segmented_point_cloud(coords_filtered, part_labels, args.output_path, part_scores,
+                               use_actual_rgb=True, original_pc_path=args.occupancy_path)

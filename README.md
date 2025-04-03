@@ -93,6 +93,7 @@ xvfb-run -a  python gs_simulation_pc.py --point_cloud_path /home/vlongle/code/di
 
 For segmentation first download nerf data from:
 ```
+cd segmentation
 gdown --folder "https://drive.google.com/drive/folders/1pe9-cOQeYuSkB07tFixekSw_KdER2J6p" -O nerf_model
 ```
 
@@ -108,6 +109,7 @@ python segmentation.py \
 This will generate a dense_similarities.npy file which contains {1, 0} values for whether the query applies at each point in the point cloud. Then run the sim:
 
 ```
+cd third_party/PhysGaussian
 python gs_simulation_pc_nonuniform.py \
     --point_cloud_path ../../segmentation/nerf_model/pc.ply \
     --similarity_path ../../segmentation/outputs_segmentation/dense_similarities.npy \

@@ -101,7 +101,7 @@ Then to run segmentation with the query "leaves":
 ```
 python segmentation.py \
     --query leaves \
-    --result_dir nerf_model/ \
+    --result_dir nerf_model \
     --threshold 0.2
 ```
 

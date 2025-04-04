@@ -53,13 +53,9 @@ def get_initial_voxel_grid_from_saved(
     # Load the pre-filtered point cloud
     if occupancy_path is None:
         occupancy_path = grid_feature_path.replace('.npz', '_pc.ply')
+    coords_filtered = load_occupancy_grid(occupancy_path, device)
     
     print(f"Loading pre-filtered point cloud from {occupancy_path}...")
-    pc = trimesh.load(occupancy_path)
-    points = np.asarray(pc.vertices)
-    
-    # Convert points to tensor and move to device
-    coords_filtered = torch.tensor(points, dtype=torch.float32, device=device)
     metrics["point_cloud"] = len(coords_filtered)
     print(f"Loaded {len(coords_filtered)} points from point cloud")
     
@@ -91,7 +87,10 @@ def get_initial_voxel_grid_from_saved(
     return features_filtered, coords_filtered, metrics
 
 
-
+def load_occupancy_grid(occupancy_path: str, device: str = "cuda"):
+    pc = trimesh.load(occupancy_path)
+    points = np.asarray(pc.vertices)
+    return torch.tensor(points, dtype=torch.float32, device=device)
 
 def clip_part_segmentation(
    grid_feature_path: str,
@@ -173,11 +172,14 @@ softmax_temperature: float = 0.1,  # Added temperature parameter for sharpening
     
     return coords_filtered, part_labels, part_scores, metrics
 
+import numpy as np
+from sklearn.neighbors import KDTree
+from scipy.stats import mode
 
 def local_post_process_segmentation(
     coords: torch.Tensor,
     part_labels: torch.Tensor,
-    k: int = 200,
+    k: int = 1000,
 ) -> torch.Tensor:
     """
     Perform local post-processing on segmentation results using k-nearest neighbors majority voting.
@@ -190,9 +192,6 @@ def local_post_process_segmentation(
     Returns:
         new_labels: Tensor of shape (num_points) with updated labels after local post-processing.
     """
-    import numpy as np
-    from sklearn.neighbors import KDTree
-    from scipy.stats import mode
 
     # Convert tensors to NumPy arrays
     coords_np = coords.cpu().numpy()
@@ -216,12 +215,17 @@ def local_post_process_segmentation(
 
 
 
+import numpy as np
+from plyfile import PlyData, PlyElement
+import matplotlib.pyplot as plt
+import trimesh
+import json
+import os
+
 def save_segmented_point_cloud(
     coords: torch.Tensor,
     part_labels: torch.Tensor,
-    output_path: str,
-    part_scores: torch.Tensor = None,
-    use_scores_for_alpha: bool = False,
+    output_dir: str,
     cmap_name: str = 'tab10',
     original_pc_path: str = None,
     part_queries: List[str] = None,
@@ -233,20 +237,19 @@ def save_segmented_point_cloud(
     Args:
         coords: Tensor of shape (num_points, 3) containing point coordinates
         part_labels: Tensor of shape (num_points) containing part indices
-        output_path: Path to save the PLY file
-        part_scores: Optional tensor of shape (num_points) with similarity scores
-        use_scores_for_alpha: If True, use scores to determine point alpha
+        output_dir: Directory to save the output files
         cmap_name: Name of the colormap to use for part colors
         original_pc_path: Path to the original point cloud file (required if use_actual_rgb=True)
         part_queries: List of part query strings corresponding to part_labels
         material_dict_path: Path to JSON file mapping part queries to material properties
     """
-    import numpy as np
-    from plyfile import PlyData, PlyElement
-    import matplotlib.pyplot as plt
-    import trimesh
-    import json
-    import os
+
+    # Create output directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Define output paths within the directory
+    rgb_output_path = os.path.join(output_dir, "segmented_rgb.ply")
+    semantic_output_path = os.path.join(output_dir, "segmented_semantics.ply")
     
     # Convert tensors to numpy arrays
     coords_np = coords.cpu().numpy()
@@ -312,19 +315,7 @@ def save_segmented_point_cloud(
             continue
             
         base_color = cmap(i % cmap.N)  # RGBA tuple
-        
-        if use_scores_for_alpha and part_scores is not None:
-            # Use scores for alpha
-            alphas = part_scores.cpu().numpy()[mask]
-            alphas = np.clip(alphas, 0.1, 1.0)  # Ensure minimum visibility
-            
-            # Set RGB values
-            semantic_colors[mask, :3] = np.array(base_color[:3])
-            # Set alpha values
-            semantic_colors[mask, 3] = alphas
-        else:
-            # Use fixed alpha
-            semantic_colors[mask] = np.array(base_color)
+        semantic_colors[mask] = np.array(base_color)
     
     # Assign material properties based on part labels
     for i in range(part_labels_np.max() + 1):
@@ -384,14 +375,10 @@ def save_segmented_point_cloud(
     
     # Create PLY element and save RGB file
     vertex_element_rgb = PlyElement.describe(vertex_data_rgb, 'vertex')
-    PlyData([vertex_element_rgb], text=False).write(output_path)
-    print(f"RGB point cloud saved to {output_path}")
+    PlyData([vertex_element_rgb], text=False).write(rgb_output_path)
+    print(f"RGB point cloud saved to {rgb_output_path}")
     
     # 2. Save semantic point cloud
-    # Generate semantic output path
-    base_name, ext = os.path.splitext(output_path)
-    semantic_output_path = f"{base_name}_semantics{ext}"
-    
     # Convert semantic colors to uint8
     semantic_colors_uint8 = (semantic_colors * 255).astype(np.uint8)
     
@@ -424,6 +411,7 @@ def save_segmented_point_cloud(
     vertex_element_semantic = PlyElement.describe(vertex_data_semantic, 'vertex')
     PlyData([vertex_element_semantic], text=False).write(semantic_output_path)
     print(f"Semantic point cloud saved to {semantic_output_path}")
+    
 
 
 
@@ -432,24 +420,34 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--grid_feature_path", type=str, required=True)
     parser.add_argument("--occupancy_path", type=str, required=True)
-    parser.add_argument("--output_path", type=str, required=True)
+    parser.add_argument("--output_dir", type=str, required=True)
     parser.add_argument("--part_queries", type=str, required=True)
     parser.add_argument("--material_dict_path", type=str, default=None, 
                         help="Path to JSON file mapping part queries to material properties")
     parser.add_argument("--use_spatial_smoothing", type=str2bool, default=False)
+    parser.add_argument("--overwrite", type=str2bool, default=False)
+    # parser.add_argument("--overwrite", type=str2bool, default=True)
     args = parser.parse_args()
 
     # Parse part queries from comma-separated string
     part_queries = [q.strip() for q in args.part_queries.split(',')]
     print(">> PART_QUERIES", part_queries)
     
-    coords_filtered, part_labels, part_scores, metrics = clip_part_segmentation(args.grid_feature_path, 
-                                                                                part_queries,
-                                                                                args.occupancy_path)
-    if args.use_spatial_smoothing:
-        part_labels = local_post_process_segmentation(coords_filtered, part_labels)
+    labels_output_path = os.path.join(args.output_dir, "part_labels.npy")
+    if args.overwrite or not os.path.exists(labels_output_path):
+        coords_filtered, part_labels, part_scores, metrics = clip_part_segmentation(args.grid_feature_path, 
+                                                                                    part_queries,
+                                                                                    args.occupancy_path)
+        if args.use_spatial_smoothing:
+            part_labels = local_post_process_segmentation(coords_filtered, part_labels)
+        # Save part labels as a numpy array
+        np.save(labels_output_path, part_labels.cpu().numpy())
+        print(f"Part labels saved to {labels_output_path}")
+    else:
+        part_labels = torch.from_numpy(np.load(labels_output_path))
+        coords_filtered = load_occupancy_grid(args.occupancy_path)
     
-    # Always save both RGB and semantic point clouds
-    save_segmented_point_cloud(coords_filtered, part_labels, args.output_path, part_scores,
+    # Save all outputs to the specified directory
+    save_segmented_point_cloud(coords_filtered, part_labels, args.output_dir, 
                                original_pc_path=args.occupancy_path,
                                part_queries=part_queries, material_dict_path=args.material_dict_path)

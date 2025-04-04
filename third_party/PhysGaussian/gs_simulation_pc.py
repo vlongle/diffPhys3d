@@ -217,7 +217,7 @@ def visualize_point_cloud_trimesh(positions, output_path, frame_number, camera_p
 
 
 def visualize_point_cloud(positions, output_path, frame_number, color=None, point_size=1,
-                          zoom_factor=1.0):
+                          zoom_factor=1.0, xlim=None, ylim=None, zlim=None):
     """
     Visualize a point cloud using matplotlib's 3D scatter plot.
     
@@ -227,12 +227,14 @@ def visualize_point_cloud(positions, output_path, frame_number, color=None, poin
         frame_number: Current frame number for filename
         color: Optional color array for points
         point_size: Size of points in the plot
+        zoom_factor: Factor to control the zoom level
+        xlim, ylim, zlim: Optional axis limits for consistent view across frames
+    
+    Returns:
+        Tuple of (height, width, xlim, ylim, zlim) for consistent visualization
     """
     # Convert positions to numpy
     positions_np = positions.cpu().numpy()
-
-    ## save positions_np to a ply file
-    # np.save(os.path.join(output_path, f"{frame_number:04d}_positions.npy"), positions_np)
     
     # Create figure
     fig = plt.figure(figsize=(10, 10))
@@ -240,32 +242,72 @@ def visualize_point_cloud(positions, output_path, frame_number, color=None, poin
     
     ax.scatter(positions_np[:, 0], positions_np[:, 1], positions_np[:, 2], s=point_size, 
                c=color)
+    
+    # Add visualization of the cuboid boundary condition
+    # Hardcoded values from custom_cuboid_config.json
+    cube_center = [1, 1, 0.5]
+    cube_size = [0.5, 0.5, 0.1]
+    
+    # Calculate the corners of the cube
+    x_min, y_min, z_min = [cube_center[i] - cube_size[i]/2 for i in range(3)]
+    x_max, y_max, z_max = [cube_center[i] + cube_size[i]/2 for i in range(3)]
+    
+    # Define the vertices of the cube
+    vertices = np.array([
+        [x_min, y_min, z_min],
+        [x_max, y_min, z_min],
+        [x_max, y_max, z_min],
+        [x_min, y_max, z_min],
+        [x_min, y_min, z_max],
+        [x_max, y_min, z_max],
+        [x_max, y_max, z_max],
+        [x_min, y_max, z_max]
+    ])
+    
+    # Define the edges of the cube
+    edges = [
+        [0, 1], [1, 2], [2, 3], [3, 0],  # Bottom face
+        [4, 5], [5, 6], [6, 7], [7, 4],  # Top face
+        [0, 4], [1, 5], [2, 6], [3, 7]   # Connecting edges
+    ]
+    
+    # # Plot the edges of the cube
+    # for edge in edges:
+    #     ax.plot3D(
+    #         [vertices[edge[0]][0], vertices[edge[1]][0]],
+    #         [vertices[edge[0]][1], vertices[edge[1]][1]],
+    #         [vertices[edge[0]][2], vertices[edge[1]][2]],
+    #         'red', linewidth=2
+    #     )
+    
     # Set consistent view angle
     ax.view_init(elev=0, azim=90)
 
-    limit = 0.5 * zoom_factor
-    x_min, x_max = -limit, limit
-    y_min, y_max = -limit, limit
-    z_min, z_max = -limit, limit
+    # Set axis limits for consistent view
+    if xlim is None or ylim is None or zlim is None:
+        # Calculate limits based on data and zoom factor if not provided
+        data_min = positions_np.min(axis=0)
+        data_max = positions_np.max(axis=0)
+        
+        # Add padding around the data
+        padding = (data_max - data_min) * 0.1
+        xlim = [data_min[0] - padding[0], data_max[0] + padding[0]]
+        ylim = [data_min[1] - padding[1], data_max[1] + padding[1]]
+        zlim = [data_min[2] - padding[2], data_max[2] + padding[2]]
+    
+    ax.set_xlim(xlim)
+    ax.set_ylim(ylim)
+    ax.set_zlim(zlim)
 
-
-    ax.set_xlim(x_min, x_max)
-    ax.set_ylim(y_min, y_max)
-    ax.set_zlim(z_min, z_max)
-
-
-    ax.set_axis_off()
-
+    # ax.set_axis_off()
     
     # Save figure
     output_file = os.path.join(output_path, f"{frame_number:04d}.png")
     plt.savefig(output_file, dpi=150, bbox_inches='tight')
     plt.close(fig)
     
-    # print(f"Rendered frame {frame_number} with {positions_np.shape[0]} points")
-    
-    # Return dimensions of the saved image
-    return 1000, 1000  # Approximate size based on figsize and dpi
+    # Return dimensions of the saved image and the axis limits
+    return 1000, 1000, xlim, ylim, zlim  # Approximate size based on figsize and dpi
 
 
 if __name__ == "__main__":
@@ -498,13 +540,17 @@ if __name__ == "__main__":
         n_grid=material_params["n_grid"],
         grid_lim=material_params["grid_lim"],
     )
-    # mpm_solver.set_parameters_dict(material_params)
 
     # Note: boundary conditions may depend on mass, so the order cannot be changedpart_labels!
     set_boundary_conditions(mpm_solver, bc_params, time_params)
 
     print(">>> APPLYING MATERIAL FIELD TO SIMULATION")
+    mpm_solver.set_parameters_dict(material_params)
     apply_material_field_to_simulation(mpm_solver, params, device=device)
+
+
+    # mpm_solver.set_parameters_dict(material_params)
+    # mpm_solver.finalize_mu_lam()
 
     # if args.material_field_path and os.path.exists(args.material_field_path):
     #     print(f"Applying material field from {args.material_field_path}")
@@ -560,6 +606,8 @@ if __name__ == "__main__":
 
     
     camera_transform=None
+    xlim, ylim, zlim = None, None, None
+
 
 
 
@@ -593,27 +641,31 @@ if __name__ == "__main__":
         if args.render_img:
             pos = mpm_solver.export_particle_x_to_torch()[:gs_num].to(device)
             
-            # Transform positions back to original coordinate system
-            pos = apply_inverse_rotations(
-                undotransform2origin(
-                    undoshift2center111(pos), scale_origin, original_mean_pos
-                ),
-                rotation_matrices,
-            )
+            ## NOTE: important. The simulation is done at 111 coordinate system
+            ### (for some reasons???)
+            # # Transform positions back to original coordinate system
+            # pos = apply_inverse_rotations(
+            #     undotransform2origin(
+            #         undoshift2center111(pos), scale_origin, original_mean_pos
+            #     ),
+            #     rotation_matrices,
+            # )
             
             # Add unselected particles if needed
             if preprocessing_params["sim_area"] is not None:
                 pos = torch.cat([pos, unselected_pos], dim=0)
             
             # Visualize point cloud
-            # height, width = visualize_point_cloud(
-            #     pos, 
-            #     args.output_path, 
-            #     frame,
-            #     color=params['colors'].cpu().numpy(),
-            #     point_size=2,  # Adjust point size as needed,
-            #     zoom_factor=0.5,
-            # )
+            height, width, xlim, ylim, zlim = visualize_point_cloud(
+                pos, 
+                args.output_path, 
+                frame,
+                color=params['colors'].cpu().numpy(),
+                point_size=2,  # Adjust point size as needed,
+                xlim=xlim,
+                ylim=ylim,
+                zlim=zlim,
+            )
 
 
             
@@ -622,13 +674,13 @@ if __name__ == "__main__":
             ## somehow the pot is also swaying, which IS NOT CORRECT.
             ## I think point_cloud_trimesh actually renders out a voxel-ish looking
             ## thing, which is nicer than just point projection like the matplotlib one.
-            height, width, camera_transform = visualize_point_cloud_trimesh(
-                pos,
-                args.output_path,
-                frame,
-                color=params['colors'].cpu().numpy(),
-                camera_transform=camera_transform
-            )
+            # height, width, camera_transform = visualize_point_cloud_trimesh(
+            #     pos,
+            #     args.output_path,
+            #     frame,
+            #     color=params['colors'].cpu().numpy(),
+            #     camera_transform=camera_transform
+            # )
             
             
     if args.render_img and args.compile_video:

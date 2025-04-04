@@ -8,7 +8,7 @@
     ],
     "substep_dt": 1e-4,
     "frame_dt": 4e-2,
-    "frame_num": 10,
+    "frame_num": 20,
     "nu": 0.4,
     "E": 2e6,
     "material": "jelly",

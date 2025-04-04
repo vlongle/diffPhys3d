@@ -74,21 +74,19 @@ pip install -e gaussian-splatting/submodules/diff-gaussian-rasterization/
 ## Workflow
 
 ```
-python run.py --obj_id ecb91f433f144a7798724890f0528b23 --camera_dist_min 1.2 --camera_dist_max 1.8 --scene_scale 1.0 --num_images 200
+python run.py --obj_id ecb91f433f144a7798724890f0528b23 --camera_dist_min 1.2 --camera_dist_max 1.8 --scene_scale 1.0 --num_images 200 --part_queries "pot, trunk, leaves"
 ```
 This code will:
 1. Render nerf data using our custom BlenderNerf add-on.
 2. Convert the nerf data to a format that can be used by nerfstudio.
 3. Train a f3rm model (nerf + clip distilled feature)
 4. Voxelize the scene to obtain the feature grid.
+5. Segment the scene to obtain the part names.
+6. Apply the material properties to the parts.
+7. Run physics simulation.
 
-Run physics simulation
 
-```
-xvfb-run -a  python gs_simulation_pc.py --point_cloud_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features_pc.ply --output_path nerf_pc_ununiform_custom_output --config ./config/custom_config.json --render_img --compile_video --white_bg --debug
-```
-
-## Run simulator with non-uniform material (based on segmentation)
+## Manually Running simulator with non-uniform material (based on segmentation)
 
 ```
 python segmentation.py --grid_feature_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features.npz --occupancy_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/clip_features_pc.ply --output_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/material_field.ply --part_queries "pot, trunk, leaves" --material_dict_path /home/vlongle/code/diffPhys3d/render_outputs/ecb91f433f144a7798724890f0528b23/material_dict.json --use_spatial_smoothing True

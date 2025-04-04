@@ -18,12 +18,13 @@ if __name__ == "__main__":
     parser.add_argument("--scene_scale", type=float, help="Scene scale", default=1.0)
     parser.add_argument("--only_normalize", type=str2bool, help="Only normalize the scene", default=False)
     parser.add_argument("--voxel_size", type=float, help="Voxel size", default=0.01)
+    parser.add_argument("--part_queries", type=str, help="Part queries", default="pot, trunk, leaves")
     args = parser.parse_args()
 
     start_time = time.time()
 
     is_on_desktop = on_desktop()
-    path_prefix = "/mnt/kostas-graid/datasets/vlongle/diffphys3d" if not is_on_desktop else "."
+    path_prefix = "/mnt/kostas-graid/datasets/vlongle/diffphys3d" if not is_on_desktop else os.getcwd()
 
     # Only download if obj_path is not provided
     if args.obj_path is None:
@@ -66,10 +67,23 @@ if __name__ == "__main__":
     # os.system(ns_render_cmd)
 
     voxel_cmd = f"python voxel_to_pc.py --scene {config_path} --output {render_output_dir}/clip_features.npz --voxel_size {args.voxel_size}"
-    os.system(voxel_cmd)
+    # os.system(voxel_cmd)
 
     voxel_pc_cmd = voxel_cmd + " --extract_pc"
-    os.system(voxel_pc_cmd)
+    # os.system(voxel_pc_cmd)
+
+    
+    segmentation_cmd = f"python segmentation.py --grid_feature_path {render_output_dir}/clip_features.npz --occupancy_path {render_output_dir}/clip_features_pc.ply --output_dir {render_output_dir} --part_queries '{args.part_queries}' --material_dict_path {render_output_dir}/material_dict.json --use_spatial_smoothing True"
+    print(">> SEGMENTATION CMD: ", segmentation_cmd)
+    os.system(segmentation_cmd)
+
+
+    material_field = "segmented_rgb.ply"
+    ## TODO: still some bugs with the custom config vs cuboid config...
+    # phys_config = "custom_cuboid_config.json"
+    phys_config = "custom_config.json"
+    phys_sim_cmd = f"cd third_party/PhysGaussian; xvfb-run -a  python gs_simulation_pc.py --point_cloud_path {render_output_dir}/{material_field} --output_path nerf_pc_ununiform_custom_output --config ./config/{phys_config} --render_img --compile_video --white_bg --debug"
+    os.system(phys_sim_cmd)
 
     end_time = time.time()
     print(f"Total time taken: {end_time - start_time} seconds")

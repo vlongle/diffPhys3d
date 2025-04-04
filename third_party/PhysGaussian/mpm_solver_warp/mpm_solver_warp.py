@@ -310,6 +310,7 @@ class MPM_Simulator_WARP:
             )
 
         if "E" in kwargs:
+            print(">>> SETTING E to ", kwargs["E"])
             wp.launch(
                 kernel=set_value_to_float_array,
                 dim=self.n_particles,
@@ -377,10 +378,13 @@ class MPM_Simulator_WARP:
                 param_modifier = MaterialParamsModifier()
                 param_modifier.point = wp.vec3(params["point"])
                 param_modifier.size = wp.vec3(params["size"])
-                param_modifier.density = params["density"]
-                param_modifier.E = params["E"]
-                param_modifier.nu = params["nu"]
                 param_modifier.material = params["material"]
+                if "density" in params:
+                    param_modifier.density = params["density"]
+                if "E" in params:
+                    param_modifier.E = params["E"]
+                if "nu" in params:
+                    param_modifier.nu = params["nu"]
                 wp.launch(
                     kernel=apply_additional_params,
                     dim=self.n_particles,

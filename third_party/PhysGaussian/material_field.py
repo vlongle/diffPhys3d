@@ -45,6 +45,29 @@ def apply_material_field_to_simulation(mpm_solver, params, device="cuda:0"):
             "nu": float(nu_values[i]),
             "material": int(material_ids[i]),
         })
+
+
+        # material_params["additional_material_params"].append({
+        #     "point": pos.tolist(),
+        #     "size": [0.001, 0.001, 0.001],  # Tiny region containing just this particle
+        #     # "density": float(densities[i]),
+        #     # "E": float(E_values[i]),
+        #     # "nu": float(nu_values[i]),
+        #     "material": int(material_ids[i]),
+        # })
+
+
+        # # ## NOTE: use the boundary condition hack in the original PhysGaussian code
+        # if material_ids[i] == 6:
+        #     mpm_solver.set_velocity_on_cuboid(
+        #         point=pos.tolist(),
+        #         size=[0.001, 0.001, 0.001],
+        #         velocity=[0.0, 0.0, 0.0],
+        #         start_time=0.0,
+        #         end_time=1e3,
+        #         reset=1
+        #     )
+        
     
     # Apply these parameters
     mpm_solver.set_parameters_dict(material_params, device=device)

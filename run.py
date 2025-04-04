@@ -78,8 +78,8 @@ if __name__ == "__main__":
     os.system(segmentation_cmd)
 
 
-    # material_field = "segmented_rgb.ply"
-    material_field = "segmented_semantics.ply"
+    material_field = "segmented_rgb.ply"
+    # material_field = "segmented_semantics.ply"
     ## TODO: still some bugs with the custom config vs cuboid config...
     # phys_config = "custom_cuboid_config.json"
     phys_config = "custom_config.json"

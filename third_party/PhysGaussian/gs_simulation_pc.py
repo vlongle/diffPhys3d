@@ -661,16 +661,16 @@ if __name__ == "__main__":
                 pos = torch.cat([pos, unselected_pos], dim=0)
             
             # Visualize point cloud
-            height, width, xlim, ylim, zlim = visualize_point_cloud(
-                pos, 
-                args.output_path, 
-                frame,
-                color=params['colors'].cpu().numpy(),
-                point_size=2,  # Adjust point size as needed,
-                xlim=xlim,
-                ylim=ylim,
-                zlim=zlim,
-            )
+            # height, width, xlim, ylim, zlim = visualize_point_cloud(
+            #     pos, 
+            #     args.output_path, 
+            #     frame,
+            #     color=params['colors'].cpu().numpy(),
+            #     point_size=2,  # Adjust point size as needed,
+            #     xlim=xlim,
+            #     ylim=ylim,
+            #     zlim=zlim,
+            # )
 
 
             
@@ -679,13 +679,13 @@ if __name__ == "__main__":
             ## somehow the pot is also swaying, which IS NOT CORRECT.
             ## I think point_cloud_trimesh actually renders out a voxel-ish looking
             ## thing, which is nicer than just point projection like the matplotlib one.
-            # height, width, camera_transform = visualize_point_cloud_trimesh(
-            #     pos,
-            #     args.output_path,
-            #     frame,
-            #     color=params['colors'].cpu().numpy(),
-            #     camera_transform=camera_transform
-            # )
+            height, width, camera_transform = visualize_point_cloud_trimesh(
+                pos,
+                args.output_path,
+                frame,
+                color=params['colors'].cpu().numpy(),
+                camera_transform=camera_transform
+            )
             
             
     if args.render_img and args.compile_video:

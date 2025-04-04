@@ -245,12 +245,17 @@ def visualize_point_cloud(positions, output_path, frame_number, color=None, poin
     
     # Add visualization of the cuboid boundary condition
     # Hardcoded values from custom_cuboid_config.json
-    cube_center = [1, 1, 0.5]
-    cube_size = [0.5, 0.5, 0.1]
-    
+    # cube_center = [1, 1, 0.5]
+    # cube_size = [0.5, 0.5, 0.28]
+
+    cube_center =   np.array([1.015075445175171, 1.052763819694519, 0.5879396796226501])
+    cube_size = np.array([0.09145225584506989, 0.09145228564739227, 0.08893968164920807])
+    buffer = 0.1
+    cube_size += buffer
+
     # Calculate the corners of the cube
-    x_min, y_min, z_min = [cube_center[i] - cube_size[i]/2 for i in range(3)]
-    x_max, y_max, z_max = [cube_center[i] + cube_size[i]/2 for i in range(3)]
+    x_min, y_min, z_min = [cube_center[i] - cube_size[i] for i in range(3)]
+    x_max, y_max, z_max = [cube_center[i] + cube_size[i] for i in range(3)]
     
     # Define the vertices of the cube
     vertices = np.array([
@@ -272,13 +277,13 @@ def visualize_point_cloud(positions, output_path, frame_number, color=None, poin
     ]
     
     # # Plot the edges of the cube
-    # for edge in edges:
-    #     ax.plot3D(
-    #         [vertices[edge[0]][0], vertices[edge[1]][0]],
-    #         [vertices[edge[0]][1], vertices[edge[1]][1]],
-    #         [vertices[edge[0]][2], vertices[edge[1]][2]],
-    #         'red', linewidth=2
-    #     )
+    for edge in edges:
+        ax.plot3D(
+            [vertices[edge[0]][0], vertices[edge[1]][0]],
+            [vertices[edge[0]][1], vertices[edge[1]][1]],
+            [vertices[edge[0]][2], vertices[edge[1]][2]],
+            'red', linewidth=2
+        )
     
     # Set consistent view angle
     ax.view_init(elev=0, azim=90)
@@ -545,7 +550,7 @@ if __name__ == "__main__":
     set_boundary_conditions(mpm_solver, bc_params, time_params)
 
     print(">>> APPLYING MATERIAL FIELD TO SIMULATION")
-    mpm_solver.set_parameters_dict(material_params)
+    # mpm_solver.set_parameters_dict(material_params)
     apply_material_field_to_simulation(mpm_solver, params, device=device)
 
 

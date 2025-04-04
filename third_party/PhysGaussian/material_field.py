@@ -4,6 +4,8 @@ import json
 import os
 import warp as wp
 from tqdm import tqdm
+from sklearn.cluster import DBSCAN
+
 def apply_material_field_to_simulation(mpm_solver, params, device="cuda:0"):
     """
     Apply material properties to particles based on material field data loaded from a point cloud.
@@ -32,7 +34,19 @@ def apply_material_field_to_simulation(mpm_solver, params, device="cuda:0"):
         "additional_material_params": []
     }
     
-    # For each particle, create a tiny region containing just that particle
+    positions = mpm_solver.mpm_state.particle_x.numpy()
+    handle_stationary_clusters(
+    mpm_solver, 
+    positions=positions, 
+    material_ids=material_ids,
+    eps=0.03, 
+    min_samples=8, 
+    start_time=0.0, 
+    end_time=1e9,
+    buffer=0.1,
+)
+
+    # # For each particle, create a tiny region containing just that particle
     for i in tqdm(range(n_particles), desc="Applying material field to particles"):
         # Get particle position
         pos = mpm_solver.mpm_state.particle_x.numpy()[i]
@@ -45,16 +59,6 @@ def apply_material_field_to_simulation(mpm_solver, params, device="cuda:0"):
             "nu": float(nu_values[i]),
             "material": int(material_ids[i]),
         })
-
-
-        # material_params["additional_material_params"].append({
-        #     "point": pos.tolist(),
-        #     "size": [0.001, 0.001, 0.001],  # Tiny region containing just this particle
-        #     # "density": float(densities[i]),
-        #     # "E": float(E_values[i]),
-        #     # "nu": float(nu_values[i]),
-        #     "material": int(material_ids[i]),
-        # })
 
 
         # # ## NOTE: use the boundary condition hack in the original PhysGaussian code
@@ -195,3 +199,69 @@ def apply_similarity_based_materials_to_simulation(mpm_solver, similarity_path,
     
     print(f"Applied similarity-based material properties to {n_particles} particles")
     return similarities
+
+def handle_stationary_clusters(mpm_solver, positions, material_ids,
+                               eps=0.03, min_samples=10,
+                               start_time=0.0, end_time=1e6, buffer=0.0):
+    """
+    Automatically clusters stationary particles and creates one cuboid BC per cluster.
+    
+    Args:
+        mpm_solver: your MPM_Simulator_WARP or similar solver instance
+        positions: (N, 3) numpy array of particle positions
+        material_ids: length-N array of material IDs for each particle
+        eps: DBSCAN max distance for two samples to be in the same neighborhood
+        min_samples: DBSCAN min number of samples to form a dense region
+        start_time: BC start time
+        end_time: BC end time
+        buffer: an optional buffer to extend each bounding box in all directions (in world units)
+    """
+    # 1) Filter only the stationary (material=6) particles
+    stationary_mask = (material_ids == 6)
+    print(">>> stationary_mask: ", stationary_mask, "Number of stationary particles: ", np.sum(stationary_mask),
+          "material_ids: ", np.unique(material_ids))
+    stationary_positions = positions[stationary_mask]
+    if len(stationary_positions) == 0:
+        print("No stationary particles found; skipping cluster-based cuboid BC creation.")
+        return
+
+    # 2) Run DBSCAN to find clusters among stationary positions
+    clustering = DBSCAN(eps=eps, min_samples=min_samples)
+    labels = clustering.fit_predict(stationary_positions)
+
+    unique_labels = np.unique(labels)
+    if len(unique_labels) == 1 and unique_labels[0] == -1:
+        print("All stationary points marked as noise by DBSCAN; no cuboid BCs created.")
+        return
+
+    # 3) For each cluster, compute bounding box and add one cuboid BC
+    for cluster_id in unique_labels:
+        if cluster_id == -1:  # DBSCAN noise
+            continue
+
+        cluster_points = stationary_positions[labels == cluster_id]
+        min_xyz = cluster_points.min(axis=0)
+        max_xyz = cluster_points.max(axis=0)
+
+        print(">> MIN_XYZ: ", min_xyz, "max_xyz: ", max_xyz)
+
+        # bounding box center
+        center = 0.5 * (min_xyz + max_xyz)
+        # half-size
+        halfsize = 0.5 * (max_xyz - min_xyz)
+
+        # add optional buffer
+        halfsize += buffer
+        # 4) Create a single velocity-on-cuboid boundary condition for this cluster
+        #    velocity=0, effectively pins that region for the entire simulation
+        mpm_solver.set_velocity_on_cuboid(
+            point=center.tolist(),
+            size=halfsize.tolist(),
+            velocity=[0.0, 0.0, 0.0],
+            start_time=start_time,
+            end_time=end_time,
+            reset=1   # reset=1 forcibly sets velocity each step
+        )
+        print(">>> Created cuboid BC for cluster ", cluster_id, " at ", center.tolist(), " with size ", halfsize.tolist())
+
+    print(f"Created cuboid BC for {len(unique_labels[unique_labels != -1])} stationary cluster(s).")

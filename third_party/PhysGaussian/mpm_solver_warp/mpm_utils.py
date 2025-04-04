@@ -377,8 +377,8 @@ def p2g_apic_with_stress(state: MPMStateStruct, model: MPMModelStruct, dt: float
                     v_in_add = wp.vec3(0.0, 0.0, 0.0)
                     added_mass = 0.0
 
-                    if material != 6:
-                    # if False:
+                    # if material != 6:
+                    if True:
                         # Normal branch for non‐stationary
                         v_in_add = (weight * state.particle_mass[p] * 
                                     (state.particle_v[p] + C * dpos) 

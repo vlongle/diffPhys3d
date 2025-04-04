@@ -379,12 +379,9 @@ class MPM_Simulator_WARP:
                 param_modifier.point = wp.vec3(params["point"])
                 param_modifier.size = wp.vec3(params["size"])
                 param_modifier.material = params["material"]
-                if "density" in params:
-                    param_modifier.density = params["density"]
-                if "E" in params:
-                    param_modifier.E = params["E"]
-                if "nu" in params:
-                    param_modifier.nu = params["nu"]
+                param_modifier.density = params["density"]
+                param_modifier.E = params["E"]
+                param_modifier.nu = params["nu"]
                 wp.launch(
                     kernel=apply_additional_params,
                     dim=self.n_particles,

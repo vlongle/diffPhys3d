@@ -8,7 +8,7 @@
     ],
     "substep_dt": 1e-4,
     "frame_dt": 4e-2,
-    "frame_num": 20,
+    "frame_num": 40,
     "nu": 0.4,
     "E": 2e6,
     "material": "jelly",
@@ -31,7 +31,7 @@
             "size": [
                 0.5,
                 0.5,
-                0.1
+                0.28
             ],
             "velocity": [
                 0,

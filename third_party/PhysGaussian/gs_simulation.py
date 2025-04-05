@@ -30,6 +30,7 @@ import warp as wp
 
 # Particle filling dependencies
 from particle_filling.filling import *
+from material_field import apply_material_field_to_simulation
 
 # Utils
 from utils.decode_param import *
@@ -37,6 +38,7 @@ from utils.transformation_utils import *
 from utils.camera_view_utils import *
 from utils.render_utils import *
 import glob
+from gs_simulation_pc import load_point_cloud
 
 wp.init()
 wp.config.verify_cuda = True
@@ -79,6 +81,7 @@ if __name__ == "__main__":
     parser.add_argument("--compile_video", action="store_true")
     parser.add_argument("--white_bg", action="store_true")
     parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--point_cloud_path", type=str, help="Path to input point cloud PLY file")
     args = parser.parse_args()
 
     if not os.path.exists(args.model_path):
@@ -297,12 +300,17 @@ if __name__ == "__main__":
         n_grid=material_params["n_grid"],
         grid_lim=material_params["grid_lim"],
     )
-    mpm_solver.set_parameters_dict(material_params)
+    # mpm_solver.set_parameters_dict(material_params)
 
     # Note: boundary conditions may depend on mass, so the order cannot be changed!
     set_boundary_conditions(mpm_solver, bc_params, time_params)
 
-    mpm_solver.finalize_mu_lam()
+
+    pc_params = load_point_cloud(args.point_cloud_path)
+    apply_material_field_to_simulation(mpm_solver, pc_params, device=device,
+                                       scale_origin=scale_origin, original_mean_pos=original_mean_pos, rotation_matrices=rotation_matrices)
+
+    # mpm_solver.finalize_mu_lam()
 
     # camera setting
     mpm_space_viewpoint_center = (
@@ -471,4 +479,36 @@ if __name__ == "__main__":
             
             video_writer.release()
             print("Video successfully saved to:", video_path)
+
+            # Also create a GIF from the frames
+            try:
+                from PIL import Image
+                
+                # Create GIF
+                gif_path = os.path.join(args.output_path, 'output.gif')
+                frames = []
+                
+                # Determine GIF frame duration in milliseconds
+                # Lower duration = faster animation
+                duration = int(1000 / fps)  # Convert fps to milliseconds per frame
+                
+                # Load all frames
+                for frame_file in frame_files:
+                    img = Image.open(frame_file)
+                    frames.append(img.copy())
+                    
+                # Save as GIF
+                frames[0].save(
+                    gif_path,
+                    format='GIF',
+                    append_images=frames[1:],
+                    save_all=True,
+                    duration=duration,
+                    loop=0  # 0 means loop forever
+                )
+                print("GIF successfully saved to:", gif_path)
+            except ImportError:
+                print("PIL library not found. GIF creation skipped.")
+            except Exception as e:
+                print(f"Error creating GIF: {e}")
 

@@ -57,6 +57,7 @@ if __name__ == "__main__":
     # os.system(blender_render_cmd)
     # os.system(convert_cmd)
     # os.system(train_cmd)
+    # os.system(gs_train_cmd)
     
     # # #  # Find the latest config file in the output directory
     output_dir = f"{path_prefix}/outputs/{args.obj_id}/{method}"
@@ -80,8 +81,8 @@ if __name__ == "__main__":
     os.system(segmentation_cmd)
 
 
-    material_field = "segmented_rgb.ply"
-    # material_field = "segmented_semantics.ply"
+    # material_field = "segmented_rgb.ply"
+    material_field = "segmented_semantics.ply"
     ## TODO: still some bugs with the custom config vs cuboid config...
     # phys_config = "custom_cuboid_config.json"
     phys_config = "custom_config.json"
@@ -89,7 +90,11 @@ if __name__ == "__main__":
     if not is_on_desktop:
         phys_sim_cmd = f"export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6; {phys_sim_cmd}"
     print(">> PHYS SIM CMD: ", phys_sim_cmd)
-    os.system(phys_sim_cmd)
+    # os.system(phys_sim_cmd)
+
+    gs_sim_cmd = f"cd third_party/PhysGaussian; xvfb-run -a  python gs_simulation.py --model_path {path_prefix}/outputs/gs/{args.obj_id} --point_cloud_path {render_output_dir}/{material_field} --output_path gs_pc_ununiform_custom_output --config ./config/{phys_config} --render_img --compile_video --white_bg --debug"
+
+    os.system(gs_sim_cmd)
 
     end_time = time.time()
     print(f"Total time taken: {end_time - start_time} seconds")

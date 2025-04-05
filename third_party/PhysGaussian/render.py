@@ -347,9 +347,13 @@ if __name__ == "__main__":
 
 
         if args.render_img:
-            pos = torch.from_numpy(np.load(os.path.join(args.save_pos_path, f"pos_{frame}.npy"))).to(device)
-            rot = torch.from_numpy(np.load(os.path.join(args.save_pos_path, f"rot_{frame}.npy"))).to(device)
-            cov3D = torch.from_numpy(np.load(os.path.join(args.save_pos_path, f"cov_{frame}.npy"))).to(device)
+            sparse_pos = torch.from_numpy(np.load(os.path.join(args.save_pos_path, f"pos_{frame}.npy"))).to(device)
+            sparse_rot = torch.from_numpy(np.load(os.path.join(args.save_pos_path, f"rot_{frame}.npy"))).to(device)
+            sparse_cov3D = torch.from_numpy(np.load(os.path.join(args.save_pos_path, f"cov_{frame}.npy"))).to(device)
+            
+
+
+
             cov3D = cov3D.view(-1, 6)[:gs_num].to(device)
             rot = rot.view(-1, 3, 3)[:gs_num].to(device)
 

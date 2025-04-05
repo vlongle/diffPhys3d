@@ -5,8 +5,72 @@ import os
 import warp as wp
 from tqdm import tqdm
 from sklearn.cluster import DBSCAN
+from sklearn.neighbors import NearestNeighbors
+import matplotlib.pyplot as plt
+from utils.transformation_utils import *
 
-def apply_material_field_to_simulation(mpm_solver, params, device="cuda:0"):
+
+
+def visualize_positions(material_positions, mpm_positions, output_path="material_field_debug"):
+    """
+    Visualize material positions and MPM positions in 3D.
+    
+    Args:
+        material_positions: Numpy array of material field positions
+        mpm_positions: Numpy array of MPM solver positions
+        output_path: Directory to save the visualization
+    """
+    os.makedirs(output_path, exist_ok=True)
+    
+    # Create figure
+    fig = plt.figure(figsize=(12, 10))
+    ax = fig.add_subplot(111, projection='3d')
+    
+    # Plot material positions in red
+    ax.scatter(material_positions[:, 0], material_positions[:, 1], material_positions[:, 2], 
+               c='red', s=2, alpha=0.5, label='Material Field Points')
+    
+    # Plot MPM positions in blue
+    ax.scatter(mpm_positions[:, 0], mpm_positions[:, 1], mpm_positions[:, 2], 
+               c='blue', s=2, alpha=0.5, label='MPM Solver Points')
+    
+    # Set labels and title
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    ax.set_title('Material Field vs MPM Solver Positions')
+    ax.legend()
+    
+    # Save figure
+    plt.savefig(os.path.join(output_path, "position_comparison.png"), dpi=150, bbox_inches='tight')
+    
+    # Create a second figure showing a 2D projection (top view)
+    fig2 = plt.figure(figsize=(12, 10))
+    ax2 = fig2.add_subplot(111)
+    
+    # Plot material positions in red
+    ax2.scatter(material_positions[:, 0], material_positions[:, 1], 
+                c='red', s=2, alpha=0.5, label='Material Field Points')
+    
+    # Plot MPM positions in blue
+    ax2.scatter(mpm_positions[:, 0], mpm_positions[:, 1], 
+                c='blue', s=2, alpha=0.5, label='MPM Solver Points')
+    
+    # Set labels and title
+    ax2.set_xlabel('X')
+    ax2.set_ylabel('Y')
+    ax2.set_title('Material Field vs MPM Solver Positions (Top View)')
+    ax2.legend()
+    
+    # Save figure
+    plt.savefig(os.path.join(output_path, "position_comparison_top.png"), dpi=150, bbox_inches='tight')
+    
+    plt.close('all')
+    print(f"Visualization saved to {output_path}")
+
+
+def apply_material_field_to_simulation(mpm_solver, params, device="cuda:0",
+                                       scale_origin=None, original_mean_pos=None, rotation_matrices=None):
     """
     Apply material properties to particles based on material field data loaded from a point cloud.
     
@@ -28,25 +92,58 @@ def apply_material_field_to_simulation(mpm_solver, params, device="cuda:0"):
     nu_values = params['nu'].cpu().numpy() if torch.is_tensor(params['nu']) else params['nu']
     material_ids = params['material_id'].cpu().numpy() if torch.is_tensor(params['material_id']) else params['material_id']
     
-    assert len(part_labels) == n_particles, f"Number of particles ({n_particles}) doesn't match material field data ({len(part_labels)})"
-    # Use material dictionary set_parameters_dict which already handles this functionality
-    material_params = {
-        "additional_material_params": []
-    }
+    # If the number of particles doesn't match, perform nearest neighbor interpolation
+    if len(part_labels) != n_particles:
+        print(f"Material field data ({len(part_labels)} particles) doesn't match MPM solver ({n_particles} particles). Performing nearest neighbor interpolation.")
+        
+        # Get positions from both the material field and the MPM solver
+        material_positions = params['pos'].cpu().numpy() if torch.is_tensor(params['pos']) else params['pos']
+        mpm_positions = mpm_solver.export_particle_x_to_torch().to(device)
+        mpm_positions = apply_inverse_rotations(
+                undotransform2origin(
+                    undoshift2center111(mpm_positions), scale_origin, original_mean_pos
+                ),
+                rotation_matrices,
+            ).detach().cpu().numpy()
+
+        visualize_positions(material_positions, mpm_positions, output_path="material_field_debug")
+        
+        # Build the nearest neighbors model with the material field positions
+        nn_model = NearestNeighbors(n_neighbors=1, algorithm='auto').fit(material_positions)
+        
+        # Find the nearest neighbor for each MPM particle
+        distances, indices = nn_model.kneighbors(mpm_positions)
+        
+        # Map material properties to MPM particles using the nearest neighbor indices
+        part_labels = part_labels[indices.flatten()]
+        densities = densities[indices.flatten()]
+        E_values = E_values[indices.flatten()]
+        nu_values = nu_values[indices.flatten()]
+        material_ids = material_ids[indices.flatten()]
+        
+        print(f"Nearest neighbor interpolation complete. Average distance to nearest material point: {distances.mean():.6f}")
+        assert distances.mean() < 0.005, f"Average distance to nearest material point {distances.mean()} is too large"
+    else:
+        print(f"Material field data matches MPM solver ({n_particles} particles).")
     
     positions = mpm_solver.mpm_state.particle_x.numpy()
     handle_stationary_clusters(
-    mpm_solver, 
-    positions=positions, 
-    material_ids=material_ids,
-    eps=0.03, 
-    min_samples=8, 
-    start_time=0.0, 
-    end_time=1e9,
-    buffer=0.1,
-)
+        mpm_solver, 
+        positions=positions, 
+        material_ids=material_ids,
+        eps=0.03, 
+        min_samples=8, 
+        start_time=0.0, 
+        end_time=1e9,
+        buffer=0.1,
+    )
 
-    # # For each particle, create a tiny region containing just that particle
+    # Create material parameters dictionary
+    material_params = {
+        "additional_material_params": []
+    }
+
+    # For each particle, create a tiny region containing just that particle
     for i in tqdm(range(n_particles), desc="Applying material field to particles"):
         # Get particle position
         pos = mpm_solver.mpm_state.particle_x.numpy()[i]
@@ -59,19 +156,6 @@ def apply_material_field_to_simulation(mpm_solver, params, device="cuda:0"):
             "nu": float(nu_values[i]),
             "material": int(material_ids[i]),
         })
-
-
-        # # ## NOTE: use the boundary condition hack in the original PhysGaussian code
-        # if material_ids[i] == 6:
-        #     mpm_solver.set_velocity_on_cuboid(
-        #         point=pos.tolist(),
-        #         size=[0.001, 0.001, 0.001],
-        #         velocity=[0.0, 0.0, 0.0],
-        #         start_time=0.0,
-        #         end_time=1e3,
-        #         reset=1
-        #     )
-        
     
     # Apply these parameters
     mpm_solver.set_parameters_dict(material_params, device=device)
@@ -100,105 +184,6 @@ def get_material_name(material_id):
     }
     
     return material_names.get(material_id, "unknown")
-
-def apply_similarity_based_materials_to_simulation(mpm_solver, similarity_path, 
-                                                  light_material, stiff_material,
-                                                  device="cuda:0"):
-    """
-    Apply material properties to particles based on similarity values.
-    """
-    import warp as wp
-    import numpy as np
-    from mpm_solver_warp.mpm_utils import set_value_to_float_array, get_float_array_product
-    
-    # Load the similarity data
-    similarities = np.load(similarity_path).flatten()
-    
-    # Make sure the number of particles matches
-    n_particles = mpm_solver.n_particles
-    if len(similarities) != n_particles:
-        print(f"Warning: Number of particles ({n_particles}) doesn't match similarity data ({len(similarities)})")
-        # Resize the array to match
-        if len(similarities) > n_particles:
-            similarities = similarities[:n_particles]
-        else:
-            similarities = np.pad(similarities, (0, n_particles - len(similarities)), 'constant')
-    
-    # Create arrays for each property with interpolated values
-    E_values = np.zeros(n_particles, dtype=np.float32)
-    nu_values = np.zeros(n_particles, dtype=np.float32)
-    density_values = np.zeros(n_particles, dtype=np.float32)
-    
-    # Interpolate properties based on similarity values
-    for i in range(n_particles):
-        sim_value = float(similarities[i])
-        # Linear interpolation between stiff and light material properties
-        E_values[i] = stiff_material["E"] * (1 - sim_value) + light_material["E"] * sim_value
-        nu_values[i] = stiff_material["nu"] * (1 - sim_value) + light_material["nu"] * sim_value
-        density_values[i] = stiff_material["density"] * (1 - sim_value) + light_material["density"] * sim_value
-    
-    # Use material dictionary set_parameters_dict which already handles this functionality
-    material_params = {
-        "additional_material_params": []
-    }
-    
-    # For each particle, create a tiny region containing just that particle
-    for i in range(n_particles):
-        if i % 10000 == 0:  # Print progress every 10000 particles
-            print(f"Processing particle {i}/{n_particles}")
-            
-        # Get particle position
-        pos = mpm_solver.mpm_state.particle_x.numpy()[i]
-        
-        # Add a material region for this particle
-        material_params["additional_material_params"].append({
-            "point": pos.tolist(),
-            "size": [0.001, 0.001, 0.001],  # Tiny region containing just this particle
-            "density": float(density_values[i]),
-            "E": float(E_values[i]),
-            "nu": float(nu_values[i])
-        })
-    
-    # Apply these parameters
-    mpm_solver.set_parameters_dict(material_params, device=device)
-    
-    # Finalize by computing mu and lambda parameters
-    mpm_solver.finalize_mu_lam(device=device)
-    
-    # Print a summary of material property distribution
-    stiff_count = np.sum(similarities < 0.25)
-    medium_count = np.sum((similarities >= 0.25) & (similarities < 0.75))
-    light_count = np.sum(similarities >= 0.75)
-    
-    print("\n==== Material Property Distribution Summary ====")
-    print(f"Total particles: {n_particles}")
-    print(f"Stiff particles (similarity < 0.25): {stiff_count} ({stiff_count/n_particles*100:.1f}%)")
-    print(f"  - Young's modulus: ~{stiff_material['E']:.1e}")
-    print(f"  - Poisson's ratio: ~{stiff_material['nu']:.2f}")
-    print(f"  - Density: ~{stiff_material['density']:.1f}")
-    
-    print(f"Medium particles (0.25 ≤ similarity < 0.75): {medium_count} ({medium_count/n_particles*100:.1f}%)")
-    middle_E = (stiff_material["E"] + light_material["E"]) / 2
-    middle_nu = (stiff_material["nu"] + light_material["nu"]) / 2
-    middle_density = (stiff_material["density"] + light_material["density"]) / 2
-    print(f"  - Young's modulus: ~{middle_E:.1e}")
-    print(f"  - Poisson's ratio: ~{middle_nu:.2f}")
-    print(f"  - Density: ~{middle_density:.1f}")
-    
-    print(f"Light particles (similarity ≥ 0.75): {light_count} ({light_count/n_particles*100:.1f}%)")
-    print(f"  - Young's modulus: ~{light_material['E']:.1e}")
-    print(f"  - Poisson's ratio: ~{light_material['nu']:.2f}")
-    print(f"  - Density: ~{light_material['density']:.1f}")
-    print("================================================\n")
-    
-    # Also print the min, max, and mean values for each property
-    print("Actual property ranges:")
-    print(f"Young's modulus: min={np.min(E_values):.1e}, max={np.max(E_values):.1e}, mean={np.mean(E_values):.1e}")
-    print(f"Poisson's ratio: min={np.min(nu_values):.2f}, max={np.max(nu_values):.2f}, mean={np.mean(nu_values):.2f}")
-    print(f"Density: min={np.min(density_values):.1f}, max={np.max(density_values):.1f}, mean={np.mean(density_values):.1f}")
-    
-    print(f"Applied similarity-based material properties to {n_particles} particles")
-    return similarities
 
 def handle_stationary_clusters(mpm_solver, positions, material_ids,
                                eps=0.03, min_samples=10,

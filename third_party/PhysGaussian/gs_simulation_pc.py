@@ -647,13 +647,13 @@ if __name__ == "__main__":
                 save_to_h5=args.output_h5,
             )
 
-        if args.save_pos:
-            pos = mpm_solver.export_particle_x_to_torch()[:gs_num].to(device)
-            np.save(os.path.join(args.output_path, f"pos_{frame}.npy"), pos.cpu().numpy())
-            rot = mpm_solver.export_particle_R_to_torch()[:gs_num].to(device)
-            np.save(os.path.join(args.output_path, f"rot_{frame}.npy"), rot.cpu().numpy())
-            cov = mpm_solver.export_particle_cov_to_torch()[:gs_num].to(device)
-            np.save(os.path.join(args.output_path, f"cov_{frame}.npy"), cov.cpu().numpy())
+        # if args.save_pos:
+        #     pos = mpm_solver.export_particle_x_to_torch()[:gs_num].to(device)
+        #     np.save(os.path.join(args.output_path, f"pos_{frame}.npy"), pos.cpu().numpy())
+        #     rot = mpm_solver.export_particle_R_to_torch()[:gs_num].to(device)
+        #     np.save(os.path.join(args.output_path, f"rot_{frame}.npy"), rot.cpu().numpy())
+        #     cov = mpm_solver.export_particle_cov_to_torch()[:gs_num].to(device)
+        #     np.save(os.path.join(args.output_path, f"cov_{frame}.npy"), cov.cpu().numpy())
 
         if args.render_img:
             pos = mpm_solver.export_particle_x_to_torch()[:gs_num].to(device)

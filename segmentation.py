@@ -229,7 +229,8 @@ def save_segmented_point_cloud(
     cmap_name: str = 'tab10',
     original_pc_path: str = None,
     part_queries: List[str] = None,
-    material_dict_path: str = None
+    material_dict_path: str = None,
+    grid_feature_path: str = None  # Added parameter for the original grid path
 ):
     """
     Save segmented point cloud to a PLY file with colors based on part labels.
@@ -242,6 +243,7 @@ def save_segmented_point_cloud(
         original_pc_path: Path to the original point cloud file (required if use_actual_rgb=True)
         part_queries: List of part query strings corresponding to part_labels
         material_dict_path: Path to JSON file mapping part queries to material properties
+        grid_feature_path: Path to the original feature grid metadata (.npz file)
     """
 
     # Create output directory if it doesn't exist
@@ -250,6 +252,7 @@ def save_segmented_point_cloud(
     # Define output paths within the directory
     rgb_output_path = os.path.join(output_dir, "segmented_rgb.ply")
     semantic_output_path = os.path.join(output_dir, "segmented_semantics.ply")
+    material_grid_path = os.path.join(output_dir, "material_grid.npy")
     
     # Convert tensors to numpy arrays
     coords_np = coords.cpu().numpy()
@@ -273,8 +276,6 @@ def save_segmented_point_cloud(
         material_props = json.load(f)
     print(f"Loaded material properties from {material_dict_path}")
     
-
-
     # Get RGB colors from original point cloud if available
     if original_pc_path:
         print(">>> LOADING ORIGINAL RGB")
@@ -404,6 +405,56 @@ def save_segmented_point_cloud(
     PlyData([vertex_element_semantic], text=False).write(semantic_output_path)
     print(f"Semantic point cloud saved to {semantic_output_path}")
     
+    # 3. Save material properties for the entire voxel grid
+    if grid_feature_path is not None:
+        print(">>> CREATING MATERIAL GRID")
+        # Load metadata from the original grid
+        metadata = np.load(grid_feature_path)
+        min_bounds = metadata['min_bounds']
+        max_bounds = metadata['max_bounds']
+        grid_shape = metadata['grid_shape']
+        
+        print(f"Grid shape: {grid_shape}")
+        
+        # Create material property grids with the same shape as the original grid
+        # Each grid will have 4 channels: density, E, nu, material_id
+        material_grid = np.zeros((*grid_shape, 4), dtype=np.float32)
+        
+        # Set default values for background (material_id=7)
+        material_grid[..., 0] = 0  # density = 0
+        material_grid[..., 1] = 0  # E = 0
+        material_grid[..., 2] = 0  # nu = 0
+        material_grid[..., 3] = 7  # material_id = 7 (background)
+        
+        # Create coordinate grid
+        x = np.linspace(min_bounds[0], max_bounds[0], grid_shape[0])
+        y = np.linspace(min_bounds[1], max_bounds[1], grid_shape[1])
+        z = np.linspace(min_bounds[2], max_bounds[2], grid_shape[2])
+        
+        # Map point cloud coordinates to grid indices
+        indices_x = np.clip(((coords_np[:, 0] - min_bounds[0]) / (max_bounds[0] - min_bounds[0]) * (grid_shape[0] - 1)).astype(int), 0, grid_shape[0] - 1)
+        indices_y = np.clip(((coords_np[:, 1] - min_bounds[1]) / (max_bounds[1] - min_bounds[1]) * (grid_shape[1] - 1)).astype(int), 0, grid_shape[1] - 1)
+        indices_z = np.clip(((coords_np[:, 2] - min_bounds[2]) / (max_bounds[2] - min_bounds[2]) * (grid_shape[2] - 1)).astype(int), 0, grid_shape[2] - 1)
+        
+        # Assign material properties to the grid
+        for i in range(len(coords_np)):
+            ix, iy, iz = indices_x[i], indices_y[i], indices_z[i]
+            material_grid[ix, iy, iz, 0] = density[i]
+            material_grid[ix, iy, iz, 1] = E[i]
+            material_grid[ix, iy, iz, 2] = nu[i]
+            material_grid[ix, iy, iz, 3] = material_id[i]
+        
+        # Save the material grid
+        np.save(material_grid_path, 
+                 material_grid)
+        print(f"Material grid saved to {material_grid_path}")
+        
+        # Also save each property as a separate file for easier visualization
+        np.save(os.path.join(output_dir, "density_grid.npy"), material_grid[..., 0])
+        np.save(os.path.join(output_dir, "E_grid.npy"), material_grid[..., 1])
+        np.save(os.path.join(output_dir, "nu_grid.npy"), material_grid[..., 2])
+        np.save(os.path.join(output_dir, "material_id_grid.npy"), material_grid[..., 3])
+        print(f"Individual material property grids saved to {output_dir}")
 
 
 
@@ -442,4 +493,6 @@ if __name__ == "__main__":
     # Save all outputs to the specified directory
     save_segmented_point_cloud(coords_filtered, part_labels, args.output_dir, 
                                original_pc_path=args.occupancy_path,
-                               part_queries=part_queries, material_dict_path=args.material_dict_path)
+                               part_queries=part_queries, 
+                               material_dict_path=args.material_dict_path,
+                               grid_feature_path=args.grid_feature_path)  # Pass grid_feature_path

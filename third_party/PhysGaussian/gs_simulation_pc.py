@@ -1,5 +1,5 @@
 import sys
-
+import shutil
 sys.path.append("gaussian-splatting")
 
 import argparse
@@ -332,9 +332,12 @@ if __name__ == "__main__":
         
     if not os.path.exists(args.config):
         raise AssertionError("Scene config does not exist!")
-    if args.output_path is not None and not os.path.exists(args.output_path):
-        os.makedirs(args.output_path)
+    if args.output_path is not None and os.path.exists(args.output_path):
+        ## remove the output path
+        shutil.rmtree(args.output_path)
 
+
+    os.makedirs(args.output_path, exist_ok=True)
     # load scene config
     print("Loading scene config...")
     (

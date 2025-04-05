@@ -258,6 +258,8 @@ def save_segmented_point_cloud(
     coords_np = coords.cpu().numpy()
     part_labels_np = part_labels.cpu().numpy()
     
+    assert len(part_labels_np) == len(coords_np), f"part_labels_np and coords_np must have the same length. len(part_labels_np): {len(part_labels_np)}, len(coords_np): {len(coords_np)}. Mismatch is likely due to new voxelization and cached part_labels_np. Try re-running with overwrite=True to recompute part_labels"
+    
     # Initialize colors array for RGB and semantic colors
     rgb_colors = np.zeros((coords_np.shape[0], 4), dtype=np.float32)
     semantic_colors = np.zeros((coords_np.shape[0], 4), dtype=np.float32)

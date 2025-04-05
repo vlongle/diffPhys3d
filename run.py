@@ -67,10 +67,10 @@ if __name__ == "__main__":
     # os.system(ns_render_cmd)
 
     voxel_cmd = f"python voxel_to_pc.py --scene {config_path} --output {render_output_dir}/clip_features.npz --voxel_size {args.voxel_size}"
-    # os.system(voxel_cmd)
+    os.system(voxel_cmd)
 
     voxel_pc_cmd = voxel_cmd + " --extract_pc"
-    # os.system(voxel_pc_cmd)
+    os.system(voxel_pc_cmd)
 
     
     segmentation_cmd = f"python segmentation.py --grid_feature_path {render_output_dir}/clip_features.npz --occupancy_path {render_output_dir}/clip_features_pc.ply --output_dir {render_output_dir} --part_queries '{args.part_queries}' --material_dict_path {render_output_dir}/material_dict.json --use_spatial_smoothing True"

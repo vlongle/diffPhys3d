@@ -266,16 +266,15 @@ def save_segmented_point_cloud(
     material_id = np.zeros(coords_np.shape[0], dtype=np.int32)
     
     # Load material properties dictionary if provided
-    material_props = {}
-    if material_dict_path and part_queries:
-        try:
-            with open(material_dict_path, 'r') as f:
-                material_props = json.load(f)
-            print(f"Loaded material properties from {material_dict_path}")
-        except Exception as e:
-            print(f"Error loading material properties: {e}")
-            print("Using default material properties instead")
+    assert material_dict_path is not None, "material_dict_path must be provided"
+    assert part_queries is not None, "part_queries must be provided"
+    assert os.path.exists(material_dict_path), f"material_dict_path {material_dict_path} does not exist"
+    with open(material_dict_path, 'r') as f:
+        material_props = json.load(f)
+    print(f"Loaded material properties from {material_dict_path}")
     
+
+
     # Get RGB colors from original point cloud if available
     if original_pc_path:
         print(">>> LOADING ORIGINAL RGB")
@@ -324,23 +323,16 @@ def save_segmented_point_cloud(
             continue
         
         # Get part query string for this label
-        part_name = part_queries[i] if part_queries and i < len(part_queries) else f"part_{i}"
+        part_name = part_queries[i]
+        print(">>> PART NAME: ", part_name)
         
-        # Get material properties for this part
-        if part_name in material_props:
-            props = material_props[part_name]
-            density[mask] = props.get("density", 200)
-            E[mask] = props.get("E", 2e6)
-            nu[mask] = props.get("nu", 0.4)
-            material_id[mask] = props.get("material_id", 0)
-            print(f"Applied material properties for {part_name}: {props}")
-        else:
-            # Default values if part not found in material dictionary
-            density[mask] = 200
-            E[mask] = 2e6
-            nu[mask] = 0.4
-            material_id[mask] = 0
-            print(f"Using default material properties for {part_name}")
+        assert part_name in material_props, f"part_name `{part_name}` not found in material_props. Material props: {material_props}"
+        props = material_props[part_name]
+        density[mask] = props.get("density", 200)
+        E[mask] = props.get("E", 2e6)
+        nu[mask] = props.get("nu", 0.4)
+        material_id[mask] = props.get("material_id", 0)
+        print(f"Applied material properties for {part_name}: {props}")
     
     # Save both RGB and semantic point clouds
     

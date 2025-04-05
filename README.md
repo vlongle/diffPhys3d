@@ -58,6 +58,8 @@ Install some f3rm robot specific stuff
 ```
 pip install --upgrade PyMCubes==0.1.4
 pip install params-proto python-slugify
+pip install warp_lang==0.10.1
+pip install taichi==1.5.0
 ```
 
 

@@ -67,10 +67,10 @@ if __name__ == "__main__":
     # os.system(ns_render_cmd)
 
     voxel_cmd = f"python voxel_to_pc.py --scene {config_path} --output {render_output_dir}/clip_features.npz --voxel_size {args.voxel_size}"
-    # os.system(voxel_cmd)
+    os.system(voxel_cmd)
 
     voxel_pc_cmd = voxel_cmd + " --extract_pc"
-    # os.system(voxel_pc_cmd)
+    os.system(voxel_pc_cmd)
 
     
     segmentation_cmd = f"python segmentation.py --grid_feature_path {render_output_dir}/clip_features.npz --occupancy_path {render_output_dir}/clip_features_pc.ply --output_dir {render_output_dir} --part_queries '{args.part_queries}' --material_dict_path {render_output_dir}/material_dict.json --use_spatial_smoothing True"
@@ -84,6 +84,8 @@ if __name__ == "__main__":
     # phys_config = "custom_cuboid_config.json"
     phys_config = "custom_config.json"
     phys_sim_cmd = f"cd third_party/PhysGaussian; xvfb-run -a  python gs_simulation_pc.py --point_cloud_path {render_output_dir}/{material_field} --output_path nerf_pc_ununiform_custom_output --config ./config/{phys_config} --render_img --compile_video --white_bg --debug"
+    if not is_on_desktop:
+        phys_sim_cmd = f"export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6; {phys_sim_cmd}"
     print(">> PHYS SIM CMD: ", phys_sim_cmd)
     os.system(phys_sim_cmd)
 

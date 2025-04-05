@@ -329,7 +329,6 @@ def main():
     parser.add_argument("--alpha_weighted", action="store_true", default=True, help="Weight features by alpha (density)")
     
     # Add arguments for point cloud extraction
-    parser.add_argument("--extract_pc", action="store_true", help="Extract point cloud from saved voxel grid")
     parser.add_argument("--alpha_threshold", type=float, default=0.01, help="Threshold for density values")
     parser.add_argument("--gray_threshold", type=float, default=0.05, help="Threshold for black background filtering")
     parser.add_argument("--pc_output", type=str, help="Path to save the extracted point cloud")
@@ -339,9 +338,8 @@ def main():
     min_bounds = (args.min_x, args.min_y, args.min_z)
     max_bounds = (args.max_x, args.max_y, args.max_z)
     
-    # Extract voxel grid if requested
-    if not args.extract_pc:
-        output_path = extract_clip_voxel_grid(
+    
+    output_path = extract_clip_voxel_grid(
             args.scene,
             args.output,
             min_bounds,
@@ -351,23 +349,18 @@ def main():
             args.alpha_weighted,
             args.device
         )
-    else:
-        output_path = args.output
+    print("Extracting point cloud from saved voxel grid...")
+    pcd = compute_occupancy_point_cloud(
+        output_path,
+        alpha_threshold=args.alpha_threshold,
+        gray_threshold=args.gray_threshold,
+        voxel_downsample_size=args.voxel_size,
+        device=args.device
+    )
     
-    # Extract point cloud if requested
-    if args.extract_pc:
-        print("Extracting point cloud from saved voxel grid...")
-        pcd = compute_occupancy_point_cloud(
-            output_path,
-            alpha_threshold=args.alpha_threshold,
-            gray_threshold=args.gray_threshold,
-            voxel_downsample_size=args.voxel_size,
-            device=args.device
-        )
-        
-        # Save point cloud
-        pc_output = args.pc_output or output_path.replace('.npz', '_pc.ply')
-        save_point_cloud(pcd, pc_output)
+    # Save point cloud
+    pc_output = args.pc_output or output_path.replace('.npz', '_pc.ply')
+    save_point_cloud(pcd, pc_output)
 
 
 if __name__ == "__main__":

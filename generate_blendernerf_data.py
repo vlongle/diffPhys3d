@@ -68,7 +68,6 @@ parser.add_argument("--camera_dist_max", type=float, default=1.4, help="Maximum 
 # Keep camera_dist for backward compatibility
 parser.add_argument("--camera_dist", type=float, default=1.2, help="Camera distance (deprecated, use min/max instead)")
 parser.add_argument("--format", type=str, default="NERF", choices=["NERF", "NGP"])
-parser.add_argument("--only_normalize", action='store_true', help="Only normalize the scene, don't render")
 parser.add_argument("--transparent_bg", action='store_true', help="Render with transparent background")
 parser.add_argument("--scene_scale", type=float, default=1.0, help="Scale factor to apply after normalization")
 argv = sys.argv[sys.argv.index("--") + 1 :]
@@ -396,25 +395,11 @@ def process_object(obj_path: str) -> None:
     # Save the normalized scene as GLB
     output_dir = os.path.join(args.output_dir, object_uid)
     os.makedirs(output_dir, exist_ok=True)
-    normalized_path = os.path.join(output_dir, "normalized_scene.glb")
+    # Add lighting
+    add_lighting()
     
-    # Select all objects before export
-    bpy.ops.object.select_all(action='SELECT')
-    
-    # Export as GLB
-    bpy.ops.export_scene.gltf(
-        filepath=normalized_path,
-        export_format='GLB',
-        use_selection=True
-    )
-    print(f"Saved normalized scene to {normalized_path}")
-    
-    if not args.only_normalize:
-        # Add lighting
-        add_lighting()
-        
-        # Render with BlenderNerf add-on
-        render_with_blendernerf(object_uid)
+    # Render with BlenderNerf add-on
+    render_with_blendernerf(object_uid)
 
 if __name__ == "__main__":
     try:
@@ -431,7 +416,7 @@ if __name__ == "__main__":
         print("Finished", local_path, "in", end_i - start_i, "seconds")
         
         # Delete the object if it was downloaded
-        if args.obj_path.startswith("http") and not args.only_normalize:
+        if args.obj_path.startswith("http"):
             os.remove(local_path)
             
     except Exception as e:

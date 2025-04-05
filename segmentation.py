@@ -466,17 +466,25 @@ if __name__ == "__main__":
     parser.add_argument("--grid_feature_path", type=str, required=True)
     parser.add_argument("--occupancy_path", type=str, required=True)
     parser.add_argument("--output_dir", type=str, required=True)
-    parser.add_argument("--part_queries", type=str, required=True)
-    parser.add_argument("--material_dict_path", type=str, default=None, 
+    # parser.add_argument("--part_queries", type=str, required=True)
+    parser.add_argument("--material_dict_path", type=str, required=True,
                         help="Path to JSON file mapping part queries to material properties")
     parser.add_argument("--use_spatial_smoothing", type=str2bool, default=False)
     parser.add_argument("--overwrite", type=str2bool, default=False)
     # parser.add_argument("--overwrite", type=str2bool, default=True)
     args = parser.parse_args()
 
+    assert os.path.exists(args.material_dict_path), f"material_dict_path {args.material_dict_path} does not exist"
+
+    with open(args.material_dict_path, 'r') as f:
+        material_props = json.load(f)
+    print(f"Loaded material properties from {args.material_dict_path}")
+
+    part_queries = list(material_props.keys())
+
     # Parse part queries from comma-separated string
-    part_queries = [q.strip() for q in args.part_queries.split(',')]
-    print(">> PART_QUERIES", part_queries)
+    # part_queries = [q.strip() for q in args.part_queries.split(',')]
+    # print(">> PART_QUERIES", part_queries)
     
     labels_output_path = os.path.join(args.output_dir, "part_labels.npy")
     if args.overwrite or not os.path.exists(labels_output_path):

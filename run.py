@@ -84,6 +84,7 @@ if __name__ == "__main__":
     # phys_config = "custom_cuboid_config.json"
     phys_config = "custom_config.json"
     phys_sim_cmd = f"cd third_party/PhysGaussian; xvfb-run -a  python gs_simulation_pc.py --point_cloud_path {render_output_dir}/{material_field} --output_path nerf_pc_ununiform_custom_output --config ./config/{phys_config} --render_img --compile_video --white_bg --debug"
+    print(">> PHYS SIM CMD: ", phys_sim_cmd)
     os.system(phys_sim_cmd)
 
     end_time = time.time()

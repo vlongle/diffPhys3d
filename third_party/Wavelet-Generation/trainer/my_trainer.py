@@ -11,7 +11,7 @@ from models.module.diffusion_network import MyUNetModel, UNetModel
 from models.module.dwt import DWTInverse3d_Laplacian, DWTForward3d_Laplacian
 from models.module.gaussian_diffusion import GaussianDiffusion, get_named_beta_schedule, mean_flat
 from models.module.resample import UniformSampler, LossSecondMomentResampler, LossAwareSampler
-from data.my_data import MaterialVoxelDataset
+from data_utils.my_data import MaterialVoxelDataset
 from tqdm import tqdm
 import os
 import argparse

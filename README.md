@@ -161,6 +161,5 @@ Available materials in PhysGaussian:
 jelly, metal, sand, foam, snow and plasticine
 
 ## TODO
-- [ ] Fully integrates the feature field.
 - [ ] Curate dataset and physics simulation.
 - [ ] Figure out how to nicely render the learned material field / physics simulation. Might have to use direct voxel optimization (with spherical harmonics) or GS.

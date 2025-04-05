@@ -1,0 +1,22 @@
+{
+    "BlenderNeRF Version": "6.0.0",
+    "Date and Time": "28/02/2025 19:10:37",
+    "Train": true,
+    "Test": true,
+    "AABB": 32,
+    "Render Frames": true,
+    "File Format": "NeRF",
+    "Save Path": "/home/vlongle/code/gaussian-splatting/test_gs/",
+    "Method": "COS",
+    "Camera": "Camera",
+    "Location": "[0.0, 0.0, -5.0]",
+    "Rotation": "[0.0, 0.0, 0.0]",
+    "Scale": "[1.0, 1.0, 1.0]",
+    "Radius": 16.0,
+    "Lens": "20.0 mm",
+    "Seed": 0,
+    "Frames": 100,
+    "Upper Views": true,
+    "Outwards": false,
+    "Dataset Name": "dataset"
+}

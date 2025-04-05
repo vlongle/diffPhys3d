@@ -1,6 +1,7 @@
 from PIL import Image
 import os
 import argparse
+import shutil
 
 def convert_images(data_dir, obj_id):
     """
@@ -29,7 +30,21 @@ def convert_images(data_dir, obj_id):
     
     # # Rename transforms file
     if os.path.exists(f"{source_data}/transforms_train.json"):
-        os.rename(f"{source_data}/transforms_train.json", f"{source_data}/transforms.json")
+        # Copy instead of rename to keep both files
+        shutil.copy(f"{source_data}/transforms_train.json", f"{source_data}/transforms.json")
+        print(f"Copied transforms_train.json to transforms.json")
+    
+    # Create an empty transforms_test.json with minimal valid structure
+    import json
+    empty_transforms = {
+        "frames": [],
+        "camera_angle_x": 0.0,
+        "camera_angle_y": 0.0
+    }
+    
+    with open(f"{source_data}/transforms_test.json", 'w') as f:
+        json.dump(empty_transforms, f, indent=4)
+    print(f"Created empty transforms_test.json")
     
     print(f"Successfully processed dataset for object ID: {obj_id}")
 

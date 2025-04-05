@@ -1,0 +1,1 @@
+Namespace(data_device='cuda', depths='', eval=False, images='images', model_path='./output/187a7e8c-7', resolution=-1, sh_degree=3, source_path='/home/vlongle/code/gaussian-splatting/data/ecb91f433f144a7798724890f0528b23', train_test_exp=False, white_background=True)

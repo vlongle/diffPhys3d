@@ -327,6 +327,7 @@ if __name__ == "__main__":
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--point_cloud_path", type=str, help="Path to input point cloud PLY file")
     parser.add_argument("--material_field_path", type=str, help="Path to a material field file")
+    parser.add_argument("--save_pos", action="store_true")
     args = parser.parse_args()
 
         
@@ -645,6 +646,14 @@ if __name__ == "__main__":
                 save_to_ply=args.output_ply,
                 save_to_h5=args.output_h5,
             )
+
+        if args.save_pos:
+            pos = mpm_solver.export_particle_x_to_torch()[:gs_num].to(device)
+            np.save(os.path.join(args.output_path, f"pos_{frame}.npy"), pos.cpu().numpy())
+            rot = mpm_solver.export_particle_R_to_torch()[:gs_num].to(device)
+            np.save(os.path.join(args.output_path, f"rot_{frame}.npy"), rot.cpu().numpy())
+            cov = mpm_solver.export_particle_cov_to_torch()[:gs_num].to(device)
+            np.save(os.path.join(args.output_path, f"cov_{frame}.npy"), cov.cpu().numpy())
 
         if args.render_img:
             pos = mpm_solver.export_particle_x_to_torch()[:gs_num].to(device)

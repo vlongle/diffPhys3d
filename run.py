@@ -51,6 +51,8 @@ if __name__ == "__main__":
     # method = "nerfacto"
     train_cmd = f"ns-train {method} --data {path_prefix}/data/{args.obj_id} --max-num-iterations {args.train_steps} --viewer.quit-on-train-completion True --save_only_latest_checkpoint False --output_dir {path_prefix}/outputs"
 
+    gs_train_cmd = f"cd third_party/gaussian_splatting; python train.py --s {path_prefix}/data/{args.obj_id} --iterations {args.train_steps} --model_path {path_prefix}/outputs/gs/{args.obj_id}"
+
 
     # os.system(blender_render_cmd)
     # os.system(convert_cmd)
